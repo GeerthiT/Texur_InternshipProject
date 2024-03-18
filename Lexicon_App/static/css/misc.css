@@ -1,0 +1,25 @@
+div.topbar {
+    background: #202020;
+    background-size: auto 54px;
+    padding: 10px; 
+
+}
+
+div.botbar{
+   
+    font-size: 20px;
+    padding: 10px; 
+    color: #fff;
+    background-color: #202020;
+    
+}
+
+.about-link {
+    color: #fff; /* Set link color to white */
+    font-weight: bold; /* Make the text bold */
+    text-decoration: none; /* Remove default underline */
+}
+
+.about-link:hover {
+    text-decoration: underline; /* Add underline on hover */
+}

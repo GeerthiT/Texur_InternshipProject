@@ -1,0 +1,59 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <link rel="icon" href="{% static "images/favicon.gif" %}" type="image/x-icon">
+    <title>Lexicon</title>
+    <!-- Bootstrap -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="{% static 'css/misc.css' %}">
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+      crossorigin="anonymous"
+    ></script>
+    <link rel="stylesheet" type="text/css" href="//cloud.typography.com/7539694/7076952/css/fonts.css">
+    <style>
+      body {
+          font-family: "Whitney SSm A", "Whitney SSm B", arial, sans-serif;
+      }
+  </style>
+  </head>
+  <body>
+    
+      <div class="content-wrap">
+        
+          <div class="page-container topbar">
+            <br>
+            <img class="card-img-top" src="{% static "images/Lexicon_logo.png" %}" alt="logo"/>
+          <br>
+        </div>
+        
+        {% block content %}
+
+        {% endblock %}
+        <!-- Footer-->
+        
+        <div class="container botbar">
+          <p style="display: flex; justify-content: space-between;">
+              <a href="/Lexicon/Lexicon/Om-Lexicon/" class="about-link">About Lexicon</a>
+              <span>© LEXICON AB</span>
+          </p>
+      </div>
+     
+    
+    </div>
+    
+  </body>
+</html>
