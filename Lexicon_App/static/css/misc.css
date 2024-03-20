@@ -1,6 +1,6 @@
 div.topbar {
-    background: #202020;
-    background-size: auto 54px;
+   /* background: #202020; */
+    background-size: auto 45px;
     padding: 10px; 
 
 }
@@ -23,3 +23,38 @@ div.botbar{
 .about-link:hover {
     text-decoration: underline; /* Add underline on hover */
 }
+
+
+.wrapper {
+    flex: 1;
+  }
+  
+  .footer {
+    background-color: #202020; /* Set your desired background color */
+    color: #fff; /* Set your desired text color */
+    padding: 100px; /* Adjust padding as needed */
+  }
+  body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    
+  }
+
+  .container-top{
+    margin-top: 100px;
+  }
+
+  .card-link {
+    text-decoration: none;
+    color: inherit;
+  }
+  
+  .card-img-top {
+    margin: 0 auto; /* Center the image horizontally */
+  }
+
+  .green{
+    color:#AED695
+  }
+  
