@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+<div class="container">
+    <h2 class="h2"><b>Student Profile</b></h2>
+    <br>
+
+    <h5 class="h5"><b>Fill your Personal Informations</b></h5>
+    <br>
+
+    <form class="form" action="submit.php" method="post">
+
+
+    <div class="inputfield mb-2">
+        <label for="firstname">First Name</label>
+        <input type="text" id="firstname" name="firstname" required>
+    </div>
+
+    <div class="inputfield mb-2">   
+      <label for="lastname">Last Name</label>
+      <input type="text" id="lastname" name="lastname" required>
+    </div>
+
+    <div class="inputfield mb-2">
+      <label for="personal_number">Personal Number</label>
+      <input type="text" id="personal_number" name="personal_number" required>
+    </div>
+
+    <div class="inputfield mb-2">
+      <label for="age">Age</label>
+      <input type="number" id="age" name="age" required>
+    </div>
+
+    <div class="inputfield mb-2">
+      <label for="email">Email ID</label>
+      <input type="email" id="email" name="email" required>
+    </div>
+
+    <div class="inputfield mb-2">
+      <label for="phone">Phone Number</label>
+      <input type="tel" id="phone" name="phone" required>
+    </div>
+
+    <div class="inputfield mb-2">  
+      <label for="qualification">Educational Qualification</label>
+      <input type="text" id="qualification" name="qualification" required>
+    </div>
+
+    <div class="inputfield mb-2">
+      <label for="course">Course (Lexicon)</label>
+      <select id="course" name="course">
+        <option value="">select the Course</option>
+        <option value="IT Support Technician">IT Support Technician</option>
+        <option value="Frontend Developer">Frontend Developer</option>
+        <option value="ASP.net">ASP.net</option>
+        <option value="Full Stack Developer">Full Stack Developer</option>
+        <option value="Python & IT Security">Python & IT Security</option>
+        <option value="Service now">Service now</option>
+        <option value="DevOps">DevOps</option>
+        <option value="Software tester">Software tester</option>
+        
+       
+      </select>
+    </div>
+
+    <div class="inputfield mb-2">
+      <label for="skills">Skills</label>
+      <input type="text" id="skills" name="skills" required>
+    </div>
+      
+    <div class="inputfield mb-2">
+      <label for="password">Password</label>
+      <input type="password" id="password" name="password" required>
+    </div>
+
+    <div class="inputfield mb-2">
+      <label for="confirm_password">Confirm Password</label>
+      <input type="password" id="confirm_password" name="confirm_password" required>
+    </div> 
+      
+      <!-- <input type="submit" value="Submit"> -->
+    </form>
+  </div>
+
+
+
+{% endblock %}
