@@ -1,60 +1,80 @@
 div.topbar {
-   /* background: #202020; */
-    background-size: auto 45px;
-    padding: 10px; 
+  /* background: #202020; */
+   background-size: auto 45px;
+   padding: 10px;
 
 }
 
 div.botbar{
-   
-    font-size: 20px;
-    padding: 10px; 
-    color: #fff;
-    background-color: #202020;
-    
+  
+   font-size: 20px;
+   padding: 10px;
+   color: #fff;
+   background-color: #202020;
+  
 }
 
 .about-link {
-    color: #fff; /* Set link color to white */
-    font-weight: bold; /* Make the text bold */
-    text-decoration: none; /* Remove default underline */
+   color: #fff; /* Set link color to white */
+   font-weight: bold; /* Make the text bold */
+   text-decoration: none; /* Remove default underline */
 }
 
 .about-link:hover {
-    text-decoration: underline; /* Add underline on hover */
+   text-decoration: underline; /* Add underline on hover */
 }
 
 
 .wrapper {
-    flex: 1;
-  }
-  
-  .footer {
-    background-color: #202020; /* Set your desired background color */
-    color: #fff; /* Set your desired text color */
-    padding: 100px; /* Adjust padding as needed */
-  }
-  body {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    
-  }
+   flex: 1;
+ }
 
-  .container-top{
-    margin-top: 100px;
-  }
-
-  .card-link {
-    text-decoration: none;
-    color: inherit;
-  }
+ .footer {
+   background-color: #202020; /* Set your desired background color */
+   color: #fff; /* Set your desired text color */
+   padding: 100px; /* Adjust padding as needed */
+ }
+ body {
+   display: flex;
+   flex-direction: column;
+   min-height: 100vh;
   
-  .card-img-top {
-    margin: 0 auto; /* Center the image horizontally */
-  }
+ }
 
-  .green{
-    color:#AED695
-  }
+ .container-top{
+   margin-top: 100px;
+ }
+
+ .card-link {
+   text-decoration: none;
+   color: inherit;
+ }
+
+ .card-img-top {
+   margin: 0 auto; /* Center the image horizontally */
+ }
+
+ .green{
+   color:#AED695
+ }
+
+/* student Login */
+
+.col-md-12 {
+  border-color: rgb(23, 19, 19); /* Change to the color you want */
+  border-width: 1px; /* Optional: Change border width */
+  border-style: solid; /* Optional: Set border style */
+  padding: 20px; /* Optional: Add padding */
+  border-radius: 1pc;
+
+ 
+}
+
+.student_login{
+  text-align: center;
   
+}
+
+.h5{
+  text-align: center;
+}

@@ -6,6 +6,9 @@ from Lexicon_App.models import Course
 def index(request):
     return render(request,"index.html")
 
+def student_login(request):
+    return render(request,"student_login.html")
+
 
 def welcome_admin(request):
     course_count = Course.objects.count()

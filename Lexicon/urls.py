@@ -23,4 +23,5 @@ urlpatterns = [
     path('', views.index, name="index"),
     path('portal_admin/', views.welcome_admin, name="welcome_admin"),
     path('courses_admin/', views.courses, name="courses"),
+    path('student_login/', views.student_login, name="student_login"),
 ]
