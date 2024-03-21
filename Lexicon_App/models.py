@@ -35,7 +35,7 @@ class Course(models.Model):
    
 
     def __str__(self):
-        return self.name
+        return self.course_name
 
 class Company(models.Model):
     companyID = models.CharField(max_length=100)

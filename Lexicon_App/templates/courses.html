@@ -1,0 +1,22 @@
+{% extends "base.html" %} {% load static %} {% block content %}
+
+<h1 class="text-center">List of courses</h1>
+<div class="container">
+
+<br />
+
+<div class="container-fluid mt-3">
+
+    {% if course_data %}
+        {% for course in course_data %}
+            
+            <ul>
+                <li>{{ course.course_name }} {{ course.start_date }} {{ course.end_date }}</li>
+            </ul>
+        {% endfor %}   
+
+    {% endif %}
+</div>
+<a href="{% url 'welcome_admin' %}"
+<button type="button" class="btn btn-danger">Back to home</button></a>
+{% endblock %}

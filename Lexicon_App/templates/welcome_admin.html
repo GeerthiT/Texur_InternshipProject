@@ -1,0 +1,58 @@
+{% extends "base.html" %} {% load static %} {% block content %}
+<h1 class="text-center">Welcome to Admin portal!</h1>
+<div class="container">
+
+<br />
+
+<div class="container-fluid mt-3">
+    <div class="row">
+
+      <div class="col-md-4 ">
+        <a href="{% url 'courses' %}" class="card-link ">
+        <div class="card  bg-success mt-5 mb-3 border border-dark"><br>
+          <img class="card-img-top" src="{% static "images/courses.png" %}" alt="students" style="width:20%">
+          <div class="card-body text-center">
+            <h4 class="card-title">Courses</h4>
+            
+          </div>
+          <div class="container bg-white text-center"><br>
+          <h4>{{ course_count }}</h4>  </div>
+        </div>
+        </a>
+      </div>
+
+      <div class="col-md-4">
+        <a href="#" class="card-link">
+        <div class="card bg-primary mt-5 mb-3 border border-dark"><br>
+          <img class="card-img-top" src="{% static "images/avatar.png" %}" alt="students" style="width:20%">
+          <div class="card-body text-center">
+            <h4 class="card-title">Students</h4>
+            
+          </div>
+          <div class="container bg-white text-center"><br>
+            <h4>COUNT</h4>  </div>
+          </div>
+        </a>
+      </div>
+
+      <div class="col-md-4">
+        <a href="#" class="card-link">
+        <div class="card bg-warning mt-5 mb-3 border border-dark rounded"><br>
+          <img class="card-img-top" src="{% static "images/company1.png" %}" alt="students" style="width:20%">
+          <div class="card-body text-center">
+            <h4 class="card-title">Companies</h4>
+            
+          </div>
+          <div class="container bg-white text-center"><br>
+            <h4>COUNT</h4>  </div>
+          </div>
+      </a>
+      </div>
+
+    </div>
+  </div>
+  
+  
+
+</div>
+{% endblock %}
