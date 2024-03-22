@@ -5,6 +5,9 @@ from Lexicon_App.models import Course, Student, Company
 
 def index(request):
     return render(request,"index.html")
+def admin_login(request):
+    return render(request,"admin_login.html")
+
 
 
 def welcome_admin(request):

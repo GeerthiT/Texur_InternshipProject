@@ -21,6 +21,8 @@ from Lexicon_App import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.index, name="index"),
+    path('admin_login', views.admin_login, name="admin_login"),
+
     path('portal_admin/', views.welcome_admin, name="welcome_admin"),
     path('courses_admin/', views.courses, name="courses"),
     path('student_admin/', views.students, name="students"),
