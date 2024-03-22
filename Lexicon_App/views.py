@@ -9,6 +9,12 @@ def admin_login(request):
     return render(request,"admin_login.html")
 
 
+def student_login(request):
+    return render(request,"student_login.html")
+
+def student_signup(request):
+    return render(request,"student_signup.html")
+
 
 def welcome_admin(request):
     course_count = Course.objects.count()
