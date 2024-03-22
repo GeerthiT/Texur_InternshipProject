@@ -1,0 +1,8 @@
+# Ignore cache files
+*.cache
+
+# Ignore compiled Python files
+*.pyc
+*.pyo
+*.mo
+*.po
