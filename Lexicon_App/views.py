@@ -9,6 +9,9 @@ def admin_login(request):
     return render(request,"admin_login.html")
 
 
+
+
+
 def student_login(request):
     return render(request,"student_login.html")
 
