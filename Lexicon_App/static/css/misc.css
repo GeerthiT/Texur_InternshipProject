@@ -79,6 +79,7 @@ div.botbar{
   
 }
 
+<<<<<<< HEAD
 .h5{
   text-align: center;
 }
@@ -129,6 +130,7 @@ h5{
 .social-links {
   font-size: 12px;
 }
+<<<<<<< HEAD
 
 .social-links img {
   width: 30px; 
@@ -149,3 +151,18 @@ h5{
 
 
 
+=======
+=======
+  .green{
+    color:#AED695
+  }
+  .col-md-12 {
+    border-color: rgb(23, 19, 19); /* Change to the color you want */
+    border-width: 1px; /* Optional: Change border width */
+    border-style: solid; /* Optional: Set border style */
+    padding: 20px; /* Optional: Add padding */
+    border-radius: 1pc;
+  }
+  
+>>>>>>> main
+>>>>>>> 2e246ba69615e195b6e8055883e3d973c375ee7d
