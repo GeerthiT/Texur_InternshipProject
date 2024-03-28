@@ -24,6 +24,9 @@ urlpatterns = [
     path('portal_admin/', views.welcome_admin, name="welcome_admin"),
     path('courses_admin/', views.courses, name="courses"),
     path('student_login/', views.student_login, name="student_login"),
-    path('student_signup/', views.student_signup, name="student_signup")
+    path('student_signup/', views.student_signup, name="student_signup"),
+    path('students/', views.students, name="students"),
+    path('company/', views.companies, name="companies"),
+    path('search/', views.search, name="search")
 
 ]
