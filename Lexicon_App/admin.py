@@ -5,3 +5,4 @@ from .models import Student, Course, Company
 admin.site.register(Student)
 admin.site.register(Course)
 admin.site.register(Company)
+

@@ -23,4 +23,6 @@ urlpatterns = [
     path('', views.index, name="index"),
     path('portal_admin/', views.welcome_admin, name="welcome_admin"),
     path('courses_admin/', views.courses, name="courses"),
+    path('employer_login/', views.employer_login, name="employer_login"),
+    path('employer_singup/', views.employer_singup, name="employer_singup"),
 ]

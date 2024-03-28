@@ -47,6 +47,12 @@ class Company(models.Model):
     def __str__(self):
         return self.name
 
+class User(models.Model):
+    username = models.CharField(max_length=100)
+    password = models.CharField(max_length=100)  # Note: Storing passwords in plain text is not secure, consider using Django's built-in authentication system or hashing the passwords
+
+    def __str__(self):
+        return self.username
 
 
 
