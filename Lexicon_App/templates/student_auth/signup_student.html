@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+  <h2 class="heading2"><b>Student Profile</b></h2>
+  <h5 class="heading5"><b>Fill your Personal Informations</b></h5>
+  
+  <div class="shadow p-4 mb-5 bg-body rounded "> 
+  <form action="." method="post">
+
+    {% csrf_token %}
+
+    {{form.as_p}}
+
+   <button class="btn btn-success" type="submit">Signup</button>
+   </form>
+
+   <style>
+    body {background-color: rgb(235, 244, 251);}
+    
+   </style>
+  </div>
+
+{% endblock %}
