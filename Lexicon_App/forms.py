@@ -15,8 +15,9 @@ class RegistrationForm(forms.ModelForm):
    password = forms.CharField(widget=forms.PasswordInput(attrs={'class' : 'form-control'}))
    confirm_password = forms.CharField(widget=forms.PasswordInput(attrs={'class' : 'form-control'}))
    email = forms.EmailField(widget=forms.EmailInput(attrs={'class' : 'form-control'}))
-   age = forms.IntegerField(widget=forms.NumberInput(attrs={'class' : 'form-control'}))
    student_ID= forms.IntegerField(widget=forms.NumberInput(attrs={'class' : 'form-control'}))
+   age = forms.IntegerField(widget=forms.NumberInput(attrs={'class' : 'form-control'}))
+   
    phone_number= forms.IntegerField(widget=forms.NumberInput(attrs={'class' : 'form-control'}))
    social_security_number = forms.CharField(widget=forms.NumberInput(attrs={'class' : 'form-control'})) 
    COURSE_CHOICES = (
@@ -46,10 +47,10 @@ class RegistrationForm(forms.ModelForm):
     'password',
     'confirm_password',
     'email',
+    'student_ID',
     'social_security_number',
     'phone_number',
     'age',
-    'student_ID',
     'course',
     'linkedin_ID',
     'github_ID',

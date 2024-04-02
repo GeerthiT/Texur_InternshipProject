@@ -19,24 +19,31 @@
           <h2 class="student_login"><b>Student Login</b></h2>
             <br>
             <br>
-            
-            <form>
+            {% if messages %}
+            {% for message in messages %}
+             {% endfor%}
+            {% endif %}
+            <form method="POST" >
+              
+              {% csrf_token %}
+
                 <div class="mb-3 ">
                     <label for="username" class="form-label">Username</label>
-                    <input type="text" class="form-control" id="username">
+                    <input type="text" class="form-control" id="username" placeholder="Enter your name">
                 </div>
                 <div class="mb-3">
                     <label for="password" class="form-label">Password</label>
-                    <input type="password" class="form-control" id="password">
+                    <input type="password" class="form-control" id="password" placeholder="Enter your password">
                 </div>
-                <button type="submit" class="btn btn-block btn-primary">Login</button>
+                <button type="submit" class="btn btn-block btn-secondary">Login</button>
             </form>
             <br>
             <br>
             <br>
 
-
-            <h5 class="h5">Don’t have an account? <a href="student_signup.html"><b>Signup</b></a> here</h5>
+            <h5 class="h5">Don’t have an account? <a href="{% url 'signup_student' %}">Sign Up</a> here</h5>
+            
+            
         </div>
     </div>
   </div>
@@ -46,5 +53,9 @@
  
 
 
-
   
+
+
+
+
+
