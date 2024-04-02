@@ -88,3 +88,9 @@ pip-delete-this-directory.txt
 *.py[cod]
 *$py.class
 *.pyc
+
+
+#random
+Lexicon/__pycache__/urls.cpython-311.pyc
+Lexicon_App/__pycache__/views.cpython-311.pyc
+Lexicon_App/static/css/misc.css
