@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'Lexicon_App'
+    'Lexicon_App',
 ]
 
 MIDDLEWARE = [
@@ -51,6 +51,11 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+# AUTHENTICATION_BACKENDS = [
+#     'Lexicon_App.backends.AdminAuthenticationBackend',
+#     # Other authentication backends if needed
+# ]
 
 ROOT_URLCONF = 'Lexicon.urls'
 

@@ -17,12 +17,18 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from Lexicon_App import views
+from django.contrib.auth import views as auth_views
+
+
+
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+   
     path('', views.index, name="index"),
-    path('admin_login', views.admin_login, name="admin_login"),
-
+    path('admin_login/', views.admin_login, name="admin_login"),
     path('portal_admin/', views.welcome_admin, name="welcome_admin"),
     path('courses_admin/', views.courses, name="courses"),
+    path('logout/', views.logout_all_portal, name='logout'),
+   
+    path('admin', admin.site.urls),
 ]

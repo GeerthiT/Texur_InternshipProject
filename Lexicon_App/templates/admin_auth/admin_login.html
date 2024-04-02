@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% load static %}
+
+
+{% block navbar %}
+
+{% endblock %}
+
+{% block content %}
+
+<div class="container col-md-12">
+     {% if success_message %}
+            <div class="alert alert-success" role="alert">
+                {{ success_message }}
+            </div>
+     {% endif %}
+<div class="container mt-5">
+    <div class="row">
+        <!-- Column for Picture -->
+        <div class="col-md-2">
+
+        </div>
+        <div class="col-md-3">
+            <img class=" img-fluid float-end" width="400" height="450"  alt="Image" src="{% static "images/user-admin-gear.png" %}" alt="students">
+       
+        </div> 
+        <!-- Column for Login Form -->
+        <div class="col-md-5 login-form mb-4 img-fluid  img-thumbnail ">
+            <h2>Login</h2>
+            
+            <form method="post" >
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="formGroupExampleInput" class="form-label">User name</label>
+                    <input type="text" class="form-control" id="username" name="username">
+                  </div>
+                  <div class="mb-3">
+                    <label for="formGroupExampleInput2" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="password" name="password">
+                  </div>
+                    <div class="mb-3 row">
+                    <div class="col-sm-6">
+                        <button type="submit" class="btn btn-primary">Login</button>
+                    </div>
+                </div>
+             </form>
+        </div>
+        <div class="col-md-2">
+
+        </div>
+    </div>
+</div>
+</div>
+
+{% endblock %}
+
+
+
+
+
+
