@@ -1,0 +1,53 @@
+{% extends "base.html" %} {% load static %} {% block content %}
+
+<h1 class="text-center">Search</h1>
+<div class="container">
+
+<br>
+<div class="d-flex justify-content-center">
+<div class="card col-8">
+  
+    <div class="card-body">
+        <form method="POST" action="{% url 'search' %}">
+            {% csrf_token %}
+            <div class="mb-3">
+                <input type="text" class="form-control" placeholder="Search Course/Student/Skill/Company" name="searched" id="searchForm">
+            </div>
+            <button type="submit" class="btn btn-secondary">Search</button> 
+        </form>
+    </div>
+    
+  </div>
+</div>
+<br>
+{% for message in messages %}
+    <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+{% endfor %}
+{% if results %}
+    <h2 class="text-start">Search Results:</h2>
+    <ul>
+        {% for result in results %}
+            {% if result.type == 'course' %}
+                <li>Course: {{ result.result }}</li>
+            {% elif result.type == 'student' %}
+                <li>Student: {{ result.result }}</li>
+            {% elif result.type == 'company' %}
+                <li>Company: {{ result.result }}</li>
+            {% endif %}
+        {% endfor %}
+    </ul>
+
+{% endif %}
+<br><br><br><br>
+<a href="{% url 'welcome_admin' %}"
+<button type="button" class="btn btn-danger">Back to home</button></a>
+{% endblock %}
+
+<script>
+    document.getElementById("searchInput").addEventListener("keyup", function(event) {
+        if (event.keyCode === 13) {
+            event.preventDefault();
+            document.getElementById("searchForm").submit();
+        }
+    });
+    </script>

@@ -28,14 +28,14 @@ class Student(models.Model):
 
 class Course(models.Model):
     courseID = models.AutoField(primary_key=True)
-    course_name = models.CharField(max_length=100) 
+    name = models.CharField(max_length=100) 
     student_ID = models.ManyToManyField(Student) 
     start_date = models.DateField()
     end_date = models.DateField()
    
 
     def __str__(self):
-        return self.course_name
+        return self.name
 
 class Company(models.Model):
     companyID = models.CharField(max_length=100)
