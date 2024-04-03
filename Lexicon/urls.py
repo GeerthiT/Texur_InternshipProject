@@ -19,10 +19,21 @@ from django.urls import path
 from Lexicon_App import views
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
     path('', views.index, name="index"),
+
+    path('admin_login/', views.admin_login, name="admin_login"),
     path('portal_admin/', views.welcome_admin, name="welcome_admin"),
     path('courses_admin/', views.courses, name="courses"),
-    path('employer_login/', views.employer_login, name="employer_login"),
+    path('logout/', views.logout_all_portal, name='logout'),
+   
+    path('admin', admin.site.urls),
+
+    path('portal_admin/', views.welcome_admin, name="welcome_admin"),
+    path('courses_admin/', views.courses, name="courses"),
+    path('login_student/', views.login_student, name="login_student"),
+    path('signup_student/', views.signup_student, name="signup_student"),
+    path('students/', views.students, name="students"),
+    path('company/', views.companies, name="companies"),
+    path('search/', views.search, name="search") ,
     path('employer_singup/', views.employer_singup, name="employer_singup"),
 ]
