@@ -29,6 +29,7 @@ div.botbar {
 }
 
 
+
 .wrapper {
   flex: 1;
 }
@@ -103,31 +104,56 @@ body {
 
 /* student Signup */
 
-h2 {
-  text-align: center;
-
+.container {
+  width: 50%;
+  margin: 0 auto;
 }
 
-h5 {
-  text-align: center;
+.form {
+  display: flex;
+  flex-direction: column;
 }
 
-.form-check {
-  text-align: center;
+.inputfield {
+  margin-bottom: 1rem;
 }
 
-.green {
-  color: #AED695
+.inputfield label {
+  display: block;
+  margin-bottom: 0.5rem;
 }
 
-.col-md-12 {
-  border-color: rgb(23, 19, 19);
-  /* Change to the color you want */
-  border-width: 1px;
-  /* Optional: Change border width */
-  border-style: solid;
-  /* Optional: Set border style */
-  padding: 20px;
-  /* Optional: Add padding */
-  border-radius: 1pc;
+.inputfield input,
+.inputfield select {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.checkbox-field {
+  display: flex;
+  align-items: center;
+}
+
+.checkbox-field input[type="checkbox"] {
+  margin-right: 0.5rem;
+}
+
+.checkbox-field label {
+  margin-bottom: 0;
+}
+
+.btn {
+  width: 100%;
+  padding: 0.5rem;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn:hover {
+  background-color: #0056b3;
 }
