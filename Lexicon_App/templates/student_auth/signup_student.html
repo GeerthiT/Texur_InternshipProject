@@ -22,8 +22,13 @@
     {% csrf_token %}
 
     {{form.as_p}}
-    
-
+    <label for="skills">Skills:</label>
+    <select name="skills" id="skills" multiple>
+        {% for skill in skills %}
+            <option value="{{ skill.id }}">{{ skill.name }}</option>
+        {% endfor %}
+    </select>
+<br><br>
    <button class="btn btn-success" type="submit">Signup</button>
    </form>
 
