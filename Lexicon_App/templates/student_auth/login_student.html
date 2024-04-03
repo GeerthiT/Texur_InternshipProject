@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% load static %}
+ 
+{% block content %}
+ 
+
+<div class="col-md-12">
+  
+  <div class="container2">
+   <div class="container mt-5">
+    <div class="row">
+        <!-- Column for Picture -->
+        <div class="col-md-6">
+          <img class="card-img-top" src="{% static "images/student-login.png" %}" alt="students" style="width:70%">
+            
+        </div>
+        <!-- Column for Login Form -->
+        <div class="col-md-6">
+          <h2 class="student_login"><b>Student Login</b></h2>
+            <br>
+            <br>
+            {% if messages %}
+            {% for message in messages %}
+             {% endfor%}
+            {% endif %}
+            <form method="POST" >
+              
+              {% csrf_token %}
+
+                <div class="mb-3 ">
+                    <label for="username" class="form-label">Username</label>
+                    <input type="text" class="form-control" id="username" placeholder="Enter your name">
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="password" placeholder="Enter your password">
+                </div>
+                <button type="submit" class="btn btn-block btn-secondary">Login</button>
+            </form>
+            <br>
+            <br>
+            <br>
+
+            <h5 class="h5">Don’t have an account? <a href="{% url 'signup_student' %}">Sign Up</a> here</h5>
+            
+            
+        </div>
+    </div>
+  </div>
+ </div>
+</div>
+{% endblock %}
+ 
+
+
+  
+
+
+
+
+

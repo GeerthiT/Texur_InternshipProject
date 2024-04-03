@@ -1,9 +1,19 @@
 
+from django.contrib.auth.models import User
+from django.contrib.auth.forms import UserCreationForm
 from django import forms
 from .models import Student
-from .models import Company
 from django.contrib.auth.forms import UserCreationForm
 # from django.db import models
+
+class admin_reg_form(UserCreationForm):
+    class Meta:
+        model = User
+        fields = ['username','email','password1','password2']
+
+
+
+
 
 
 class SearchForm(forms.Form):
@@ -88,7 +98,6 @@ def save(self, commit=True):
         user.save()
     return user
 
-
 class CompanyProfileForm(forms.Form):
     Companyname = forms.CharField(max_length=100, widget=forms.TextInput(attrs={'class': 'form-control'}))
     Companysize = forms.ChoiceField(choices=[('','Select the Company size'),('Startup','Startup'),('Small','Small'),('Medium','Medium'),('Large','Large'),('Enterprise','Enterprise')], widget=forms.Select(attrs={'class': 'form-control'}))
@@ -145,6 +154,3 @@ def save(self, commit=True):
    
 
     return company
-
-
-

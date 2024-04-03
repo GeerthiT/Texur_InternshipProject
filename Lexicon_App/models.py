@@ -2,40 +2,53 @@ from django.db import models
 
 # Create your models here.
 
-class Student(models.Model):
-    student_ID = models.AutoField(primary_key=True)
+class Skillset(models.Model):
     name = models.CharField(max_length=100)
-    email = models.EmailField(max_length=100)
-    password = models.CharField(max_length=100)
-    social_security_number = models.CharField(max_length=20)
-    postal_address = models.CharField(max_length=200)
-    knowledge_level = models.CharField(max_length=100)
-    GDPR_consent = models.BooleanField(default=False)
-    # class_name = models.ForeignKey(Class, on_delete=models.CASCADE)
-    # skills = models.ManyToManyField(max_length=100)
-    # certifications = models.ManyToManyField(Certification)
-    language_proficiency = models.CharField(max_length=200) 
-    # internships = models.ManyToManyField(max_length=100)
-    cv = models.FileField(upload_to='cv/', null=True, blank=True)
-    linkedin_profile = models.URLField(null=True, blank=True)
-    github_profile = models.URLField(null=True, blank=True)
-    portfolio_profile = models.URLField(null=True, blank=True)
 
     def __str__(self):
         return self.name
+
+class Student(models.Model):
+    username = models.CharField(max_length=150, unique=True, default='')
+    first_name = models.CharField(max_length=30, default='')
+    last_name = models.CharField(max_length=30, default='')  
+    student_ID = models.AutoField(primary_key=True)
+    phone_number = models.CharField(max_length=15, default='')
+    password = models.CharField(max_length=100, default='')
+    confirm_password = models.CharField(max_length=100, default='')
+    age = models.IntegerField(null=True, blank=True)
+    email = models.EmailField('User Email')
+    social_security_number = models.CharField(max_length=20)
+    postal_address = models.CharField(max_length=200)
+    skills = models.ManyToManyField(Skillset)
+    knowledge_level = models.CharField(max_length=100)
+    GDPR_consent = models.BooleanField(default=False)
+    cv = models.FileField(upload_to='cv/', null=True, blank=True)
+    linkedin_ID = models.URLField(null=True, blank=True)
+    github_ID = models.URLField(null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.first_name} {self.last_name}"
+
+    # class_name = models.ForeignKey(Class, on_delete=models.CASCADE)
+    # skills = models.ManyToManyField(max_length=100)
+    # certifications = models.ManyToManyField(Certification)
+    # language_proficiency = models.CharField(max_length=200) 
+    # internships = models.ManyToManyField(max_length=100) 
+    # portfolio_profile = models.URLField(null=True, blank=True)
 
  
 
 class Course(models.Model):
     courseID = models.AutoField(primary_key=True)
-    course_name = models.CharField(max_length=100) 
+    name = models.CharField(max_length=100) 
     student_ID = models.ManyToManyField(Student) 
     start_date = models.DateField()
     end_date = models.DateField()
    
 
     def __str__(self):
-        return self.course_name
+        return self.name
 
 class Company(models.Model):
     companyID = models.CharField(max_length=100)
@@ -43,6 +56,12 @@ class Company(models.Model):
     contact_details = models.ManyToManyField(Course)
     accepting_interns = models.BooleanField(default=False)
     openings_job_description = models.TextField(blank=True)
+
+    def __str__(self):
+        return self.name
+    
+class Skill(models.Model):
+    name = models.CharField(max_length=100)
 
     def __str__(self):
         return self.name

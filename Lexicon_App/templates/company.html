@@ -1,0 +1,22 @@
+{% extends "base.html" %} {% load static %} {% block content %}
+
+<h1 class="text-center">List of courses</h1>
+<div class="container">
+
+<br />
+
+<div class="container-fluid mt-3">
+
+    {% if company_data %}
+        {% for company in company_data %}
+            
+            <ul>
+                <li><b>{{ company.name }}</b><br>Accepting Interns: {{ company.accepting_interns }}</li>
+            </ul>
+        {% endfor %}   
+
+    {% endif %}
+</div>
+<a href="{% url 'welcome_admin' %}"
+<button type="button" class="btn btn-danger">Back to home</button></a>
+{% endblock %}

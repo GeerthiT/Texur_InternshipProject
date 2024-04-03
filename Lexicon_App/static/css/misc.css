@@ -1,10 +1,23 @@
+<<<<<<< HEAD
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+=======
 div.topbar {
   /* background: #202020; */
+<<<<<<< HEAD
   background-size: auto 45px;
   padding: 10px;
+=======
+   background-size: auto 45px;
+   padding: 10px;
+>>>>>>> 2c49fc800bb3cc894475c4b52cea95c8bd528a6b
 
+>>>>>>> main
 }
 
+<<<<<<< HEAD
 div.botbar {
 
   font-size: 20px;
@@ -26,11 +39,58 @@ div.botbar {
 .about-link:hover {
   text-decoration: underline;
   /* Add underline on hover */
+=======
+.logo img {
+  height: 50px;
+  width: auto;
+}
+
+.nav-item img{
+   height: 50px;
+  width: auto;
+}
+div.botbar{
+  
+<<<<<<< HEAD
+  font-size: 20px;
+  padding: 10px;
+  color: #fff;
+  background-color:#202020;
+ 
+}
+
+.about-link {
+  color: #fff; /* Set link color to white */
+  font-weight: bold; /* Make the text bold */
+  text-decoration: none; /* Remove default underline */
+}
+
+.about-link:hover {
+  text-decoration: underline; /* Add underline on hover */
+=======
+   font-size: 20px;
+   padding: 10px;
+   color: #fff;
+   background-color: #202020;
+  
+}
+
+.about-link {
+   color: #fff; /* Set link color to white */
+   font-weight: bold; /* Make the text bold */
+   text-decoration: none; /* Remove default underline */
+}
+
+.about-link:hover {
+   text-decoration: underline; /* Add underline on hover */
+>>>>>>> main
+>>>>>>> 2c49fc800bb3cc894475c4b52cea95c8bd528a6b
 }
 
 
 
 .wrapper {
+<<<<<<< HEAD
   flex: 1;
 }
 
@@ -157,3 +217,157 @@ body {
 .btn:hover {
   background-color: #0056b3;
 }
+=======
+<<<<<<< HEAD
+  flex: 1;
+}
+.footer {
+  background-color:black; /* Set your desired background color */
+  color: #fff; /* Set your desired text color */
+  padding: 100px; /* Adjust padding as needed */
+}
+
+
+=======
+   flex: 1;
+ }
+
+ .footer {
+   background-color: #202020; /* Set your desired background color */
+   color: #fff; /* Set your desired text color */
+   padding: 100px; /* Adjust padding as needed */
+ }
+ body {
+   display: flex;
+   flex-direction: column;
+   min-height: 100vh;
+  
+ }
+
+ .container-top{
+   margin-top: 100px;
+ }
+
+ .card-link {
+   text-decoration: none;
+   color: inherit;
+ }
+
+ .card-img-top {
+   margin: 0 auto; /* Center the image horizontally */
+ }
+
+ .green{
+   color:#AED695
+ }
+
+
+
+
+
+/* student Login */
+
+.col-md-12 {
+  border-color: rgb(23, 19, 19); /* Change to the color you want */
+  border-width: 1px; /* Optional: Change border width */
+  border-style: solid; /* Optional: Set border style */
+  padding: 20px; /* Optional: Add padding */
+  border-radius: 1pc;
+
+ 
+}
+
+.student_login{
+  text-align: center;
+  
+}
+
+<<<<<<< HEAD
+.h5{
+  text-align: center;
+}
+
+/* student Signup */
+
+h2{
+  text-align: center;
+ 
+}
+
+h5{
+  text-align: center;
+}
+
+
+.container_stu{
+  padding-top: 20px;
+  padding-bottom: 20px;
+  padding-left: 420px;
+  background-color: aliceblue;
+  
+}
+
+.container_stu1{
+  padding-top: 20px;
+  padding-bottom: 20px;
+  padding-left: 100px;
+  padding-right: 40px;
+  background-color: aliceblue;
+  
+}
+
+.label{
+  width: 200px; 
+  color: #060404;
+  margin-right: 10px;
+  font-size: 18px;
+}
+
+.course {
+    width: 204px; 
+    height: 33px; 
+    
+  }
+
+
+.social-links {
+  font-size: 12px;
+}
+<<<<<<< HEAD
+
+.social-links img {
+  width: 30px; 
+  height: 30px; 
+}
+
+/* .form-check{
+  text-align: center;
+} */
+
+
+
+
+
+
+
+
+
+
+
+=======
+=======
+  .green{
+    color:#AED695
+  }
+  .col-md-12 {
+    border-color: rgb(23, 19, 19); /* Change to the color you want */
+    border-width: 1px; /* Optional: Change border width */
+    border-style: solid; /* Optional: Set border style */
+    padding: 20px; /* Optional: Add padding */
+    border-radius: 1pc;
+  }
+  
+>>>>>>> main
+>>>>>>> 2e246ba69615e195b6e8055883e3d973c375ee7d
+>>>>>>> main
+>>>>>>> 2c49fc800bb3cc894475c4b52cea95c8bd528a6b
