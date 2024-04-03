@@ -14,6 +14,7 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+
 from django.contrib import admin
 from django.urls import path
 from Lexicon_App import views
@@ -36,4 +37,6 @@ urlpatterns = [
     path('company/', views.companies, name="companies"),
     path('search/', views.search, name="search") ,
     path('employer_singup/', views.employer_singup, name="employer_singup"),
+    path('Company_login/', views.Company_login, name="Company_login"),
+    path('Company_singup/', views.Company_singup, name="Company_singup"),
 ]
