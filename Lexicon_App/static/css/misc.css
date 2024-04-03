@@ -1,12 +1,45 @@
+<<<<<<< HEAD
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+=======
 div.topbar {
   /* background: #202020; */
    background-size: auto 45px;
    padding: 10px;
 
+>>>>>>> main
 }
 
+.logo img {
+  height: 50px;
+  width: auto;
+}
+
+.nav-item img{
+   height: 50px;
+  width: auto;
+}
 div.botbar{
   
+<<<<<<< HEAD
+  font-size: 20px;
+  padding: 10px;
+  color: #fff;
+  background-color:#202020;
+ 
+}
+
+.about-link {
+  color: #fff; /* Set link color to white */
+  font-weight: bold; /* Make the text bold */
+  text-decoration: none; /* Remove default underline */
+}
+
+.about-link:hover {
+  text-decoration: underline; /* Add underline on hover */
+=======
    font-size: 20px;
    padding: 10px;
    color: #fff;
@@ -22,10 +55,22 @@ div.botbar{
 
 .about-link:hover {
    text-decoration: underline; /* Add underline on hover */
+>>>>>>> main
 }
 
 
 .wrapper {
+<<<<<<< HEAD
+  flex: 1;
+}
+.footer {
+  background-color:black; /* Set your desired background color */
+  color: #fff; /* Set your desired text color */
+  padding: 100px; /* Adjust padding as needed */
+}
+
+
+=======
    flex: 1;
  }
 
@@ -166,3 +211,4 @@ h5{
   
 >>>>>>> main
 >>>>>>> 2e246ba69615e195b6e8055883e3d973c375ee7d
+>>>>>>> main

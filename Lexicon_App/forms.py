@@ -1,3 +1,13 @@
+<<<<<<< HEAD
+from django.contrib.auth.models import User
+from django.contrib.auth.forms import UserCreationForm
+
+class admin_reg_form(UserCreationForm):
+    class Meta:
+        model = User
+        fields = ['username','email','password1','password2']
+
+=======
 
 from django import forms
 from .models import Student
@@ -86,3 +96,4 @@ def save(self, commit=True):
     if commit:
         user.save()
     return user
+>>>>>>> main
