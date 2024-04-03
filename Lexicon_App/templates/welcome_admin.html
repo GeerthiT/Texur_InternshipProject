@@ -9,6 +9,13 @@
 <br />
 
 <div class="container-fluid mt-3">
+  <br>
+  <div class="d-flex justify-content-center">
+    <a href="{% url 'search' %}">
+        <button type="button" class="btn btn-danger">SEARCH</button>
+    </a>
+</div>
+<br>
     <div class="row">
 
       <div class="col-md-4 ">
@@ -26,7 +33,7 @@
       </div>
 
       <div class="col-md-4">
-        <a href="#" class="card-link">
+        <a href="{% url 'students' %}" class="card-link">
         <div class="card bg-primary mt-5 mb-3 border border-dark"><br>
           <img class="card-img-top" src="{% static "images/avatar.png" %}" alt="students" style="width:20%">
           <div class="card-body text-center">
@@ -34,13 +41,13 @@
             
           </div>
           <div class="container bg-white text-center"><br>
-            <h4>COUNT</h4>  </div>
+            <h4>{{ student_count }}</h4>  </div>
           </div>
         </a>
       </div>
 
       <div class="col-md-4">
-        <a href="#" class="card-link">
+        <a href="{% url 'companies' %}" class="card-link">
         <div class="card bg-warning mt-5 mb-3 border border-dark rounded"><br>
           <img class="card-img-top" src="{% static "images/company1.png" %}" alt="students" style="width:20%">
           <div class="card-body text-center">
@@ -48,7 +55,7 @@
             
           </div>
           <div class="container bg-white text-center"><br>
-            <h4>COUNT</h4>  </div>
+            <h4>{{company_count}}</h4>  </div>
           </div>
       </a>
       </div>
