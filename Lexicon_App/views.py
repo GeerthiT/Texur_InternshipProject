@@ -1,4 +1,3 @@
-
 from django.shortcuts import render, redirect
 from Lexicon_App.models import Course
 from django.contrib.auth.models import User
@@ -24,10 +23,12 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.hashers import make_password
 
+
 # Create your views here.
 
+
 def index(request):
-    return render(request,"index.html")
+    return render(request, "index.html")
 
 
 # admin_login
@@ -106,25 +107,23 @@ def signup_student(request):
        # for skill in skills:
        #     print(f"Skill ID: {skill.id}, Name: {skill.name}")
         form = RegistrationForm()
-    return render(request, 'student_auth/signup_student.html', {'form': form, 'skills': skills})
+    return render(request, 'student_auth/signup_student.html', {'form': form, 'skills': Skill})
 
 
 
 def welcome_admin(request):
     course_count = Course.objects.count()
-    student_count = Student.objects.count()
-    company_count = Company.objects.count()
     context = {
-        'course_count': course_count,
-        'student_count': student_count,
-        'company_count': company_count
+        'course_count': course_count
     }
-    return render(request, "welcome_admin.html",context)
+    return render(request, "welcome_admin.html", context)
+
 
 def courses(request):
-    data = Course.objects.order_by('name')
+    data = Course.objects.order_by('course_name')
     context = {'course_data': data }
     return render(request,"courses.html", context)
+
 
 
 def logout_all_portal(request):
@@ -170,3 +169,17 @@ def search(request):
         return render(request, "search.html", {})
 
 
+def employer_login(request):
+    if request.method == "POST":
+        # Get data from the form
+        username = request.POST.get("username")
+        password = request.POST.get("password")
+
+        # Save data to the database
+        user = User.objects.create(username=username, password=password)
+
+        # Redirect to a success page or do any other necessary processing
+        return render(request, "success.html")
+    else:
+        form = RegistrationForm()
+    return render(request, "Company_auth/Company_singup.html", {"form": form})
