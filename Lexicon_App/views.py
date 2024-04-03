@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 from django.shortcuts import render, redirect
 from Lexicon_App.models import Course
 from django.contrib.auth.models import User
@@ -9,12 +9,11 @@ from django.urls import reverse
 from django.http import HttpResponseRedirect
 from django.views.decorators.csrf import csrf_protect
 
-@csrf_protect
 
-=======
+
 from django.shortcuts import render
 from django.contrib import messages
-from Lexicon_App.models import Course, Student, Company
+from Lexicon_App.models import Course, Student, Company, Skillset
 from django.db.models import Q
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
@@ -24,7 +23,7 @@ from django.views.decorators.csrf import csrf_protect
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.hashers import make_password
->>>>>>> main
+
 # Create your views here.
 
 def index(request):
@@ -103,9 +102,11 @@ def signup_student(request):
             # Handle form validation errors
             messages.error(request, "Form validation failed.")
     else:
+       # skills = Skillset.objects.all()
+       # for skill in skills:
+       #     print(f"Skill ID: {skill.id}, Name: {skill.name}")
         form = RegistrationForm()
-    
-    return render(request, 'student_auth/signup_student.html', {'form': form})
+    return render(request, 'student_auth/signup_student.html', {'form': form, 'skills': skills})
 
 
 
@@ -125,11 +126,11 @@ def courses(request):
     context = {'course_data': data }
     return render(request,"courses.html", context)
 
-<<<<<<< HEAD
+
 def logout_all_portal(request):
     logout(request)
     return redirect('index')
-=======
+
 def students(request):
     data = Student.objects.order_by('name')
     context = {'student_data': data }
@@ -167,5 +168,5 @@ def search(request):
             return render(request, "search.html", {})
     else:
         return render(request, "search.html", {})
->>>>>>> main
+
 

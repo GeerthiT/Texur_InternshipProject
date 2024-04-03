@@ -2,6 +2,12 @@ from django.db import models
 
 # Create your models here.
 
+class Skillset(models.Model):
+    name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.name
+
 class Student(models.Model):
     username = models.CharField(max_length=150, unique=True, default='')
     first_name = models.CharField(max_length=30, default='')
@@ -14,6 +20,7 @@ class Student(models.Model):
     email = models.EmailField('User Email')
     social_security_number = models.CharField(max_length=20)
     postal_address = models.CharField(max_length=200)
+    skills = models.ManyToManyField(Skillset)
     knowledge_level = models.CharField(max_length=100)
     GDPR_consent = models.BooleanField(default=False)
     cv = models.FileField(upload_to='cv/', null=True, blank=True)
@@ -49,6 +56,12 @@ class Company(models.Model):
     contact_details = models.ManyToManyField(Course)
     accepting_interns = models.BooleanField(default=False)
     openings_job_description = models.TextField(blank=True)
+
+    def __str__(self):
+        return self.name
+    
+class Skill(models.Model):
+    name = models.CharField(max_length=100)
 
     def __str__(self):
         return self.name

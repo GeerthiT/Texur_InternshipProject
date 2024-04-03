@@ -25,14 +25,14 @@ from django.contrib.auth import views as auth_views
 urlpatterns = [
    
     path('', views.index, name="index"),
-<<<<<<< HEAD
+
     path('admin_login/', views.admin_login, name="admin_login"),
     path('portal_admin/', views.welcome_admin, name="welcome_admin"),
     path('courses_admin/', views.courses, name="courses"),
     path('logout/', views.logout_all_portal, name='logout'),
    
     path('admin', admin.site.urls),
-=======
+
     path('portal_admin/', views.welcome_admin, name="welcome_admin"),
     path('courses_admin/', views.courses, name="courses"),
     path('login_student/', views.login_student, name="login_student"),
@@ -41,5 +41,5 @@ urlpatterns = [
     path('company/', views.companies, name="companies"),
     path('search/', views.search, name="search")
 
->>>>>>> main
+
 ]
