@@ -8,6 +8,8 @@
   <br />
 
   <form class="form" action="submit.php" method="post">
+    {% csrf_token %}
+      {{ form.as_p }}
     <div class="inputfield mb-2">
       <label for="Companyname">Company Name</label>
       <input type="text" id="Companyname" name="Companyname" required />
@@ -75,7 +77,9 @@
       <label for="condition">I agree terms and conditions</label>
     </div>
 
-    <input type="button" value="Submit" />
+    <form method="post">
+      
+      <button type="submit">Submit</button>
   </form>
 </div>
 
