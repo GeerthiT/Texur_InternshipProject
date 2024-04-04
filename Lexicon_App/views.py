@@ -93,6 +93,16 @@ def signup_student(request):
                     user = form.save(commit=False)
                     user.password = make_password(password)  # Manually set hashed password
                     user.save()
+                    # Get the selected course ID and skills IDs from the form
+                    selected_course_id = request.POST.get('courses')
+                    selected_skills_ids = request.POST.getlist('skills')
+
+                    # Save the selected course for the user
+                    user.course_id = selected_course_id
+                    user.save()
+
+                    # Save the selected skills for the user
+                    user.skills.add(*selected_skills_ids)
                     messages.success(request, "Registration successful!")
                     return redirect('login_student')
                 else:
@@ -103,11 +113,14 @@ def signup_student(request):
             # Handle form validation errors
             messages.error(request, "Form validation failed.")
     else:
-       # skills = Skillset.objects.all()
-       # for skill in skills:
-       #     print(f"Skill ID: {skill.id}, Name: {skill.name}")
+        skills = Skillset.objects.all()
+        courses = Course.objects.all()
+        for skill in skills:
+            print(f"Skill ID: {skill.id}, Name: {skill.name}")
+        for course in courses:
+            print(f"Course ID: {course.pk}, Name: {course.name}")
         form = RegistrationForm()
-    return render(request, 'student_auth/signup_student.html', {'form': form, 'skills': Skill})
+    return render(request, 'student_auth/signup_student.html', {'form': form, 'skills': skills, 'courses':courses})
 
 
 
