@@ -2,7 +2,7 @@
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
-from .models import Student
+from .models import Company, Student
 from django.contrib.auth.forms import UserCreationForm
 # from django.db import models
 
