@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from Lexicon_App.models import Course, Skill
+from Lexicon_App.models import Course, Skillset, Student,Company
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate,login,logout
 from django.contrib import messages
@@ -12,7 +12,7 @@ from django.views.decorators.csrf import csrf_protect
 
 from django.shortcuts import render
 from django.contrib import messages
-from Lexicon_App.models import Course, Student, Company, Skill
+from Lexicon_App.models import Course, Student, Company, Skillset
 from django.db.models import Q
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
@@ -94,6 +94,16 @@ def signup_student(request):
                     user = form.save(commit=False)
                     user.password = make_password(password)  # Manually set hashed password
                     user.save()
+                    # Get the selected course ID and skills IDs from the form
+                    selected_course_id = request.POST.get('courses')
+                    selected_skills_ids = request.POST.getlist('skills')
+
+                    # Save the selected course for the user
+                    user.course_id = selected_course_id
+                    user.save()
+
+                    # Save the selected skills for the user
+                    user.skills.add(*selected_skills_ids)
                     messages.success(request, "Registration successful!")
                     return redirect('login_student')
                 else:
@@ -104,11 +114,14 @@ def signup_student(request):
             # Handle form validation errors
             messages.error(request, "Form validation failed.")
     else:
-       # skills = Skillset.objects.all()
-       # for skill in skills:
-       #     print(f"Skill ID: {skill.id}, Name: {skill.name}")
+        skills = Skillset.objects.all()
+        courses = Course.objects.all()
+        for skill in skills:
+            print(f"Skill ID: {skill.id}, Name: {skill.name}")
+        for course in courses:
+            print(f"Course ID: {course.pk}, Name: {course.name}")
         form = RegistrationForm()
-    return render(request, 'student_auth/signup_student.html', {'form': form, 'skills': Skill})
+    return render(request, 'student_auth/signup_student.html', {'form': form, 'skills': skills, 'courses':courses})
 
 
 
@@ -121,7 +134,7 @@ def welcome_admin(request):
 
 
 def courses(request):
-    data = Course.objects.order_by('course_name')
+    data = Course.objects.order_by('name')
     context = {'course_data': data }
     return render(request,"courses.html", context)
 
@@ -132,7 +145,7 @@ def logout_all_portal(request):
     return redirect('index')
 
 def students(request):
-    data = Student.objects.order_by('name')
+    data = Student.objects.order_by('first_name')
     context = {'student_data': data }
     return render(request,"students.html", context)
 
@@ -147,7 +160,7 @@ def search(request):
 
         if searched:
             courses = Course.objects.filter(name__icontains=searched)
-            students = Student.objects.filter(name__icontains=searched)
+            students = Student.objects.filter(first_name__icontains=searched)
             companies = Company.objects.filter(name__icontains=searched)
 
             results = []
@@ -206,5 +219,7 @@ def company_signup(request):
         else:
             messages.error(request, "Form validation failed.")
     else:
-        form = CompanyProfileForm()
-    return render(request, "Company_auth/Company_singup.html", {"form": form})
+       
+        form = RegistrationForm()
+    return (request, 'Company_auth/company_signup.html')
+
