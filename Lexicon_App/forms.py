@@ -31,19 +31,19 @@ class RegistrationForm(forms.ModelForm):
    
    phone_number= forms.IntegerField(widget=forms.NumberInput(attrs={'class' : 'form-control'}))
    social_security_number = forms.CharField(widget=forms.NumberInput(attrs={'class' : 'form-control'})) 
-   COURSE_CHOICES = (
-        ('', 'Select a course'),  
-        ('IT Support Technician', 'IT Support Technician'),
-        ('Frontend Developer', 'Frontend Developer'),
-        ('ASP.net', 'ASP.net'),
-        ('Full Stack Developer', 'Full Stack Developer'),
-        ('Python & IT Security', 'Python & IT Security'),
-        ('Service now', 'Service now'),
-        ('DevOps', 'DevOps'),
-        ('Software tester', 'Software tester'),
+ #  COURSE_CHOICES = (
+  #      ('', 'Select a course'),  
+   #     ('IT Support Technician', 'IT Support Technician'),
+    #    ('Frontend Developer', 'Frontend Developer'),
+     #   ('ASP.net', 'ASP.net'),
+      #  ('Full Stack Developer', 'Full Stack Developer'),
+       # ('Python & IT Security', 'Python & IT Security'),
+        #('Service now', 'Service now'),
+        #('DevOps', 'DevOps'),
+        #('Software tester', 'Software tester'),
         
-    )
-   course = forms.ChoiceField(choices=COURSE_CHOICES, widget=forms.Select(attrs={'class': 'form-control'}))
+    #)
+   #course = forms.ChoiceField(choices=COURSE_CHOICES, widget=forms.Select(attrs={'class': 'form-control'}))
    linkedin_ID = forms.CharField(widget=forms.TextInput(attrs={'class' : 'form-control'}))
    github_ID = forms.CharField(widget=forms.TextInput(attrs={'class' : 'form-control'}))
    cv = forms.FileField(label='Attach your CV', required=False, widget=forms.ClearableFileInput(attrs={'class': 'form-control-file'}))
@@ -62,7 +62,6 @@ class RegistrationForm(forms.ModelForm):
     'social_security_number',
     'phone_number',
     'age',
-    'course',
     'linkedin_ID',
     'github_ID',
     'cv',
