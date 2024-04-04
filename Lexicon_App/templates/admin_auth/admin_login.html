@@ -7,15 +7,20 @@
 {% endblock %}
 
 {% block content %}
+<!-- invalid username or password error message -->
+        <div class="error alert alert-danger alert-dismissible fade d-none" id="errorAlert" role="alert">
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        {% if error_message %}
+            {{ error_message }}
+        {% endif %}
+        </div>
+          
+        
 
-<div class="container col-md-12">
-     {% if success_message %}
-            <div class="alert alert-success" role="alert">
-                {{ success_message }}
-            </div>
-     {% endif %}
 <div class="container mt-5">
-    <div class="row">
+   
+    <div class="row"> 
+       
         <!-- Column for Picture -->
         <div class="col-md-2">
 
@@ -24,11 +29,12 @@
             <img class=" img-fluid float-end" width="400" height="450"  alt="Image" src="{% static "images/user-admin-gear.png" %}" alt="students">
        
         </div> 
-        <!-- Column for Login Form -->
+        <!-- Column for Login Form --> 
+        
         <div class="col-md-5 login-form mb-4 img-fluid  img-thumbnail ">
             <h2>Login</h2>
-            
-            <form method="post" >
+            <form method="post" onsubmit="return validateForm()">
+                
                 {% csrf_token %}
                 <div class="mb-3">
                     <label for="formGroupExampleInput" class="form-label">User name</label>

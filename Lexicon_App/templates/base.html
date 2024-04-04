@@ -58,10 +58,18 @@
                     alt="logo" width="150"/>
                   </a>
 
+                  <!-- to display the text 'Hi admin!'  -->
+                  <span class="navbar-text">
+                    {{ welcome_admin }}
+                  </span>
+
+                  <!-- to display the heading -->
+                  <span class="navbar-heading">
+                    {{ navbar_heading }}
+                  </span>
+
+
     <!-- drop-down menu -->
-                  <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                  </button>
                   <div class="collapse navbar-collapse" id="navbarNavDropdown">
                     <ul class="navbar-nav ms-auto">
                       <li class="nav-item dropdown">
@@ -102,7 +110,29 @@
     
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-F0s83BkSRlHQsNlHg9yI4tdQdUE0Q3Bp4QYoC1RyHlAhxAGm+ydo8gKqG95JHS5Q" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js" integrity="sha384-2OxiMpIUyv5+8A9cmBiJirIIZgjtCJR7Rp7uXUK5Q3uC7N1foeX+d1a6g5rJ93+d" crossorigin="anonymous"></script>
-    
+    <script>
+      function validateForm() {
+        
+        var username = document.getElementById("username").value;
+        var password = document.getElementById("password").value;
+        var errorAlert = document.getElementById("errorAlert");
 
- </body>
+        // Your validation logic here (replace with your own validation)
+        if (username !== "username" || password !== "password") {
+          errorAlert.classList.remove('d-none'); // Show the error message
+          errorAlert.classList.add('show');
+          clearInput(); 
+          return false; // Prevent form submission
+        }
+        
+        return true; // Allow form submission if credentials are correct
+      }
+
+      function clearInput() {
+          document.getElementById("username").value = ""; // Clear username input
+          document.getElementById("password").value = ""; // Clear password input
+      }
+    </script>
+
+  </body>
 </html>

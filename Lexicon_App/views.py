@@ -46,14 +46,10 @@ def admin_login(request):
         else:
             # Invalid login, show an error message
             error_message = "Invalid username or password."
-            return render(request, 'login.html', {'error_message': error_message})
+            return render(request, 'admin_auth/admin_login.html', {'error_message': error_message})
 
     # For GET requests or when the login form is initially loaded
     return render(request,"admin_auth/admin_login.html")
-
-
-
-
 
 
 @csrf_protect
@@ -71,12 +67,6 @@ def login_student(request):
             return redirect('login')
     else:
         return render(request, 'student_auth/login_student.html', {})
-
-
-# def logout_student(request):
-#     logout(request)
-#     messages.success(request, ("You Have Been Logged Out..."))
-#     return redirect('index.html')
 
 
 def signup_student(request):
@@ -114,10 +104,14 @@ def welcome_admin(request):
     course_count = Course.objects.count()
     student_count = Student.objects.count()
     company_count = Company.objects.count()
+    heading = "Welcome to admin portal"
+    welcome_admin='Hi admin!'
     context = {
         'course_count': course_count,
         'student_count': student_count,
-        'company_count': company_count
+        'company_count': company_count,
+        'navbar_heading':heading,
+        'welcome_admin':welcome_admin
     }
     return render(request, "welcome_admin.html",context)
 
