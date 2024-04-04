@@ -211,7 +211,7 @@ def company_signup(request):
                     user.password = make_password(password) 
                     user.save()
                     messages.success(request, "Registration successful!")
-                    return redirect('Company_auth/Company_login')
+                    return redirect('Company_login')
                 else:
                     messages.error(request, "Passwords do not match.")
             else:
@@ -219,7 +219,6 @@ def company_signup(request):
         else:
             messages.error(request, "Form validation failed.")
     else:
-       
-        form = RegistrationForm()
-    return (request, 'Company_auth/company_signup.html')
+        form = CompanyProfileForm()
+    return render(request, 'Company_auth/company_signup.html', {'form': form})
 
