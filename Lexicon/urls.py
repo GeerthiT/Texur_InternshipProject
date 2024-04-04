@@ -32,10 +32,7 @@ urlpatterns = [
     path('login_student/', views.login_student, name="login_student"),
     path('signup_student/', views.signup_student, name="signup_student"),
     path('students/', views.students, name="students"),
-    
-    
-    
-    path('Company_login/', views.Company_login, name="Company_login"),
-    path('Company_singup/', views.Company_singup, name="Company_singup"),
+     path('Company_login/', views.Company_login, name="Company_login"),
+    path('Company_singup/', views.company_signup, name="Company_singup"),
     path('search/', views.search, name="search")
 ]

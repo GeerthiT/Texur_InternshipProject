@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from Lexicon_App.models import Course
+from Lexicon_App.models import Course, Skill
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate,login,logout
 from django.contrib import messages
@@ -12,12 +12,13 @@ from django.views.decorators.csrf import csrf_protect
 
 from django.shortcuts import render
 from django.contrib import messages
-from Lexicon_App.models import Course, Student, Company, Skillset
+from Lexicon_App.models import Course, Student, Company, Skill
 from django.db.models import Q
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from .forms import RegistrationForm
+from .forms import CompanyProfileForm
 from django.views.decorators.csrf import csrf_protect
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
@@ -182,7 +183,7 @@ def search(request):
         return render(request, "search.html", {})
 
 
-def employer_login(request):
+def Company_login(request):
     if request.method == "POST":
         # Get data from the form
         username = request.POST.get("username")
@@ -195,4 +196,33 @@ def employer_login(request):
         return render(request, "success.html")
     else:
         form = RegistrationForm()
-    return render(request, "Company_auth/Company_singup.html", {"form": form})
+    return render(request, "Company_auth/Company_login.html", {"form": form})
+
+
+def company_signup(request):
+    if request.method == 'POST':
+        form = CompanyProfileForm(request.POST)
+        if form.is_valid():
+            # Check if both 'password' and 'confirm_password' exist in cleaned_data
+            password = form.cleaned_data.get('password')
+            confirm_password = form.cleaned_data.get('confirm_password')
+            if password and confirm_password:
+                if password == confirm_password:
+                    # Proceed with user registration
+                    user = form.save(commit=False)
+                    user.password = make_password(password)  # Manually set hashed password
+                    user.save()
+                    messages.success(request, "Registration successful!")
+                    return redirect('login_student')
+                else:
+                    messages.error(request, "Passwords do not match.")
+            else:
+                messages.error(request, "Password or Confirm Password is missing.")
+        else:
+            # Handle form validation errors
+            messages.error(request, "Form validation failed.")
+    else:
+       
+        form = RegistrationForm()
+    return (request, 'Company_auth/company_signup.html')
+
