@@ -1,13 +1,12 @@
 {% extends "base.html" %} {% load static %} 
 {% block header %}
-<h1 class="text-center">Welcome to Admin portal!</h1>
+<h1 class="text-center"></h1>
 {% endblock %}
 
 
 {% block content %}
 <div class="container">
 <br />
-
 <div class="container-fluid mt-3">
   <br>
   <div class="d-flex justify-content-center">
@@ -47,7 +46,7 @@
       </div>
 
       <div class="col-md-4">
-        <a href="{% url 'companies' %}" class="card-link">
+        <a href="{% url 'company' %}" class="card-link">
         <div class="card bg-warning mt-5 mb-3 border border-dark rounded"><br>
           <img class="card-img-top" src="{% static "images/company1.png" %}" alt="students" style="width:20%">
           <div class="card-body text-center">
