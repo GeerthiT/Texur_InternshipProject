@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+<h1>Personal Information</h1>
+
+<div class="info_student">
+    {% if student %}
+    <p><strong>First Name:</strong> {{ student.first_name }}</p>
+    <p><strong>Last Name:</strong> {{ student.last_name }}</p>
+    <p><strong>Username:</strong> {{ student.username }}</p>
+    <p><strong>Email:</strong> {{ student.email }}</p>
+    <p><strong>Student_ID:</strong> {{ student.student_ID }}</p>
+    <p><strong>Social_security_number:</strong> {{ student.social_security_number }}</p>
+    <p><strong>Phone_number:</strong> {{ student.phone_number }}</p>
+    <p><strong>Age:</strong> {{ student.age }}</p>
+    <p><strong>Postal_address:</strong> {{ student.Postal_address }}</p>
+    <p><strong>Skills:</strong> {{ student.Skills }}</p>
+    <p><strong>Course:</strong> {{ student.Course }}</p>
+    <p><strong>Linkedin_ID:</strong> {{ student.linkedin_ID }}</p>
+    <p><strong>Github_ID:</strong> {{ student.github_ID }}</p>
+    <!-- Add more fields as needed -->
+{% else %}
+    <p>No student information found.</p>
+{% endif %}
+<button
+class="btn btn-primary"
+onclick="window.open('#')"
+>
+Download CV
+</button>
+</div>
+    
+   
+
+    
+ 
+
+
+
+
+
+
+{% endblock %}
+
