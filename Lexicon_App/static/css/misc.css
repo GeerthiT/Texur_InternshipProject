@@ -5,8 +5,13 @@ body {
 
 div.topbar {
   /* background: #202020; */
+<<<<<<< HEAD
   background-size: auto 45px;
   padding: 10px;
+=======
+  background-size: auto 45px;
+  padding: 10px;
+>>>>>>> 2c49fc800bb3cc894475c4b52cea95c8bd528a6b
 
 }
 
@@ -31,8 +36,7 @@ div.botbar {
 .about-link:hover {
   text-decoration: underline;
   /* Add underline on hover */
-}
-
+=======
 .logo img {
   height: 50px;
   width: auto;
@@ -87,12 +91,142 @@ div.botbar{
 
 .about-link:hover {
    text-decoration: underline; /* Add underline on hover */
-
+>>>>>>> main
+>>>>>>> 2c49fc800bb3cc894475c4b52cea95c8bd528a6b
 }
 
 
 
 .wrapper {
+<<<<<<< HEAD
+  flex: 1;
+}
+
+.footer {
+  background-color: #202020;
+  /* Set your desired background color */
+  color: #fff;
+  /* Set your desired text color */
+  padding: 100px;
+  /* Adjust padding as needed */
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+
+}
+
+.container-top {
+  margin-top: 100px;
+}
+
+.card-link {
+  text-decoration: none;
+  color: inherit;
+}
+
+.card-img-top {
+  margin: 0 auto;
+  /* Center the image horizontally */
+}
+
+.green {
+  color: #AED695
+}
+
+
+
+
+
+
+
+.col-md-12 {
+  border-color: rgb(23, 19, 19);
+  /* Change to the color you want */
+  border-width: 1px;
+  /* Optional: Change border width */
+  border-style: solid;
+  /* Optional: Set border style */
+  padding: 20px;
+  /* Optional: Add padding */
+  border-radius: 1pc;
+
+
+}
+
+
+
+
+
+.employer_login {
+  text-align: center;
+
+}
+
+
+.h5 {
+  text-align: center;
+}
+
+/* student Signup */
+
+.container {
+  width: 50%;
+  margin: 0 auto;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+}
+
+.inputfield {
+  margin-bottom: 1rem;
+}
+
+.inputfield label {
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.inputfield input,
+.inputfield select {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.checkbox-field {
+  display: flex;
+  align-items: center;
+}
+
+.checkbox-field input[type="checkbox"] {
+  margin-right: 0.5rem;
+}
+
+.checkbox-field label {
+  margin-bottom: 0;
+}
+
+.btn {
+  width: 100%;
+  padding: 0.5rem;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn:hover {
+  background-color: #0056b3;
+}
+=======
+<<<<<<< HEAD
   flex: 1;
 }
 
@@ -337,3 +471,8 @@ h5{
     padding: 20px; /* Optional: Add padding */
     border-radius: 1pc;
   }
+  
+>>>>>>> main
+>>>>>>> 2e246ba69615e195b6e8055883e3d973c375ee7d
+>>>>>>> main
+>>>>>>> 2c49fc800bb3cc894475c4b52cea95c8bd528a6b

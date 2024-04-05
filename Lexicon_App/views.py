@@ -121,6 +121,7 @@ def signup_student(request):
 
 def welcome_admin(request):
     course_count = Course.objects.count()
+<<<<<<< HEAD
     student_count = Student.objects.count()
     company_count = Company.objects.count()
     navbar_heading = "Welcome to admin portal"
@@ -133,8 +134,13 @@ def welcome_admin(request):
         'navbar_heading':navbar_heading,
         'hi_admin':hi_admin
     
+=======
+    context = {
+        'course_count': course_count
+>>>>>>> main
     }
-    return render(request, "welcome_admin.html",context)
+    return render(request, "welcome_admin.html", context)
+
 
 
 def courses(request):
