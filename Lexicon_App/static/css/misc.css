@@ -36,10 +36,23 @@ div.botbar {
 .about-link:hover {
   text-decoration: underline;
   /* Add underline on hover */
-=======
+
 .logo img {
   height: 50px;
   width: auto;
+}
+
+/* display title in navbar */
+.navbar-heading{
+  color:white ;
+  position: absolute;
+  left: 40%;
+  font-weight:normal;
+  font-size:xx-large;
+}
+
+.navbar-txt{
+  color:white;
 }
 
 /* display title in navbar */
@@ -98,7 +111,6 @@ div.botbar{
 
 
 .wrapper {
-<<<<<<< HEAD
   flex: 1;
 }
 
