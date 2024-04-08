@@ -7,15 +7,15 @@
 {% endblock %}
 
 {% block content %}
+<!-- invalid username or password error message -->
 
-<div class="container col-md-12">
-     {% if success_message %}
-            <div class="alert alert-success" role="alert">
-                {{ success_message }}
-            </div>
-     {% endif %}
 <div class="container mt-5">
-    <div class="row">
+   
+    <div class="row"> 
+       
+   
+    <div class="row"> 
+       
         <!-- Column for Picture -->
         <div class="col-md-2">
 
@@ -24,23 +24,32 @@
             <img class=" img-fluid float-end" width="400" height="450"  alt="Image" src="{% static "images/user-admin-gear.png" %}" alt="students">
        
         </div> 
-        <!-- Column for Login Form -->
-        <div class="col-md-5 login-form mb-4 img-fluid  img-thumbnail ">
-            <h2>Login</h2>
+        <!-- Column for Login Form --> 
+        
+        <div class="col-md-5 login-form mb-4 img-fluid  img-thumbnail">
+            <div>
+                <h2 style="text-align: left; ">Login</h2>
+            </div>
             
-            <form method="post" >
+            
+        <div style="text-align: center; color:red;">   
+                {{ error_msg }}
+        </div>
+      
+            <form method="post">
+                
                 {% csrf_token %}
                 <div class="mb-3">
-                    <label for="formGroupExampleInput" class="form-label">User name</label>
-                    <input type="text" class="form-control" id="username" name="username">
+                    <label for="formGroupExampleInput" class="form-label" >User name</label>
+                    <input type="text" class="form-control" id="username" name="username" required>
                   </div>
                   <div class="mb-3">
-                    <label for="formGroupExampleInput2" class="form-label">Password</label>
-                    <input type="password" class="form-control" id="password" name="password">
+                    <label for="formGroupExampleInput2" class="form-label" autocomplete="current-password">Password</label>
+                    <input type="password" class="form-control" id="password" name="password" required>
                   </div>
                     <div class="mb-3 row">
                     <div class="col-sm-6">
-                        <button type="submit" class="btn btn-primary">Login</button>
+                        <button type="submit" class="btn btn-primary" >Login</button>
                     </div>
                 </div>
              </form>
