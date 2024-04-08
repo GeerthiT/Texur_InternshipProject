@@ -1,4 +1,5 @@
-{% extends "base.html" %} {% load static %} {% block content %}
+company_signup.html: {% extends "base.html" %} {% load static %} {% block
+content %}
 
 <div class="container">
   <h2 class="h2"><b>Company Profile</b></h2>
@@ -7,8 +8,22 @@
   <h5 class="h5"><b>Fill your Information</b></h5>
   <br />
 
-  <form class="form" action="Company_auth/Company_login.html" method="post">
+  <form class="form" action="{% url 'clogin_company' %}" method="post">
     {% csrf_token %} {{ form.as_p }}
+    <label for="skills">Skills:</label>
+    <div class="mb-3">
+      <label for="skills">Select Skills:</label><br />
+      {% for skill in skills %}
+      <input
+        type="checkbox"
+        id="skill{{ skill.id }}"
+        name="skills"
+        value="{{ skill.id }}"
+      />
+      <label for="skill{{ skill.id }}">{{ skill.name }}</label><br />
+      {% endfor %}
+    </div>
+    <br />
 
     <button type="submit">Submit</button>
   </form>

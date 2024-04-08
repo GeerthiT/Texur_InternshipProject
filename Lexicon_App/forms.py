@@ -97,6 +97,14 @@ def save(self, commit=True):
         user.save()
     return user
 
+class UserRegistrationForm(forms.ModelForm):
+    password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control'}))
+    confirm_password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control'}))
+ 
+    class Meta:
+        model = User
+        fields = ['username', 'password', 'confirm_password']
+       
 class CompanyProfileForm(forms.Form):
     Companyname = forms.CharField(max_length=100, widget=forms.TextInput(attrs={'class': 'form-control'}))
     Companysize = forms.ChoiceField(choices=[('','Select the Company size'),('Startup','Startup'),('Small','Small'),('Medium','Medium'),('Large','Large'),('Enterprise','Enterprise')], widget=forms.Select(attrs={'class': 'form-control'}))
@@ -109,47 +117,47 @@ class CompanyProfileForm(forms.Form):
     confirm_password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control'}))
     address = forms.CharField(max_length=255, widget=forms.TextInput(attrs={'class': 'form-control'}))
     terms_conditions = forms.BooleanField(required=True)
-
+ 
     def clean(self):
         cleaned_data = super().clean()
         password = cleaned_data.get("password")
         confirm_password = cleaned_data.get("confirm_password")
-
+ 
         if password != confirm_password:
             raise forms.ValidationError(
                 "Password and Confirm Password fields do not match."
             )
-
+ 
      
-
-def save(self, commit=True):
-    if not commit:
-        raise NotImplementedError("Can't create Company instance without commit=True")
-
+ 
+    def save(self, commit=True):
+        if not commit:
+            raise NotImplementedError("Can't create Company instance without commit=True")
+ 
     # Extract cleaned data
-    company_name = self.cleaned_data['Companyname']
-    company_size = self.cleaned_data['Companysize']
-    website = self.cleaned_data['Website']
-    contact_person_name = self.cleaned_data['name']
-    contact_person_position = self.cleaned_data['position']
-    email = self.cleaned_data['email']
-    phone = self.cleaned_data['phone']
-    password = self.cleaned_data['password']
-    address = self.cleaned_data['address']
-
+        company_name = self.cleaned_data['Companyname']
+        company_size = self.cleaned_data['Companysize']
+        website = self.cleaned_data['Website']
+        contact_person_name = self.cleaned_data['name']
+        contact_person_position = self.cleaned_data['position']
+        email = self.cleaned_data['email']
+        phone = self.cleaned_data['phone']
+        password = self.cleaned_data['password']
+        address = self.cleaned_data['address']
+ 
     # Saving logic for the company
-    company = Company(
-        name=company_name,
-        size=company_size,
-        website=website,
-        contact_person_name=contact_person_name,
-        contact_person_position=contact_person_position,
-        email=email,
-        phone=phone,
-        address=address
+        company = Company(
+            name=company_name,
+            size=company_size,
+            website=website,
+            contact_person_name=contact_person_name,
+            contact_person_position=contact_person_position,
+            email=email,
+            phone=phone,
+            address=address
     )
-    company.save()
-
+        company.save()
+ 
    
-
-    return company
+ 
+        return company

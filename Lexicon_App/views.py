@@ -17,7 +17,7 @@ from django.db.models import Q
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
-from .forms import RegistrationForm
+from .forms import RegistrationForm, UserRegistrationForm
 from .forms import CompanyProfileForm
 from django.views.decorators.csrf import csrf_protect
 from django.contrib.auth.models import User
@@ -183,42 +183,47 @@ def search(request):
         return render(request, "search.html", {})
 
 
-def Company_login(request):
+def clogin_company(request):
     if request.method == "POST":
-        # Get data from the form
-        username = request.POST.get("username")
-        password = request.POST.get("password")
-
-        # Save data to the database
-        user = User.objects.create(username=username, password=password)
-
-        # Redirect to a success page or do any other necessary processing
-        return render(request, "success.html")
+        # Handle user authentication
+        form = UserRegistrationForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
+            confirm_password = form.cleaned_data['confirm_password']
+            if password == confirm_password:
+                # Hash the password before saving
+                hashed_password = make_password(password)
+                # Create a new user
+                user = User.objects.create(username=username, password=hashed_password)
+               
+                # Redirect to index URL after successful login
+                print/("login success!")
+                return redirect('index')
+            else:
+                messages.error(request, "Passwords do not match.")
+        else:
+            messages.error(request, "Form validation failed.")
     else:
-        form = RegistrationForm()
-    return render(request, "Company_auth/Company_login.html", {"form": form})
-
-
+        form = UserRegistrationForm()
+       
+    return render(request, "company_auth/clogin_company.html", {"form": form})
+ 
+ 
 def company_signup(request):
     if request.method == 'POST':
         form = CompanyProfileForm(request.POST)
         if form.is_valid():
             password = form.cleaned_data.get('password')
             confirm_password = form.cleaned_data.get('confirm_password')
-            if password and confirm_password:
-                if password == confirm_password:
-                    user = form.save(commit=False)
-                    user.password = make_password(password) 
-                    user.save()
-                    messages.success(request, "Registration successful!")
-                    return redirect('Company_login')
-                else:
-                    messages.error(request, "Passwords do not match.")
-            else:
-                messages.error(request, "Password or Confirm Password is missing.")
+            messages.success(request, "Registration successful!")
+            return redirect('clogin_company')
         else:
             messages.error(request, "Form validation failed.")
     else:
         form = CompanyProfileForm()
-    return render(request, 'Company_auth/company_signup.html', {'form': form})
-
+        skills = Skillset.objects.all()
+        for skill in skills:
+            print(f"Skill ID: {skill.id}, Name: {skill.name}")
+ 
+    return render(request, 'company_auth/Company_signup.html', {'form': form, 'skills': skills})

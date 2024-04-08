@@ -21,6 +21,8 @@ from Lexicon_App import views
 from django.contrib.auth import views as auth_views
 
 
+
+
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("", views.index, name="index"),
@@ -30,7 +32,7 @@ urlpatterns = [
     path("login_student/", views.login_student, name="login_student"),
     path("signup_student/", views.signup_student, name="signup_student"),
     path("students/", views.students, name="students"),
-    path("Company_login/", views.Company_login, name="Company_login"),
+    path("clogin_company/", views.clogin_company, name="clogin_company"),
     path("Company_singup/", views.company_signup, name="Company_singup"),
     path("search/", views.search, name="search"),
     path("courses/", views.courses, name="courses"),
