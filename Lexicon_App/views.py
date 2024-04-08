@@ -1,13 +1,15 @@
 from django.shortcuts import render, redirect
 from Lexicon_App.models import Course, Skillset, Student,Company
-from Lexicon_App.models import Course, Skillset, Student,Company
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate,login,logout
 from django.contrib import messages
 from django.contrib.auth.forms import UserCreationForm
-from django.urls import reverse
 from django.http import HttpResponseRedirect
 from django.views.decorators.csrf import csrf_protect
+from django.contrib.auth.decorators import login_required
+from django.http import HttpResponseRedirect
+from django.urls import reverse
+
 
 
 
@@ -15,17 +17,14 @@ from django.shortcuts import render
 from django.contrib import messages
 from Lexicon_App.models import Course, Student, Company, Skillset
 from django.db.models import Q
-from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from .forms import RegistrationForm
 from .forms import CompanyProfileForm
 from .forms import CompanyProfileForm
-from django.views.decorators.csrf import csrf_protect
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.hashers import make_password
-
+from .models import Student 
 
 
 # Create your views here.
@@ -69,23 +68,30 @@ def admin_login(request):
     return render(request,"admin_auth/admin_login.html")
 
 
-@csrf_protect
+# student
+
 def login_student(request):
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
-        user = authenticate(request, username=username, password=password)
+        
+        # Authenticate the user
+        user = authenticate(username=username, password=password)
+        
+        # Check if authentication was successful
         if user is not None:
+            # Log the user in
             login(request, user)
-            messages.success(request, "You Have Been Logged In...")
-            return redirect('index.html')
+            # Redirect to a success page
+            return HttpResponseRedirect(reverse('info_student'))
         else:
-            messages.error(request, "Invalid username or password. Please try again.")
-            return redirect('login')
+            # Return an error message or render a login form with error message
+            return render(request, 'login.html', {'error_message': 'Invalid username or password'})
     else:
-        return render(request, 'student_auth/login_student.html', {})
+        # Render the login form
+        return render(request, 'student_auth/login_student.html')
 
-
+       
 def signup_student(request):
     if request.method == 'POST':
         form = RegistrationForm(request.POST)
@@ -144,6 +150,36 @@ def signup_student(request):
         form = RegistrationForm()
     return render(request, 'student_auth/signup_student.html', {'form': form, 'skills': skills, 'courses':courses})
     return render(request, 'student_auth/signup_student.html', {'form': form, 'skills': skills, 'courses':courses})
+
+def info_student(request):
+    # Assuming you have a way to identify the current logged-in user
+    current_user = request.user
+
+    # Query the Student model to retrieve information for the current user
+    try:
+        student = Student.objects.get(username=current_user.username)
+    except Student.DoesNotExist:
+        # Handle case where student info for the current user does not exist
+        student = None
+
+    return render(request, 'student_auth/info_student.html', {'student': student})
+
+
+
+def info_student(request):
+    # Assuming you have a way to identify the current logged-in user
+    current_user = request.user
+
+    # Query the Student model to retrieve information for the current user
+    try:
+        student = Student.objects.get(username=current_user.username)
+    except Student.DoesNotExist:
+        # Handle case where student info for the current user does not exist
+        student = None
+
+    return render(request, 'student_auth/info_student.html', {'student': student})
+
+
 
 
 
