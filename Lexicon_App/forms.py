@@ -28,7 +28,7 @@ class RegistrationForm(forms.ModelForm):
    email = forms.EmailField(widget=forms.EmailInput(attrs={'class' : 'form-control'}))
    student_ID= forms.IntegerField(widget=forms.NumberInput(attrs={'class' : 'form-control'}))
    age = forms.IntegerField(widget=forms.NumberInput(attrs={'class' : 'form-control'}))
-   
+   Postal_address = forms.CharField(max_length=100, widget=forms.TextInput(attrs={'class' : 'form-control'}))
    phone_number= forms.IntegerField(widget=forms.NumberInput(attrs={'class' : 'form-control'}))
    social_security_number = forms.CharField(widget=forms.NumberInput(attrs={'class' : 'form-control'})) 
  #  COURSE_CHOICES = (
@@ -62,6 +62,7 @@ class RegistrationForm(forms.ModelForm):
     'social_security_number',
     'phone_number',
     'age',
+    'Postal_address',
     'linkedin_ID',
     'github_ID',
     'cv',
@@ -78,6 +79,7 @@ def __init__(self, *args, **kwargs):
     self.fields['email'].widget.attrs['class'] = 'form-control'
     self.fields['social_security_number'].widget.attrs['class'] = 'form-control'
     self.fields['age'].widget.attrs['class'] = 'form-control'
+    self.fields['Postal_address'].widget.attrs['class'] = 'form-control'
     self.fields['student_ID'].widget.attrs['class'] = 'form-control'
     self.fields['phone_number'].widget.attrs['class'] = 'form-control'
     self.fields['linkedin_ID'].widget.attrs['class'] = 'form-control'

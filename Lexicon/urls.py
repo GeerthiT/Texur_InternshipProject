@@ -31,6 +31,7 @@ urlpatterns = [
     path("courses_admin/", views.courses, name="courses"),
     path("login_student/", views.login_student, name="login_student"),
     path("signup_student/", views.signup_student, name="signup_student"),
+    path("info_student/", views.info_student, name="info_student"),
     path("students/", views.students, name="students"),
     path("clogin_company/", views.clogin_company, name="clogin_company"),
     path("Company_singup/", views.company_signup, name="Company_singup"),

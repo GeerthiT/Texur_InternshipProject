@@ -19,23 +19,25 @@
           <h2 class="student_login"><b>Student Login</b></h2>
             <br>
             <br>
-            {% if messages %}
-            {% for message in messages %}
-             {% endfor%}
+            {% if error_message %}
+            <div class="alert alert-danger" role="alert">
+              {{ error_message }}
+            </div>
             {% endif %}
-            <form method="POST" >
+            <form method="POST" action="{% url 'login_student' %}">
               
               {% csrf_token %}
 
-                <div class="mb-3 ">
-                    <label for="username" class="form-label">Username</label>
-                    <input type="text" class="form-control" id="username" placeholder="Enter your name">
-                </div>
-                <div class="mb-3">
-                    <label for="password" class="form-label">Password</label>
-                    <input type="password" class="form-control" id="password" placeholder="Enter your password">
-                </div>
+              <div class="mb-3">
+                <label for="username" class="form-label">Username</label>
+                <input type="text" class="form-control" id="username" name="username" placeholder="Enter your username">
+              </div>
+              <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" class="form-control" id="password" name="password" placeholder="Enter your password">
+              </div>
                 <button type="submit" class="btn btn-block btn-secondary">Login</button>
+                 
             </form>
             <br>
             <br>
