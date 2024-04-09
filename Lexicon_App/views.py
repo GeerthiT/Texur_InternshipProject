@@ -149,7 +149,7 @@ def signup_student(request):
             print(f"Course ID: {course.pk}, Name: {course.name}")
         form = RegistrationForm()
     return render(request, 'student_auth/signup_student.html', {'form': form, 'skills': skills, 'courses':courses})
-    return render(request, 'student_auth/signup_student.html', {'form': form, 'skills': skills, 'courses':courses})
+    
 
 def info_student(request):
     # Assuming you have a way to identify the current logged-in user
@@ -280,7 +280,7 @@ def clogin_company(request):
     return render(request, "company_auth/clogin_company.html", {"form": form})
  
 
-def company_signup(request):
+def Company_signup(request):
     if request.method == 'POST':
         form = CompanyProfileForm(request.POST)
         if form.is_valid():
