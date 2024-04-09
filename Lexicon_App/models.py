@@ -63,6 +63,16 @@ class Company(models.Model):
     def __str__(self):
         return self.name
 
+    from django.db import models
+
+
+    
+class Skill(models.Model):
+    name = models.CharField(max_length=100)
+
+
+    def __str__(self):
+        return self.name
 
 class User(models.Model):
     username = models.CharField(max_length=100)
