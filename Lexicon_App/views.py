@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from Lexicon_App.models import Course, Skillset, Student,Company
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate,login,logout
@@ -166,6 +166,15 @@ def info_student(request):
 
     return render(request, 'student_auth/info_student.html', {'student': student})
 
+# Delete a Student
+
+def delete_student(request, student_id):
+    # Retrieve the student object using the provided ID
+    student = get_object_or_404(Student, pk=student_id)
+    # Delete the student from DB
+    student.delete()
+    # Redirect to a relevant page
+    return redirect ('students')
 
 
 
