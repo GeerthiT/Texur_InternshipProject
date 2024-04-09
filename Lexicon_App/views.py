@@ -19,7 +19,7 @@ from django.contrib import messages
 from Lexicon_App.models import Course, Student, Company, Skillset
 from django.db.models import Q
 from django.contrib import messages
-from .forms import RegistrationForm
+from .forms import RegistrationForm, UserRegistrationForm
 from .forms import CompanyProfileForm
 from .forms import CompanyProfileForm
 from django.contrib.auth.models import User
@@ -150,7 +150,7 @@ def signup_student(request):
             print(f"Course ID: {course.pk}, Name: {course.name}")
         form = RegistrationForm()
     return render(request, 'student_auth/signup_student.html', {'form': form, 'skills': skills, 'courses':courses})
-    return render(request, 'student_auth/signup_student.html', {'form': form, 'skills': skills, 'courses':courses})
+    
 
 def info_student(request):
     # Assuming you have a way to identify the current logged-in user
@@ -254,7 +254,7 @@ def search(request):
         return render(request, "search.html", {})
 
 
-def Company_login(request):
+def clogin_company(request):
     if request.method == "POST":
         # Get data from the form
         username = request.POST.get("username")
@@ -274,17 +274,8 @@ def company_signup(request):
         if form.is_valid():
             password = form.cleaned_data.get('password')
             confirm_password = form.cleaned_data.get('confirm_password')
-            if password and confirm_password:
-                if password == confirm_password:
-                    user = form.save(commit=False)
-                    user.password = make_password(password) 
-                    user.save()
-                    messages.success(request, "Registration successful!")
-                    return redirect('Company_auth/Company_login')
-                else:
-                    messages.error(request, "Passwords do not match.")
-            else:
-                messages.error(request, "Password or Confirm Password is missing.")
+            messages.success(request, "Registration successful!")
+            return redirect('clogin_company')
         else:
             messages.error(request, "Form validation failed.")
     else:
