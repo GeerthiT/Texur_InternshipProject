@@ -8,6 +8,7 @@ from django.http import HttpResponseRedirect
 from django.views.decorators.csrf import csrf_protect
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
+from collections import defaultdict
 from django.urls import reverse
 
 
@@ -255,32 +256,19 @@ def search(request):
 
 def clogin_company(request):
     if request.method == "POST":
-        # Handle user authentication
-        form = UserRegistrationForm(request.POST)
-        if form.is_valid():
-            username = form.cleaned_data['username']
-            password = form.cleaned_data['password']
-            confirm_password = form.cleaned_data['confirm_password']
-            if password == confirm_password:
-                # Hash the password before saving
-                hashed_password = make_password(password)
-                # Create a new user
-                user = User.objects.create(username=username, password=hashed_password)
-               
-                # Redirect to index URL after successful login
-                print/("login success!")
-                return redirect('index')
-            else:
-                messages.error(request, "Passwords do not match.")
-        else:
-            messages.error(request, "Form validation failed.")
-    else:
-       form = UserRegistrationForm()
-       
-    return render(request, "company_auth/clogin_company.html", {"form": form})
- 
+        # Get data from the form
+        username = request.POST.get("username")
+        password = request.POST.get("password")
 
-def Company_signup(request):
+        # Save data to the database
+        user = User.objects.create(username=username, password=password)
+
+        # Redirect to a success page or do any other necessary processing
+        return render(request, "success.html")
+    else:
+        form = RegistrationForm()
+    return render(request, "Company_auth/Company_login.html", {"form": form})
+def company_signup(request):
     if request.method == 'POST':
         form = CompanyProfileForm(request.POST)
         if form.is_valid():
@@ -292,8 +280,72 @@ def Company_signup(request):
             messages.error(request, "Form validation failed.")
     else:
         form = CompanyProfileForm()
-        skills = Skillset.objects.all()
-        for skill in skills:
-            print(f"Skill ID: {skill.id}, Name: {skill.name}")
- 
-    return render(request, 'company_auth/Company_signup.html', {'form': form, 'skills': skills})
+    return render(request, "Company_auth/Company_singup.html", {"form": form})
+
+
+def profile_matcherStudent(request):
+    # Retrieve all students
+    students = Student.objects.all()
+
+    # Initialize an empty dictionary to store matched student-company pairs
+    matched_pairs = {}
+
+    # Iterate through each student
+    for student in students:
+        # Retrieve the skills of the student
+        student_skills = student.skills.all()
+
+        # Find companies that match the student's skills
+        matching_companies = []
+        for company in Company.objects.all():
+            # Retrieve the required skills of the company
+            required_skills = company.required_skills.all()
+            # Find common skills between student and company
+            common_skills = set(student_skills).intersection(required_skills)
+            if common_skills:
+                matching_companies.append({
+                    'company': company,
+                    'common_skills': common_skills
+                })
+
+        # Store the matched companies for the current student
+        if matching_companies:
+            matched_pairs[student] = matching_companies
+
+    # Pass the matched_pairs dictionary to the template for rendering
+    return render(request, 'profileMatcher_Student.html', {'matched_pairs': matched_pairs})
+
+def profile_matcherCompany(request):
+    # Retrieve all students
+    companies = Company.objects.all()
+
+    # Initialize an empty dictionary to store matched student-company pairs
+    matched_pairs = {}
+
+    # Iterate through each company
+    for company in companies:
+        # Retrieve the skills of the student
+        required_skills = company.required_skills.all()
+
+        # Find companies that match the student's skills
+        matching_students = []
+        for student in Student.objects.all():
+            # Retrieve the required skills of the company
+            student_skills = student.skills.all()
+            # Find common skills between student and company
+            common_skills = set(student_skills).intersection(required_skills)
+            if common_skills:
+                matching_students.append({
+                    'student': student,
+                    'common_skills': common_skills
+                })
+
+        # Store the matched companies for the current student
+        if matching_students:
+            matched_pairs[company] = matching_students
+    print(matched_pairs)
+
+    # Pass the matched_pairs dictionary to the template for rendering
+    return render(request, 'profileMatcher_Company.html', {'matched_pairs': matched_pairs})
+    
+

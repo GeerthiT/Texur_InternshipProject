@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+<h1>Skills Mapping</h1>
+
+<body>
+    <br>
+        {% for student, companies in matched_pairs.items %}
+            <div class="container p-3 border mb-4">
+                <strong>Student Name:</strong> {{ student.first_name }} {{ student.last_name }}<br>
+                {% for pair in companies %}
+                    <hr>
+                    <strong>Company Name:</strong> {{ pair.company.name }}<br>
+                    <strong>Common Skills:</strong>
+                    <ul>
+                        {% for skill in pair.common_skills %}
+                            <li>{{ skill }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endfor %}
+            </div>
+        {% endfor %}
+</body>
+
+{% endblock %}

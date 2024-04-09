@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+<h1>Skills Mapping</h1>
+
+<body>
+   
+        <br>
+        {% for company, students in matched_pairs.items %}
+            <div class="container p-3 border mb-4">
+                <h4>Company Name: {{ company.name }} </h4> <br>
+                <strong>Accepting Interns:</strong> {{ company.accepting_interns }}<br>
+                <strong>Openings Job Description:</strong> {{ company.openings_job_description }}<br>
+                <strong>Required Skills:</strong>
+                <ul>
+                    {% for skill in company.required_skills.all %}
+                        <li>{{ skill }}</li>
+                    {% endfor %}
+                </ul>
+                <hr>
+                <h5>Matched Students:</h5><br>
+                {% for student_data in students %}
+                    <strong>Student Name:</strong>{{ student_data.student.first_name }} {{ student_data.student.last_name }}<br>
+                    <strong>Email:</strong>{{ student_data.student.email }}<br>
+                    <hr>
+                {% endfor %}
+            </div>
+        {% endfor %}
+</body>
+
+{% endblock %}
