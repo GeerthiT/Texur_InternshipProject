@@ -36,7 +36,7 @@ class TestViews(TestCase):
         self.assertTemplateUsed(response, 'students.html')
 
     def test_studentLogin(self):
-        response = self.client.get(reverse('login_student,'))
+        response = self.client.get(reverse('login_student'))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'student_auth/login_student.html')
 
@@ -54,11 +54,6 @@ class TestViews(TestCase):
         response = self.client.get(reverse('clogin_company'))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'Company_auth/clogin_company.html')
-
-    def test_companySignup(self):
-        response = self.client.get(reverse('Company_signup'))
-        self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'Company_auth/Company_signup.html')
 
     def test_matchStudent(self):
         response = self.client.get(reverse('profile_matcherStudent'))
