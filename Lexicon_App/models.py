@@ -25,7 +25,7 @@ class Student(models.Model):
     username = models.CharField(max_length=150, unique=True, default="")
     first_name = models.CharField(max_length=30, default="")
     last_name = models.CharField(max_length=30, default="")
-    student_ID = models.AutoField(primary_key=True)
+    student_ID = models.AutoField(p rimary_key=True)
     phone_number = models.CharField(max_length=15, default="")
     password = models.CharField(max_length=100, default="")
     confirm_password = models.CharField(max_length=100, default="")

@@ -14,6 +14,7 @@ from django.urls import reverse
 
 
 
+
 from django.shortcuts import render
 from django.contrib import messages
 from Lexicon_App.models import Course, Student, Company, Skillset
@@ -92,7 +93,7 @@ def login_student(request):
         # Render the login form
         return render(request, 'student_auth/login_student.html')
 
-       
+ # Create a Student      
 def signup_student(request):
     if request.method == 'POST':
         form = RegistrationForm(request.POST)
@@ -165,20 +166,6 @@ def info_student(request):
 
     return render(request, 'student_auth/info_student.html', {'student': student})
 
-
-
-def info_student(request):
-    # Assuming you have a way to identify the current logged-in user
-    current_user = request.user
-
-    # Query the Student model to retrieve information for the current user
-    try:
-        student = Student.objects.get(username=current_user.username)
-    except Student.DoesNotExist:
-        # Handle case where student info for the current user does not exist
-        student = None
-
-    return render(request, 'student_auth/info_student.html', {'student': student})
 
 
 
