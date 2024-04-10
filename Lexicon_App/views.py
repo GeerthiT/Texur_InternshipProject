@@ -7,25 +7,15 @@ from django.contrib.auth.forms import UserCreationForm
 from django.http import HttpResponseRedirect
 from django.views.decorators.csrf import csrf_protect
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from collections import defaultdict
 from django.urls import reverse
 
-
-
-
-
-from django.shortcuts import render
-from django.contrib import messages
-from Lexicon_App.models import Course, Student, Company, Skillset
-from django.db.models import Q
-from django.contrib import messages
-from .forms import RegistrationForm, UserRegistrationForm
-from .forms import CompanyProfileForm, StudentUpdateForm, CompanyUpdateForm
-from django.contrib.auth.models import User
-from django.core.exceptions import ObjectDoesNotExist
+from django.core.mail import send_mail
+from .forms import RegistrationForm, StudentUpdateForm, CompanyUpdateForm
 from django.contrib.auth.hashers import make_password
 from .models import Student, Company
+
 
 
 # Create your views here.
@@ -277,7 +267,7 @@ def clogin_company(request):
         return render(request, "success.html")
     else:
         form = RegistrationForm()
-    return render(request, "Company_auth/Company_login.html", {"form": form})
+    return render(request, "Company_auth/clogin_company.html", {"form": form})
 def company_signup(request):
     if request.method == 'POST':
         form = CompanyProfileForm(request.POST)
@@ -384,3 +374,18 @@ def profile_matcherCompany(request):
     return render(request, 'profileMatcher_Company.html', {'matched_pairs': matched_pairs})
     
 
+def send_email(request):
+    if request.method == 'POST':
+        student_id = request.POST.get('student_id')
+        student = Student.objects.get(pk=student_id)
+        # Replace the below with your actual email sending logic
+        send_mail(
+            'Subject',
+            'Message body',
+            'sender@example.com',
+            [student.email],
+            fail_silently=False,
+        )
+        return HttpResponse('Email sent successfully!')
+    else:
+        return HttpResponse('Invalid request!')
