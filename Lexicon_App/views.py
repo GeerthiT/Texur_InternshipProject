@@ -25,7 +25,7 @@ from .forms import CompanyProfileForm, StudentUpdateForm
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.hashers import make_password
-from .models import Student 
+from .models import Student, Company
 
 
 # Create your views here.
@@ -291,6 +291,19 @@ def company_signup(request):
     else:
         form = CompanyProfileForm()
     return render(request, "Company_auth/Company_singup.html", {"form": form})
+
+# Delete a company
+def delete_company(request, company_id):
+    # Retrieve the company object using the provided ID
+    company = get_object_or_404(Company, pk=company_id)
+    # Delete the company from the database
+    company.delete()
+    # Redirect to a relevant page
+    return redirect('company')  
+
+def confirm_company_delete(request, company_id):
+    company = get_object_or_404(Company, pk=company_id)
+    return render(request, 'confirm_company_delete.html', {'company': company})
 
 
 def profile_matcherStudent(request):
