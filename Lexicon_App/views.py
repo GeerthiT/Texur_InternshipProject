@@ -21,7 +21,7 @@ from Lexicon_App.models import Course, Student, Company, Skillset
 from django.db.models import Q
 from django.contrib import messages
 from .forms import RegistrationForm, UserRegistrationForm
-from .forms import CompanyProfileForm, StudentUpdateForm
+from .forms import CompanyProfileForm, StudentUpdateForm, CompanyUpdateForm
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.hashers import make_password
@@ -304,6 +304,18 @@ def delete_company(request, company_id):
 def confirm_company_delete(request, company_id):
     company = get_object_or_404(Company, pk=company_id)
     return render(request, 'confirm_company_delete.html', {'company': company})
+
+# Update a company
+def update_company(request, company_id):
+    company = get_object_or_404(Company, pk=company_id)
+    if request.method == 'POST':
+        form = CompanyUpdateForm(request.POST, instance=company)
+        if form.is_valid():
+            form.save()
+            return redirect('company_profile')  # Redirect to the company profile page after successful update
+    else:
+        form = CompanyUpdateForm(instance=company)
+    return render(request, 'update_company.html', {'form': form})
 
 
 def profile_matcherStudent(request):

@@ -193,3 +193,8 @@ class StudentUpdateForm(forms.ModelForm):
             raise forms.ValidationError("Please enter a valid email address ending with '@example.com'.")
         return email
 
+# Updating a company
+class CompanyUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Company
+        fields = ['name', 'size', 'website', 'contact_person_name', 'contact_person_position', 'email', 'phone', 'address']

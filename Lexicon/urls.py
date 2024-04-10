@@ -42,7 +42,8 @@ urlpatterns = [
     path('profileMatcher_Student/', views.profile_matcherStudent, name='profileMatcherStudent'),
     path('profileMatcher_Company/', views.profile_matcherCompany, name='profileMatcherCompany'),
     path('students/<int:student_id>/delete/', delete_student, name='delete_student'),
-    path('students/<int:student_id>/update/', update_student, name='update_student')
+    path('students/<int:student_id>/update/', update_student, name='update_student'),
     path('companies/<int:company_id>/delete/', views.delete_company, name='delete_company'),
     path('companies/<int:company_id>/confirm_delete/', views.confirm_company_delete, name='confirm_company_delete'),
+    path('update_company/<int:company_id>/', views.update_company, name='update_company'),
 ]
