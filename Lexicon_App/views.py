@@ -21,8 +21,7 @@ from Lexicon_App.models import Course, Student, Company, Skillset
 from django.db.models import Q
 from django.contrib import messages
 from .forms import RegistrationForm, UserRegistrationForm
-from .forms import CompanyProfileForm
-from .forms import CompanyProfileForm
+from .forms import CompanyProfileForm, StudentUpdateForm
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.hashers import make_password
@@ -166,8 +165,25 @@ def info_student(request):
 
     return render(request, 'student_auth/info_student.html', {'student': student})
 
-# Delete a Student
+#Update a Student
+def update_student(request, student_id):
+    # Retrieve the student object using the provided ID
+    student = get_object_or_404(Student, pk=student_id)
 
+    if request.method == 'POST':
+        # Populate the update form with current student data and submitted data
+        form = StudentUpdateForm(request.POST, instance=student)
+        if form.is_valid():
+            # Save the updated student object to the database
+            form.save()
+            return redirect('info_student')  # Redirect to student info page or any relevant page
+    else:
+        # If the request method is GET, display the update form populated with current student data
+        form = StudentUpdateForm(instance=student)
+
+    return render(request, 'student_auth/update_student.html', {'form': form, 'student': student})
+
+# Delete a Student
 def delete_student(request, student_id):
     # Retrieve the student object using the provided ID
     student = get_object_or_404(Student, pk=student_id)
@@ -175,8 +191,6 @@ def delete_student(request, student_id):
     student.delete()
     # Redirect to a relevant page
     return redirect ('students')
-
-
 
 
 

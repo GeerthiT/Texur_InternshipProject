@@ -19,7 +19,7 @@ from django.contrib import admin
 from django.urls import path
 from Lexicon_App import views
 from django.contrib.auth import views as auth_views
-from Lexicon_App.views import delete_student
+from Lexicon_App.views import delete_student, update_student
 
 
 
@@ -42,4 +42,5 @@ urlpatterns = [
     path('profileMatcher_Student/', views.profile_matcherStudent, name='profileMatcherStudent'),
     path('profileMatcher_Company/', views.profile_matcherCompany, name='profileMatcherCompany'),
     path('students/<int:student_id>/delete/', delete_student, name='delete_student'),
+    path('students/<int:student_id>/update/', update_student, name='update_student'),
 ]
