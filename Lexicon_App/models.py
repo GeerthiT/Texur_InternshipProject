@@ -20,7 +20,7 @@ class Course(models.Model):
     def __str__(self):
         return self.name
 
-
+# Student
 class Student(models.Model):
     username = models.CharField(max_length=150, unique=True, default="")
     first_name = models.CharField(max_length=30, default="")
