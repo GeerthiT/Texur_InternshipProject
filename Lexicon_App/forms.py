@@ -163,3 +163,38 @@ class CompanyProfileForm(forms.Form):
    
  
         return company
+    
+
+# Student Update Form
+
+class StudentUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Student
+        fields = [
+            'username',  
+            'first_name',
+            'last_name', 
+            'phone_number', 
+            'email', 
+            'social_security_number',
+            'postal_address', 
+            'skills', 
+            'knowledge_level', 
+            'GDPR_consent', 
+            'cv', 
+            'linkedin_ID', 
+            'github_ID', 
+            'course'
+        ]
+
+    def clean_email(self): 
+        email = self.cleaned_data['email']
+        if not email.endswith('@example.com'):
+            raise forms.ValidationError("Please enter a valid email address ending with '@example.com'.")
+        return email
+
+# Updating a company
+class CompanyUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Company
+        fields = ['name', 'size', 'website', 'contact_person_name', 'contact_person_position', 'email', 'phone', 'address']

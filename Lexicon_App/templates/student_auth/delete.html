@@ -1,0 +1,10 @@
+<!-- Loop through each student and display their details -->
+{% for student in student_data %}
+    <h3>{{ student.first_name }} {{ student.last_name }}</h3>
+    <!-- Other student details... -->
+    <!-- Button/link to delete the student -->
+    <form action="{% url 'delete_student' student.id %}" method="post">
+        {% csrf_token %}
+        <input type="submit" value="Delete">
+    </form>
+{% endfor %}
