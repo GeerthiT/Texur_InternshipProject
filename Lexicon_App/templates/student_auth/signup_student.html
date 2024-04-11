@@ -17,26 +17,12 @@
     </ul>
 {% endif %}
 
-  <form method="post">
-
-    {% csrf_token %}
-
-    {{form.as_p}}
-    <label for="courses">Course: </label>
-    <select name="courses" id="courses" multiple>
-        {% for course in courses %}
-            <option value="{{ course.pk }}">{{ course.name }}</option>
-        {% endfor %}
-    </select><br>
-    <label for="skills">Skills:</label>
-    <select name="skills" id="skills" multiple>
-        {% for skill in skills %}
-            <option value="{{ skill.id }}">{{ skill.name }}</option>
-        {% endfor %}
-    </select>
-<br><br>
-   <button class="btn btn-success" type="submit">Signup</button>
-   </form>
+<form method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+  {{ user_form.as_p }}
+  {{ student_form.as_p }}
+  <button type="submit">Sign Up</button>
+</form>
 
    <style>
     body {background-color: rgb(235, 244, 251);}

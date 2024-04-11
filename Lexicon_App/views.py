@@ -3,31 +3,12 @@ from Lexicon_App.models import Course, Skillset, Student,Company
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate,login,logout
 from django.contrib import messages
-from django.contrib.auth.forms import UserCreationForm
-from django.http import HttpResponseRedirect
-from django.views.decorators.csrf import csrf_protect
-from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 
-
-
-
-from django.shortcuts import render
-from django.contrib import messages
-from Lexicon_App.models import Course, Student, Company, Skillset
-from django.db.models import Q
-from django.contrib import messages
-from .forms import RegistrationForm
+from .forms import UserForm, StudentForm
 from .forms import CompanyProfileForm
-from .forms import CompanyProfileForm
-from django.contrib.auth.models import User
-from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.hashers import make_password
-from .models import Student 
-
-
-# Create your views here.
 
 
 
@@ -83,6 +64,7 @@ def login_student(request):
             # Log the user in
             login(request, user)
             # Redirect to a success page
+            print("successful login")
             return HttpResponseRedirect(reverse('info_student'))
         else:
             # Return an error message or render a login form with error message
@@ -94,76 +76,19 @@ def login_student(request):
        
 def signup_student(request):
     if request.method == 'POST':
-        form = RegistrationForm(request.POST)
-        if form.is_valid():
-            # Check if both 'password' and 'confirm_password' exist in cleaned_data
-            password = form.cleaned_data.get('password')
-            confirm_password = form.cleaned_data.get('confirm_password')
-            if password and confirm_password:
-                if password == confirm_password:
-                    # Proceed with user registration
-                    user = form.save(commit=False)
-                    user.password = make_password(password)  # Manually set hashed password
-                    user.save()
-                    # Get the selected course ID and skills IDs from the form
-                    selected_course_id = request.POST.get('courses')
-                    selected_skills_ids = request.POST.getlist('skills')
-
-                    # Save the selected course for the user
-                    user.course_id = selected_course_id
-                    user.save()
-
-                    # Save the selected skills for the user
-                    user.skills.add(*selected_skills_ids)
-                    # Get the selected course ID and skills IDs from the form
-                    selected_course_id = request.POST.get('courses')
-                    selected_skills_ids = request.POST.getlist('skills')
-
-                    # Save the selected course for the user
-                    user.course_id = selected_course_id
-                    user.save()
-
-                    # Save the selected skills for the user
-                    user.skills.add(*selected_skills_ids)
-                    messages.success(request, "Registration successful!")
-                    return redirect('login_student')
-                else:
-                    messages.error(request, "Passwords do not match.")
-            else:
-                messages.error(request, "Password or Confirm Password is missing.")
-        else:
-            # Handle form validation errors
-            messages.error(request, "Form validation failed.")
+        user_form = UserForm(request.POST)
+        student_form = StudentForm(request.POST, request.FILES)
+        if user_form.is_valid() and student_form.is_valid():
+            user = user_form.save()
+            student = student_form.save(commit=False)
+            student.user = user
+            student.save()
+            student_form.save_m2m()  # Save ManyToManyField data
+            return redirect('login_student')
     else:
-        skills = Skillset.objects.all()
-        courses = Course.objects.all()
-        for skill in skills:
-            print(f"Skill ID: {skill.id}, Name: {skill.name}")
-        for course in courses:
-            print(f"Course ID: {course.pk}, Name: {course.name}")
-        skills = Skillset.objects.all()
-        courses = Course.objects.all()
-        for skill in skills:
-            print(f"Skill ID: {skill.id}, Name: {skill.name}")
-        for course in courses:
-            print(f"Course ID: {course.pk}, Name: {course.name}")
-        form = RegistrationForm()
-    return render(request, 'student_auth/signup_student.html', {'form': form, 'skills': skills, 'courses':courses})
-    return render(request, 'student_auth/signup_student.html', {'form': form, 'skills': skills, 'courses':courses})
-
-def info_student(request):
-    # Assuming you have a way to identify the current logged-in user
-    current_user = request.user
-
-    # Query the Student model to retrieve information for the current user
-    try:
-        student = Student.objects.get(username=current_user.username)
-    except Student.DoesNotExist:
-        # Handle case where student info for the current user does not exist
-        student = None
-
-    return render(request, 'student_auth/info_student.html', {'student': student})
-
+        user_form = UserForm()
+        student_form = StudentForm()
+    return render(request, 'student_auth/signup_student.html', {'user_form': user_form, 'student_form': student_form})
 
 
 def info_student(request):
@@ -172,13 +97,12 @@ def info_student(request):
 
     # Query the Student model to retrieve information for the current user
     try:
-        student = Student.objects.get(username=current_user.username)
+        student = Student.objects.get(user=current_user)
     except Student.DoesNotExist:
         # Handle case where student info for the current user does not exist
         student = None
 
     return render(request, 'student_auth/info_student.html', {'student': student})
-
 
 
 
