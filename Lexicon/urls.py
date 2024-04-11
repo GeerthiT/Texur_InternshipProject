@@ -34,10 +34,10 @@ urlpatterns = [
     path("info_student/", views.info_student, name="info_student"),
     path("students/", views.students, name="students"),
     path("clogin_company/", views.clogin_company, name="clogin_company"),
-    path("Company_signup/", views.Company_signup, name="Company_signup"),
+    path("Company_signup/", views.company_signup, name="Company_signup"),
     path("search/", views.search, name="search"),
     path("courses/", views.courses, name="courses"),
     path("company/", views.companies, name="company"),
-    path('profileMatcher_Student/', views.profile_matcherStudent, name='profileMatcherStudent'),
-    path('profileMatcher_Company/', views.profile_matcherCompany, name='profileMatcherCompany'),
+    path('profileMatcher_Student/', views.profile_matcherStudent, name='profile_matcherStudent'),
+    path('profileMatcher_Company/', views.profile_matcherCompany, name='profile_matcherCompany'),
 ]
