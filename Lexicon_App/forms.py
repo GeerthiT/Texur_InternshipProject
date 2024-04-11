@@ -25,7 +25,7 @@ class UserForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ('password', 'confirm_password', 'email')
+        fields = ('username', 'email')  
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -67,35 +67,10 @@ class StudentForm(forms.ModelForm):
             'courses',  # Include skills and courses fields here
         )
 
-def __init__(self, *args, **kwargs):
-    super(RegistrationForm, self).__init__(*args, **kwargs)
-    self.fields['first_name'].widget.attrs['class'] = 'form-control'
-    self.fields['last_name'].widget.attrs['class'] = 'form-control'
-    self.fields['username'].widget.attrs['class'] = 'form-control'
-    self.fields['password'].widget.attrs['class'] = 'form-control'
-    self.fields['confirm_password'].widget.attrs['class'] = 'form-control'
-    self.fields['email'].widget.attrs['class'] = 'form-control'
-    self.fields['social_security_number'].widget.attrs['class'] = 'form-control'
-    self.fields['age'].widget.attrs['class'] = 'form-control'
-    self.fields['Postal_address'].widget.attrs['class'] = 'form-control'
-    self.fields['student_ID'].widget.attrs['class'] = 'form-control'
-    self.fields['phone_number'].widget.attrs['class'] = 'form-control'
-    self.fields['linkedin_ID'].widget.attrs['class'] = 'form-control'
-    self.fields['github_ID'].widget.attrs['class'] = 'form-control'
-    self.fields['cv'].widget.attrs['class'] = 'form-control'
-
-
-
-
-
-def save(self, commit=True):
-    user = super(UserCreationForm, self).save(commit=False)  
-    cv_file = self.cleaned_data.get('cv')
-    if cv_file:
-        user.cv = cv_file
-    if commit:
-        user.save()
-    return user
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field_name in self.fields:
+            self.fields[field_name].widget.attrs['class'] = 'form-control'
 
 class CompanyProfileForm(forms.Form):
     Companyname = forms.CharField(max_length=100, widget=forms.TextInput(attrs={'class': 'form-control'}))
