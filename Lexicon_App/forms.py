@@ -2,7 +2,7 @@
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
-from .models import Company, Student
+from .models import Company, Student, Skillset, Course
 from django.contrib.auth.forms import UserCreationForm
 # from django.db import models
 
@@ -19,55 +19,53 @@ class admin_reg_form(UserCreationForm):
 class SearchForm(forms.Form):
     query = forms.CharField(label='Search')
 
-class RegistrationForm(forms.ModelForm):
-   first_name = forms.CharField(max_length=50, widget=forms.TextInput(attrs={'class' : 'form-control'}))
-   last_name = forms.CharField(max_length=50, widget=forms.TextInput(attrs={'class' : 'form-control'}))
-   username = forms.CharField(max_length=50, widget=forms.TextInput(attrs={'class' : 'form-control'}))
-   password = forms.CharField(widget=forms.PasswordInput(attrs={'class' : 'form-control'}))
-   confirm_password = forms.CharField(widget=forms.PasswordInput(attrs={'class' : 'form-control'}))
-   email = forms.EmailField(widget=forms.EmailInput(attrs={'class' : 'form-control'}))
-   student_ID= forms.IntegerField(widget=forms.NumberInput(attrs={'class' : 'form-control'}))
-   age = forms.IntegerField(widget=forms.NumberInput(attrs={'class' : 'form-control'}))
-   Postal_address = forms.CharField(max_length=100, widget=forms.TextInput(attrs={'class' : 'form-control'}))
-   phone_number= forms.IntegerField(widget=forms.NumberInput(attrs={'class' : 'form-control'}))
-   social_security_number = forms.CharField(widget=forms.NumberInput(attrs={'class' : 'form-control'})) 
- #  COURSE_CHOICES = (
-  #      ('', 'Select a course'),  
-   #     ('IT Support Technician', 'IT Support Technician'),
-    #    ('Frontend Developer', 'Frontend Developer'),
-     #   ('ASP.net', 'ASP.net'),
-      #  ('Full Stack Developer', 'Full Stack Developer'),
-       # ('Python & IT Security', 'Python & IT Security'),
-        #('Service now', 'Service now'),
-        #('DevOps', 'DevOps'),
-        #('Software tester', 'Software tester'),
-        
-    #)
-   #course = forms.ChoiceField(choices=COURSE_CHOICES, widget=forms.Select(attrs={'class': 'form-control'}))
-   linkedin_ID = forms.CharField(widget=forms.TextInput(attrs={'class' : 'form-control'}))
-   github_ID = forms.CharField(widget=forms.TextInput(attrs={'class' : 'form-control'}))
-   cv = forms.FileField(label='Attach your CV', required=False, widget=forms.ClearableFileInput(attrs={'class': 'form-control-file'}))
-   
-    
-   class Meta:
+class UserForm(forms.ModelForm):
+    password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control'}))
+    confirm_password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control'}))
+
+    class Meta:
+        model = User
+        fields = ('password', 'confirm_password', 'email')
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field_name in self.fields:
+            self.fields[field_name].widget.attrs['class'] = 'form-control'
+
+    def clean(self):
+        cleaned_data = super().clean()
+        password = cleaned_data.get('password')
+        confirm_password = cleaned_data.get('confirm_password')
+        if password != confirm_password:
+            raise forms.ValidationError("Passwords do not match.")
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.set_password(self.cleaned_data['password'])
+        if commit:
+            user.save()
+        return user
+
+class StudentForm(forms.ModelForm):
+    skills = forms.ModelMultipleChoiceField(queryset=Skillset.objects.all(), widget=forms.CheckboxSelectMultiple, required=False)
+    courses = forms.ModelMultipleChoiceField(queryset=Course.objects.all(), widget=forms.CheckboxSelectMultiple, required=False)
+
+    class Meta:
         model = Student
         fields = (
-    'first_name',
-    'last_name',
-    'username',
-    'password',
-    'confirm_password',
-    'email',
-    'student_ID',
-    'social_security_number',
-    'phone_number',
-    'age',
-    'Postal_address',
-    'linkedin_ID',
-    'github_ID',
-    'cv',
-    
-)
+            'first_name',
+            'last_name',
+            'student_ID',
+            'social_security_number',
+            'phone_number',
+            'age',
+            'postal_address',
+            'linkedin_ID',
+            'github_ID',
+            'cv',
+            'skills',
+            'courses',  # Include skills and courses fields here
+        )
 
 def __init__(self, *args, **kwargs):
     super(RegistrationForm, self).__init__(*args, **kwargs)
@@ -99,14 +97,6 @@ def save(self, commit=True):
         user.save()
     return user
 
-class UserRegistrationForm(forms.ModelForm):
-    password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control'}))
-    confirm_password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control'}))
- 
-    class Meta:
-        model = User
-        fields = ['username', 'password', 'confirm_password']
-       
 class CompanyProfileForm(forms.Form):
     Companyname = forms.CharField(max_length=100, widget=forms.TextInput(attrs={'class': 'form-control'}))
     Companysize = forms.ChoiceField(choices=[('','Select the Company size'),('Startup','Startup'),('Small','Small'),('Medium','Medium'),('Large','Large'),('Enterprise','Enterprise')], widget=forms.Select(attrs={'class': 'form-control'}))
@@ -131,12 +121,12 @@ class CompanyProfileForm(forms.Form):
             )
  
      
- 
+
     def save(self, commit=True):
         if not commit:
             raise NotImplementedError("Can't create Company instance without commit=True")
- 
-    # Extract cleaned data
+
+        # Extract cleaned data
         company_name = self.cleaned_data['Companyname']
         company_size = self.cleaned_data['Companysize']
         website = self.cleaned_data['Website']
@@ -146,8 +136,8 @@ class CompanyProfileForm(forms.Form):
         phone = self.cleaned_data['phone']
         password = self.cleaned_data['password']
         address = self.cleaned_data['address']
- 
-    # Saving logic for the company
+
+        # Saving logic for the company
         company = Company(
             name=company_name,
             size=company_size,
@@ -157,44 +147,7 @@ class CompanyProfileForm(forms.Form):
             email=email,
             phone=phone,
             address=address
-    )
+        )
         company.save()
- 
-   
- 
+
         return company
-    
-
-# Student Update Form
-
-class StudentUpdateForm(forms.ModelForm):
-    class Meta:
-        model = Student
-        fields = [
-            'username',  
-            'first_name',
-            'last_name', 
-            'phone_number', 
-            'email', 
-            'social_security_number',
-            'postal_address', 
-            'skills', 
-            'knowledge_level', 
-            'GDPR_consent', 
-            'cv', 
-            'linkedin_ID', 
-            'github_ID', 
-            'course'
-        ]
-
-    def clean_email(self): 
-        email = self.cleaned_data['email']
-        if not email.endswith('@example.com'):
-            raise forms.ValidationError("Please enter a valid email address ending with '@example.com'.")
-        return email
-
-# Updating a company
-class CompanyUpdateForm(forms.ModelForm):
-    class Meta:
-        model = Company
-        fields = ['name', 'size', 'website', 'contact_person_name', 'contact_person_position', 'email', 'phone', 'address']
