@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+<h1>Skills Mapping</h1>
+
+<body>
+    <br>
+    {% for company, students in matched_pairs.items %}
+    <div class="container p-3 border mb-4">
+        <p><strong>Company Name: {{ company.name }}</strong></p>
+        <p>Required Skills:</p>
+        <ul>
+            {% for skill in company.required_skills.all %}
+            <li>{{ skill }}</li>
+            {% endfor %}
+        </ul>
+        <hr>
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            {% for student_info in students %}
+            <div class="col">
+                <div class="card">
+                    <div class="card-body">
+                        <strong>Student: {{ student_info.student.first_name }} {{ student_info.student.last_name }}</strong>
+                        <br><br>
+                        <p><strong>Course:</strong> {{ student_info.student.course.name }}</p>
+                        <p class="card-text"><strong>Email:</strong> {{ student_info.student.email }}</p>
+                        <!-- Form to send email -->
+                        <form action="{% url 'send_email' %}" method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="student_id" value="{{ student_info.student.pk }}">
+                            <button type="submit" class="btn btn-primary btn-sm">Send Email</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endfor %}
+</body>
+
+{% endblock %}

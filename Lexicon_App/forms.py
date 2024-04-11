@@ -67,10 +67,35 @@ class StudentForm(forms.ModelForm):
             'courses',  # Include skills and courses fields here
         )
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        for field_name in self.fields:
-            self.fields[field_name].widget.attrs['class'] = 'form-control'
+def __init__(self, *args, **kwargs):
+    super(RegistrationForm, self).__init__(*args, **kwargs)
+    self.fields['first_name'].widget.attrs['class'] = 'form-control'
+    self.fields['last_name'].widget.attrs['class'] = 'form-control'
+    self.fields['username'].widget.attrs['class'] = 'form-control'
+    self.fields['password'].widget.attrs['class'] = 'form-control'
+    self.fields['confirm_password'].widget.attrs['class'] = 'form-control'
+    self.fields['email'].widget.attrs['class'] = 'form-control'
+    self.fields['social_security_number'].widget.attrs['class'] = 'form-control'
+    self.fields['age'].widget.attrs['class'] = 'form-control'
+    self.fields['Postal_address'].widget.attrs['class'] = 'form-control'
+    self.fields['student_ID'].widget.attrs['class'] = 'form-control'
+    self.fields['phone_number'].widget.attrs['class'] = 'form-control'
+    self.fields['linkedin_ID'].widget.attrs['class'] = 'form-control'
+    self.fields['github_ID'].widget.attrs['class'] = 'form-control'
+    self.fields['cv'].widget.attrs['class'] = 'form-control'
+
+
+
+
+
+def save(self, commit=True):
+    user = super(UserCreationForm, self).save(commit=False)  
+    cv_file = self.cleaned_data.get('cv')
+    if cv_file:
+        user.cv = cv_file
+    if commit:
+        user.save()
+    return user
 
 class CompanyProfileForm(forms.Form):
     Companyname = forms.CharField(max_length=100, widget=forms.TextInput(attrs={'class': 'form-control'}))
@@ -84,17 +109,17 @@ class CompanyProfileForm(forms.Form):
     confirm_password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control'}))
     address = forms.CharField(max_length=255, widget=forms.TextInput(attrs={'class': 'form-control'}))
     terms_conditions = forms.BooleanField(required=True)
-
+ 
     def clean(self):
         cleaned_data = super().clean()
         password = cleaned_data.get("password")
         confirm_password = cleaned_data.get("confirm_password")
-
+ 
         if password != confirm_password:
             raise forms.ValidationError(
                 "Password and Confirm Password fields do not match."
             )
-
+ 
      
 
     def save(self, commit=True):

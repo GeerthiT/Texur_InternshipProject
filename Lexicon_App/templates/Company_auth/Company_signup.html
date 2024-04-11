@@ -1,4 +1,6 @@
-{% extends "base.html" %} {% load static %} {% block content %}
+{% extends "base.html" %} 
+{% load static %} 
+{% block content %}
 
 <div class="container">
   <h2 class="h2"><b>Company Profile</b></h2>
@@ -7,80 +9,18 @@
   <h5 class="h5"><b>Fill your Information</b></h5>
   <br />
 
-  <form class="form" action="submit.php" method="post">
-    {% csrf_token %}
-      {{ form.as_p }}
-    <div class="inputfield mb-2">
-      <label for="Companyname">Company Name</label>
-      <input type="text" id="Companyname" name="Companyname" required />
-    </div>
+  <form class="form" action="{% url 'clogin_company' %}" method="post">
+    {% csrf_token %} 
+    {{ form.as_p }}
 
-    <div class="inputfield mb-2">
-      <label for="Companysize">Company size</label>
-      <select id="Companysize" name="Companysize">
-        <option value="">select the Company size</option>
-        <option value="Startup">Startup</option>
-        <option value="Small">Small</option>
-        <option value="Medium">Medium</option>
-        <option value="Large">Large</option>
-        <option value="Enterprise">Enterprise</option>
-      </select>
-    </div>
+    <br />
 
-    <div class="inputfield mb-2">
-      <label for="website">Company Website</label>
-      <input type="text" id="Website" name="website" required />
-    </div>
+    <button type="submit">Submit</button>
 
-    <div class="inputfield mb-2">
-      <label for="name">Contact Person Name</label>
-      <input type="text" id="name" name="name" required />
-    </div>
-
-    <div class="inputfield mb-2">
-      <label for="position">Contact Person Position</label>
-      <input type="text" id="position" name="position" required />
-    </div>
-
-    <div class="inputfield mb-2">
-      <label for="email">Email ID</label>
-      <input type="email" id="email" name="email" required />
-    </div>
-
-    <div class="inputfield mb-2">
-      <label for="phone">Phone Number</label>
-      <input type="tel" id="phone" name="phone" required />
-    </div>
-
-    <div class="inputfield mb-2">
-      <label for="password">Password</label>
-      <input type="password" id="password" name="password" required />
-    </div>
-
-    <div class="inputfield mb-2">
-      <label for="confirm_password">Confirm Password</label>
-      <input
-        type="password"
-        id="confirm_password"
-        name="confirm_password"
-        required
-      />
-    </div>
-
-    <div class="inputfield mb-2">
-      <label for="address">Address</label>
-      <input type="text" id="address" name="address" required />
-    </div>
-
-    <div>
-      <input type="checkbox" id="scales" name="scales" checked />
-      <label for="condition">I agree terms and conditions</label>
-    </div>
-
-    <form method="post">
-      
-      <button type="submit">Submit</button>
+    <!-- Add the delete button/link here -->
+    <a href="{% url 'delete_company' company.id %}" class="btn btn-danger">Delete Company</a>
   </form>
 </div>
 
 {% endblock %}
+

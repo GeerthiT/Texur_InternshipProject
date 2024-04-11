@@ -19,6 +19,9 @@ from django.contrib import admin
 from django.urls import path
 from Lexicon_App import views
 from django.contrib.auth import views as auth_views
+from Lexicon_App.views import delete_student, update_student
+
+
 
 
 urlpatterns = [
@@ -31,9 +34,16 @@ urlpatterns = [
     path("signup_student/", views.signup_student, name="signup_student"),
     path("info_student/", views.info_student, name="info_student"),
     path("students/", views.students, name="students"),
-    path("Company_login/", views.Company_login, name="Company_login"),
-    path("Company_singup/", views.company_signup, name="Company_singup"),
+    path("clogin_company/", views.clogin_company, name="clogin_company"),
+    path("company_signup/", views.company_signup, name="Company_signup"),
     path("search/", views.search, name="search"),
     path("courses/", views.courses, name="courses"),
     path("company/", views.companies, name="company"),
+    path('profileMatcher_Student/', views.profile_matcherStudent, name='profileMatcherStudent'),
+    path('profileMatcher_Company/', views.profile_matcherCompany, name='profileMatcherCompany'),
+    path('students/<int:student_id>/delete/', delete_student, name='delete_student'),
+    path('students/<int:student_id>/update/', update_student, name='update_student'),
+    path('companies/<int:company_id>/delete/', views.delete_company, name='delete_company'),
+    path('companies/<int:company_id>/confirm_delete/', views.confirm_company_delete, name='confirm_company_delete'),
+    path('update_company/<int:company_id>/', views.update_company, name='update_company'),
 ]

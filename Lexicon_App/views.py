@@ -1,9 +1,10 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from Lexicon_App.models import Course, Skillset, Student,Company
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate,login,logout
 from django.contrib import messages
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
+from collections import defaultdict
 from django.urls import reverse
 
 from .forms import UserForm, StudentForm
@@ -73,7 +74,7 @@ def login_student(request):
         # Render the login form
         return render(request, 'student_auth/login_student.html')
 
-       
+ # Create a Student      
 def signup_student(request):
     if request.method == 'POST':
         user_form = UserForm(request.POST)
@@ -104,6 +105,32 @@ def info_student(request):
 
     return render(request, 'student_auth/info_student.html', {'student': student})
 
+#Update a Student
+def update_student(request, student_id):
+    # Retrieve the student object using the provided ID
+    student = get_object_or_404(Student, pk=student_id)
+
+    if request.method == 'POST':
+        # Populate the update form with current student data and submitted data
+        form = StudentUpdateForm(request.POST, instance=student)
+        if form.is_valid():
+            # Save the updated student object to the database
+            form.save()
+            return redirect('info_student')  # Redirect to student info page or any relevant page
+    else:
+        # If the request method is GET, display the update form populated with current student data
+        form = StudentUpdateForm(instance=student)
+
+    return render(request, 'student_auth/update_student.html', {'form': form, 'student': student})
+
+# Delete a Student
+def delete_student(request, student_id):
+    # Retrieve the student object using the provided ID
+    student = get_object_or_404(Student, pk=student_id)
+    # Delete the student from DB
+    student.delete()
+    # Redirect to a relevant page
+    return redirect ('students')
 
 
 
@@ -177,7 +204,7 @@ def search(request):
         return render(request, "search.html", {})
 
 
-def Company_login(request):
+def clogin_company(request):
     if request.method == "POST":
         # Get data from the form
         username = request.POST.get("username")
@@ -190,46 +217,7 @@ def Company_login(request):
         return render(request, "success.html")
     else:
         form = RegistrationForm()
-    return render(request, "Company_auth/Company_login.html", {"form": form})
-
-
-def company_signup(request):
-    if request.method == 'POST':
-        form = CompanyProfileForm(request.POST)
-        if form.is_valid():
-            password = form.cleaned_data.get('password')
-            confirm_password = form.cleaned_data.get('confirm_password')
-            if password and confirm_password:
-                if password == confirm_password:
-                    user = form.save(commit=False)
-                    user.password = make_password(password) 
-                    user.save()
-                    messages.success(request, "Registration successful!")
-                    return redirect('Company_auth/Company_login')
-                else:
-                    messages.error(request, "Passwords do not match.")
-            else:
-                messages.error(request, "Password or Confirm Password is missing.")
-        else:
-            messages.error(request, "Form validation failed.")
-    else:
-        form = CompanyProfileForm()
-    return render(request, "Company_auth/Company_singup.html", {"form": form})
-def Company_login(request):
-    if request.method == "POST":
-        # Get data from the form
-        username = request.POST.get("username")
-        password = request.POST.get("password")
-
-        # Save data to the database
-        user = User.objects.create(username=username, password=password)
-
-        # Redirect to a success page or do any other necessary processing
-        return render(request, "success.html")
-    else:
-        form = RegistrationForm()
-    return render(request, "Company_auth/Company_login.html", {"form": form})
-
+    return render(request, "Company_auth/clogin_company.html", {"form": form})
 
 def company_signup(request):
     if request.method == 'POST':
@@ -237,19 +225,118 @@ def company_signup(request):
         if form.is_valid():
             password = form.cleaned_data.get('password')
             confirm_password = form.cleaned_data.get('confirm_password')
-            if password and confirm_password:
-                if password == confirm_password:
-                    user = form.save(commit=False)
-                    user.password = make_password(password) 
-                    user.save()
-                    messages.success(request, "Registration successful!")
-                    return redirect('Company_auth/Company_login')
-                else:
-                    messages.error(request, "Passwords do not match.")
-            else:
-                messages.error(request, "Password or Confirm Password is missing.")
+            messages.success(request, "Registration successful!")
+            return redirect('clogin_company')
         else:
             messages.error(request, "Form validation failed.")
     else:
         form = CompanyProfileForm()
     return render(request, "Company_auth/Company_singup.html", {"form": form})
+
+# Delete a company
+def delete_company(request, company_id):
+    # Retrieve the company object using the provided ID
+    company = get_object_or_404(Company, pk=company_id)
+    # Delete the company from the database
+    company.delete()
+    # Redirect to a relevant page
+    return redirect('company')  
+
+def confirm_company_delete(request, company_id):
+    company = get_object_or_404(Company, pk=company_id)
+    return render(request, 'confirm_company_delete.html', {'company': company})
+
+# Update a company
+def update_company(request, company_id):
+    company = get_object_or_404(Company, pk=company_id)
+    if request.method == 'POST':
+        form = CompanyUpdateForm(request.POST, instance=company)
+        if form.is_valid():
+            form.save()
+            return redirect('company_profile')  # Redirect to the company profile page after successful update
+    else:
+        form = CompanyUpdateForm(instance=company)
+    return render(request, 'update_company.html', {'form': form})
+
+
+def profile_matcherStudent(request):
+    # Retrieve all students
+    students = Student.objects.all()
+
+    # Initialize an empty dictionary to store matched student-company pairs
+    matched_pairs = {}
+
+    # Iterate through each student
+    for student in students:
+        # Retrieve the skills of the student
+        student_skills = student.skills.all()
+
+        # Find companies that match the student's skills
+        matching_companies = []
+        for company in Company.objects.all():
+            # Retrieve the required skills of the company
+            required_skills = company.required_skills.all()
+            # Find common skills between student and company
+            common_skills = set(student_skills).intersection(required_skills)
+            if common_skills:
+                matching_companies.append({
+                    'company': company,
+                    'common_skills': common_skills
+                })
+
+        # Store the matched companies for the current student
+        if matching_companies:
+            matched_pairs[student] = matching_companies
+
+    # Pass the matched_pairs dictionary to the template for rendering
+    return render(request, 'profileMatcher_Student.html', {'matched_pairs': matched_pairs})
+
+def profile_matcherCompany(request):
+    # Retrieve all students
+    companies = Company.objects.all()
+
+    # Initialize an empty dictionary to store matched student-company pairs
+    matched_pairs = {}
+
+    # Iterate through each company
+    for company in companies:
+        # Retrieve the skills of the student
+        required_skills = company.required_skills.all()
+
+        # Find companies that match the student's skills
+        matching_students = []
+        for student in Student.objects.all():
+            # Retrieve the required skills of the company
+            student_skills = student.skills.all()
+            # Find common skills between student and company
+            common_skills = set(student_skills).intersection(required_skills)
+            if common_skills:
+                matching_students.append({
+                    'student': student,
+                    'common_skills': common_skills
+                })
+
+        # Store the matched companies for the current student
+        if matching_students:
+            matched_pairs[company] = matching_students
+    print(matched_pairs)
+
+    # Pass the matched_pairs dictionary to the template for rendering
+    return render(request, 'profileMatcher_Company.html', {'matched_pairs': matched_pairs})
+    
+
+def send_email(request):
+    if request.method == 'POST':
+        student_id = request.POST.get('student_id')
+        student = Student.objects.get(pk=student_id)
+        # Replace the below with your actual email sending logic
+        send_mail(
+            'Subject',
+            'Message body',
+            'sender@example.com',
+            [student.email],
+            fail_silently=False,
+        )
+        return HttpResponse('Email sent successfully!')
+    else:
+        return HttpResponse('Invalid request!')
