@@ -20,7 +20,7 @@ class Course(models.Model):
     def __str__(self):
         return self.name
 
-
+# Student
 class Student(models.Model):
     username = models.CharField(max_length=150, unique=True, default="")
     first_name = models.CharField(max_length=30, default="")
@@ -39,7 +39,7 @@ class Student(models.Model):
     cv = models.FileField(upload_to="cv/", null=True, blank=True)
     linkedin_ID = models.URLField(null=True, blank=True)
     github_ID = models.URLField(null=True, blank=True)
-    course = models.ManyToManyField(Course, related_name="students")
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name="students", default=None)
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
@@ -63,7 +63,7 @@ class Company(models.Model):
     def __str__(self):
         return self.name
 
-    from django.db import models
+
 
 
     
