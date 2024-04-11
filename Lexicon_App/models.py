@@ -40,7 +40,7 @@ class Student(models.Model):
     cv = models.FileField(upload_to="cv/", null=True, blank=True)
     linkedin_ID = models.URLField(null=True, blank=True)
     github_ID = models.URLField(null=True, blank=True)
-    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name="students", default=None)
+    course = models.ManyToManyField(Course, related_name="students")
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"

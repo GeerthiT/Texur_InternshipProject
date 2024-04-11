@@ -74,7 +74,7 @@ def login_student(request):
         # Render the login form
         return render(request, 'student_auth/login_student.html')
 
- # Create a Student      
+       
 def signup_student(request):
     if request.method == 'POST':
         user_form = UserForm(request.POST)
@@ -104,6 +104,7 @@ def info_student(request):
         student = None
 
     return render(request, 'student_auth/info_student.html', {'student': student})
+
 
 #Update a Student
 def update_student(request, student_id):
