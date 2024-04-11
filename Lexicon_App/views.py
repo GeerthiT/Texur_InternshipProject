@@ -267,7 +267,8 @@ def clogin_company(request):
         return render(request, "success.html")
     else:
         form = RegistrationForm()
-    return render(request, "Company_auth/Company_login.html", {"form": form})
+    return render(request, "Company_auth/clogin_company.html", {"form": form})
+
 def company_signup(request):
     if request.method == 'POST':
         form = CompanyProfileForm(request.POST)
