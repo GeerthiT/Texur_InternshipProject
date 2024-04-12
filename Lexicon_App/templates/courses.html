@@ -1,22 +1,42 @@
-{% extends "base.html" %} {% load static %} {% block content %}
+{% extends "base.html" %}
+{% load static %} 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LEXICON Courses</title>
+</head>
 
-<h1 class="text-center">List of courses</h1>
-<div class="container">
-
-<br />
-
-<div class="container-fluid mt-3">
-
-    {% if course_data %}
-        {% for course in course_data %}
-            
-            <ul>
-                <li>{{ course.course_name }} {{ course.start_date }} {{ course.end_date }}</li>
-            </ul>
-        {% endfor %}   
-
-    {% endif %}
-</div>
-<a href="{% url 'welcome_admin' %}"
-<button type="button" class="btn btn-danger">Back to home</button></a>
+{% block content %}
+    <h1 class="text-center">List of Courses</h1>
+    <div class="courses-container">
+        <div class="container mt-3">
+            {% if course_data %}
+                <ul class="list-group">
+                    {% for course in course_data %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center" style="border-radius: 35px; margin-bottom: 10px;">
+                            <span>
+                                {{ course.course_name }} ({{ course.start_date }} - {{ course.end_date }})
+                            </span>
+                            <span>
+                                <a href="#" class="btn-edit" style="background-color: #F1DF3C; border-radius: 35px; padding: 5px 19.34px; color: #000000; text-decoration: none;">Edit</a>
+                                <a href="#" class="btn-delete" style="background-color: #EB1609; border-radius: 35px; padding: 5px 10px; color: #000000; text-decoration: none;">Delete</a>
+                            </span>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>No courses found.</p>
+            {% endif %}
+            <div class="row mt-3">
+                <div class="col">
+                    <a href="{% url 'welcome_admin' %}" class="btn btn-danger" style="background-color: #ff0000; border-radius: 35px; padding: 0.5px 10.79px; color: #000000;">Home</a>
+                </div>
+                <div class="col-auto" style="margin-left: -60px;">
+                    <a href="#" class="btn btn-success" style="background-color: #09EB12; border-radius: 35px; padding: 0.5px 17.9px; color: #000000; margin-left: -47px; text-decoration: none;">Add</a>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
