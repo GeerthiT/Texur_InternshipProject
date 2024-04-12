@@ -20,7 +20,8 @@ from django.urls import path
 from Lexicon_App import views
 from django.contrib.auth import views as auth_views
 from Lexicon_App.views import delete_student, update_student
-
+from django.conf.urls.static import static
+from django.conf import settings
 
 
 
@@ -46,4 +47,4 @@ urlpatterns = [
     path('companies/<int:company_id>/delete/', views.delete_company, name='delete_company'),
     path('companies/<int:company_id>/confirm_delete/', views.confirm_company_delete, name='confirm_company_delete'),
     path('update_company/<int:company_id>/', views.update_company, name='update_company'),
-]
+]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
