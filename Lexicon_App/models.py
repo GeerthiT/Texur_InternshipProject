@@ -41,6 +41,7 @@ class Student(models.Model):
     linkedin_ID = models.URLField(null=True, blank=True)
     github_ID = models.URLField(null=True, blank=True)
     course = models.ManyToManyField(Course, related_name="students")
+    profile_picture = models.ImageField(upload_to='profile_pictures/', blank=True, null=True)
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"

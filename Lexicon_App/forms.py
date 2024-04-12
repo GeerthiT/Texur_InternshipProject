@@ -56,6 +56,7 @@ class StudentForm(forms.ModelForm):
             'first_name',
             'last_name',
             'student_ID',
+            'profile_picture',
             'social_security_number',
             'phone_number',
             'age',
@@ -64,7 +65,8 @@ class StudentForm(forms.ModelForm):
             'github_ID',
             'cv',
             'skills',
-            'courses',  # Include skills and courses fields here
+            'courses',
+                # Include skills and courses fields here
         )
 
     def __init__(self, *args, **kwargs):
