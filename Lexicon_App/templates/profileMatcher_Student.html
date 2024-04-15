@@ -24,7 +24,7 @@
                                 {% endfor %}
                             </ul>
                             <!-- Form to send email -->
-                            <form action="{% url 'send_email' %}" method="post">
+                            <form action="#" method="post">
                                 {% csrf_token %}
                                 <input type="hidden" name="student_id" value="{{ student.pk }}">
                                 <button type="submit" class="btn btn-primary btn-sm">Send Email to student</button>

@@ -47,4 +47,5 @@ urlpatterns = [
     path('companies/<int:company_id>/delete/', views.delete_company, name='delete_company'),
     path('companies/<int:company_id>/confirm_delete/', views.confirm_company_delete, name='confirm_company_delete'),
     path('update_company/<int:company_id>/', views.update_company, name='update_company'),
+    path('send-email/', views.send_email, name='send_email')
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

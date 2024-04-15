@@ -6,11 +6,12 @@ from django.contrib import messages
 from django.http import HttpResponseRedirect, HttpResponse
 from collections import defaultdict
 from django.urls import reverse
-
+from django.core.mail import send_mail
+from django.contrib.auth.decorators import login_required
 from .forms import UserForm, StudentForm
 from .forms import CompanyProfileForm
 from django.contrib.auth.hashers import make_password
-
+from django.core.exceptions import ObjectDoesNotExist
 
 
 def index(request):
@@ -156,6 +157,7 @@ def welcome_admin(request):
 def courses(request):
     data = Course.objects.order_by('name')
     context = {'course_data': data }
+    print(context)
     return render(request,"courses.html", context)
 
 
@@ -326,10 +328,15 @@ def profile_matcherCompany(request):
     return render(request, 'profileMatcher_Company.html', {'matched_pairs': matched_pairs})
     
 
+#@login_required
 def send_email(request):
     if request.method == 'POST':
         student_id = request.POST.get('student_id')
-        student = Student.objects.get(pk=student_id)
+        try:
+            student = Student.objects.get(pk=student_id)
+        except ObjectDoesNotExist:
+            return HttpResponse('Student not found!', status=404)
+        
         # Replace the below with your actual email sending logic
         send_mail(
             'Subject',
@@ -338,6 +345,6 @@ def send_email(request):
             [student.email],
             fail_silently=False,
         )
-        return HttpResponse('Email sent successfully!')
+        return redirect('email_sent')  # Redirect to a confirmation page
     else:
-        return HttpResponse('Invalid request!')
+        return HttpResponse('Invalid request!', status=400)
