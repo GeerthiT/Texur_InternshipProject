@@ -12,6 +12,7 @@ from .forms import UserForm, StudentForm
 from .forms import CompanyProfileForm
 from django.contrib.auth.hashers import make_password
 from django.core.exceptions import ObjectDoesNotExist
+from django.db.models import Q
 
 
 def index(request):
@@ -67,7 +68,8 @@ def login_student(request):
             login(request, user)
             # Redirect to a success page
             print("successful login")
-            return HttpResponseRedirect(reverse('info_student'))
+            student = Student.objects.get(user=user)
+            return HttpResponseRedirect(reverse('info_student', args=[student.student_ID]))
         else:
             # Return an error message or render a login form with error message
             return render(request, 'login.html', {'error_message': 'Invalid username or password'})
@@ -93,17 +95,10 @@ def signup_student(request):
     return render(request, 'student_auth/signup_student.html', {'user_form': user_form, 'student_form': student_form})
 
 
-def info_student(request):
-    # Assuming you have a way to identify the current logged-in user
-    current_user = request.user
-
-    # Query the Student model to retrieve information for the current user
-    try:
-        student = Student.objects.get(user=current_user)
-    except Student.DoesNotExist:
-        # Handle case where student info for the current user does not exist
-        student = None
-
+def info_student(request, student_ID):
+    # Query the Student model to retrieve information for the specified student ID
+    student = get_object_or_404(Student, student_ID=student_ID)
+    
     return render(request, 'student_auth/info_student.html', {'student': student})
 
 
@@ -183,12 +178,14 @@ def search(request):
         searched = request.POST.get('searched')
 
         if searched:
+            # Search for courses, students, and companies matching the searched term
             courses = Course.objects.filter(name__icontains=searched)
-            students = Student.objects.filter(first_name__icontains=searched)
-            companies = Company.objects.filter(name__icontains=searched)
+            students = Student.objects.filter(Q(first_name__icontains=searched) | Q(last_name__icontains=searched) | Q(skills__name__icontains=searched))
+            companies = Company.objects.filter(Q(name__icontains=searched) | Q(required_skills__name__icontains=searched))
 
             results = []
 
+            # Append search results to the results list
             for course in courses:
                 results.append({'type': 'course', 'result': course})
             for student in students:
@@ -322,9 +319,7 @@ def profile_matcherCompany(request):
         # Store the matched companies for the current student
         if matching_students:
             matched_pairs[company] = matching_students
-    print(matched_pairs)
-
-    # Pass the matched_pairs dictionary to the template for rendering
+   # Pass the matched_pairs dictionary to the template for rendering
     return render(request, 'profileMatcher_Company.html', {'matched_pairs': matched_pairs})
     
 
