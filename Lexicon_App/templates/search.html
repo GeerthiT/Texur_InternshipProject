@@ -35,7 +35,10 @@
                 <ul>
                     {% for result in results %}
                         {% if result.type == 'course' %}
-                            <li>{{ result.result }}</li>
+                            <li>
+                                <a href="{% url 'courses' result.result.courseID %}">
+                                    {{ result.result.courseID }}
+                                </a></li>
                         {% endif %}
                     {% endfor %}
                 </ul>

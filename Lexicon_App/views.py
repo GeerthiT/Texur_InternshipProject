@@ -4,12 +4,11 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate,login,logout
 from django.contrib import messages
 from django.http import HttpResponseRedirect, HttpResponse
-from collections import defaultdict
+import csv
 from django.urls import reverse
 from django.core.mail import send_mail
 from django.contrib.auth.decorators import login_required
-from .forms import UserForm, StudentForm
-from .forms import CompanyProfileForm
+from .forms import UserForm, StudentForm, CompanyProfileForm, CourseForm, CSVUploadForm
 from django.contrib.auth.hashers import make_password
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
@@ -343,3 +342,51 @@ def send_email(request):
         return redirect('email_sent')  # Redirect to a confirmation page
     else:
         return HttpResponse('Invalid request!', status=400)
+
+def add_course(request):
+    if request.method == 'POST':
+        form = CourseForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('courses')
+    else:
+        form = CourseForm()
+    return render(request, 'course_administration/add_course.html', {'form': form})    
+
+def edit_course(request, course_id):
+    course = Course.objects.get(pk=course_id)
+    if request.method == 'POST':
+        form = CourseForm(request.POST, instance=course)
+        if form.is_valid():
+            form.save()
+            return redirect('courses')
+    else:
+        form = CourseForm(instance=course)
+    return render(request, 'course_administration/edit_course.html', {'form': form, 'course_id': course_id})
+
+def add_student(request, course_id):
+    if request.method == 'POST':
+        form = StudentForm(request.POST)
+        if form.is_valid():
+            student = form.save(commit=False)
+            student.save()
+            course = Course.objects.get(pk=course_id)
+            course.students.add(student)
+            return redirect('edit_course', course_id=course_id)
+    else:
+        form = StudentForm()
+    return render(request, 'course_administration/add_student.html', {'form': form, 'course_id': course_id})
+
+def upload_students(request, course_id):
+    if request.method == 'POST':
+        form = CSVUploadForm(request.POST, request.FILES)
+        if form.is_valid():
+            course = Course.objects.get(pk=course_id)
+            csv_file = request.FILES['csv_file']
+            # Process CSV file and add students to the course
+            # Implement this part according to your CSV processing logic
+            return redirect('edit_course', course_id=course_id)
+    else:
+        form = CSVUploadForm()
+    return render(request, 'course_administration/upload_students.html', {'form': form, 'course_id': course_id})
+
