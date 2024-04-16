@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+<h1>Edit course</h1>
+<p>
+<form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Save Changes</button>
+</form>
+</p>
+
+
+<p>
+<a href="{% url 'add_student' course_id=course_id %}">Add Student</a>
+</p>
+
+
+<p>
+<a href="{% url 'upload_students' course_id=course_id %}">Upload Students</a>
+</p>
+
+{% endblock %}
