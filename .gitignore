@@ -115,3 +115,4 @@ Lexicon_App/__pycache__/views.cpython-311.pyc
 Lexicon_App/migrations/0001_initial.py
 Lexicon_App/migrations/__pycache__/0001_initial.cpython-311.pyc
 Lexicon_App/migrations/__pycache__/__init__.cpython-311.pyc
+Lexicon_App/migrations/0002_student_profile_picture.py

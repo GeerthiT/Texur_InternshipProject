@@ -9,9 +9,35 @@
 </head>
 
 {% block content %}
+    <style>
+        .btn-edit {
+            background-color: #F1DF3C;
+            border-radius: 35px;
+            padding: 5px 19.34px;
+            color: #000000;
+            text-decoration: none;
+        }
+
+        .btn-delete {
+            background-color: #EB1609;
+            border-radius: 35px;
+            padding: 5px 10px;
+            color: #000000;
+            text-decoration: none;
+        }
+
+        .btn-add {
+            background-color: #09EB12;
+            border-radius: 35px;
+            padding: 1px 17.9px;
+            color: #000000;
+            text-decoration: none;
+        }
+    </style>
+
     <h1 class="text-center">List of Courses</h1>
     <div class="courses-container">
-        <div class="container mt-3">
+        <div class="container mt-2">
             {% if course_data %}
                 <ul class="list-group">
                     {% for course in course_data %}
@@ -20,8 +46,8 @@
                                 {{ course.course_name }} ({{ course.start_date }} - {{ course.end_date }})
                             </span>
                             <span>
-                                <a href="#" class="btn-edit" style="background-color: #F1DF3C; border-radius: 35px; padding: 5px 19.34px; color: #000000; text-decoration: none;">Edit</a>
-                                <a href="#" class="btn-delete" style="background-color: #EB1609; border-radius: 35px; padding: 5px 10px; color: #000000; text-decoration: none;">Delete</a>
+                                <a href="#" class="btn-edit">Edit</a>
+                                <a href="#" class="btn-delete">Delete</a>
                             </span>
                         </li>
                     {% endfor %}
@@ -29,13 +55,13 @@
             {% else %}
                 <p>No courses found.</p>
             {% endif %}
-            <div class="row mt-3">
-                <div class="col">
-                    <a href="{% url 'welcome_admin' %}" class="btn btn-danger" style="background-color: #ff0000; border-radius: 35px; padding: 0.5px 10.79px; color: #000000;">Home</a>
-                </div>
-                <div class="col-auto" style="margin-left: -60px;">
-                    <a href="#" class="btn btn-success" style="background-color: #09EB12; border-radius: 35px; padding: 0.5px 17.9px; color: #000000; margin-left: -47px; text-decoration: none;">Add</a>
-                </div>
+        </div>
+    </div>
+
+    <div class="container mt-2">
+        <div class="row justify-content-end">
+            <div class="col-auto" style="margin-top: -80px; margin-right: 17px;">
+                <a href="#" class="btn btn-success btn-add">Add</a>
             </div>
         </div>
     </div>
