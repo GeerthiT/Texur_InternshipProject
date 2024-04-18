@@ -4,13 +4,14 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate,login,logout
 from django.contrib import messages
 from django.http import HttpResponseRedirect, HttpResponse
-from collections import defaultdict
+import csv
 from django.urls import reverse
-
-from .forms import UserForm, StudentForm
-from .forms import CompanyProfileForm
+from django.core.mail import send_mail
+from django.contrib.auth.decorators import login_required
+from .forms import UserForm, StudentForm, CompanyProfileForm, CourseForm, CSVUploadForm
 from django.contrib.auth.hashers import make_password
-
+from django.core.exceptions import ObjectDoesNotExist
+from django.db.models import Q
 
 
 def index(request):
@@ -66,7 +67,8 @@ def login_student(request):
             login(request, user)
             # Redirect to a success page
             print("successful login")
-            return HttpResponseRedirect(reverse('info_student'))
+            student = Student.objects.get(user=user)
+            return HttpResponseRedirect(reverse('info_student', args=[student.student_ID]))
         else:
             # Return an error message or render a login form with error message
             return render(request, 'login.html', {'error_message': 'Invalid username or password'})
@@ -92,17 +94,10 @@ def signup_student(request):
     return render(request, 'student_auth/signup_student.html', {'user_form': user_form, 'student_form': student_form})
 
 
-def info_student(request):
-    # Assuming you have a way to identify the current logged-in user
-    current_user = request.user
-
-    # Query the Student model to retrieve information for the current user
-    try:
-        student = Student.objects.get(user=current_user)
-    except Student.DoesNotExist:
-        # Handle case where student info for the current user does not exist
-        student = None
-
+def info_student(request, student_ID):
+    # Query the Student model to retrieve information for the specified student ID
+    student = get_object_or_404(Student, student_ID=student_ID)
+    
     return render(request, 'student_auth/info_student.html', {'student': student})
 
 
@@ -156,6 +151,7 @@ def welcome_admin(request):
 def courses(request):
     data = Course.objects.order_by('name')
     context = {'course_data': data }
+    print(context)
     return render(request,"courses.html", context)
 
 
@@ -181,12 +177,14 @@ def search(request):
         searched = request.POST.get('searched')
 
         if searched:
+            # Search for courses, students, and companies matching the searched term
             courses = Course.objects.filter(name__icontains=searched)
-            students = Student.objects.filter(first_name__icontains=searched)
-            companies = Company.objects.filter(name__icontains=searched)
+            students = Student.objects.filter(Q(first_name__icontains=searched) | Q(last_name__icontains=searched) | Q(skills__name__icontains=searched))
+            companies = Company.objects.filter(Q(name__icontains=searched) | Q(required_skills__name__icontains=searched))
 
             results = []
 
+            # Append search results to the results list
             for course in courses:
                 results.append({'type': 'course', 'result': course})
             for student in students:
@@ -320,16 +318,19 @@ def profile_matcherCompany(request):
         # Store the matched companies for the current student
         if matching_students:
             matched_pairs[company] = matching_students
-    print(matched_pairs)
-
-    # Pass the matched_pairs dictionary to the template for rendering
+   # Pass the matched_pairs dictionary to the template for rendering
     return render(request, 'profileMatcher_Company.html', {'matched_pairs': matched_pairs})
     
 
+#@login_required
 def send_email(request):
     if request.method == 'POST':
         student_id = request.POST.get('student_id')
-        student = Student.objects.get(pk=student_id)
+        try:
+            student = Student.objects.get(pk=student_id)
+        except ObjectDoesNotExist:
+            return HttpResponse('Student not found!', status=404)
+        
         # Replace the below with your actual email sending logic
         send_mail(
             'Subject',
@@ -338,6 +339,54 @@ def send_email(request):
             [student.email],
             fail_silently=False,
         )
-        return HttpResponse('Email sent successfully!')
+        return redirect('email_sent')  # Redirect to a confirmation page
     else:
-        return HttpResponse('Invalid request!')
+        return HttpResponse('Invalid request!', status=400)
+
+def add_course(request):
+    if request.method == 'POST':
+        form = CourseForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('courses')
+    else:
+        form = CourseForm()
+    return render(request, 'course_administration/add_course.html', {'form': form})    
+
+def edit_course(request, course_id):
+    course = Course.objects.get(pk=course_id)
+    if request.method == 'POST':
+        form = CourseForm(request.POST, instance=course)
+        if form.is_valid():
+            form.save()
+            return redirect('courses')
+    else:
+        form = CourseForm(instance=course)
+    return render(request, 'course_administration/edit_course.html', {'form': form, 'course_id': course_id})
+
+def add_student(request, course_id):
+    if request.method == 'POST':
+        form = StudentForm(request.POST)
+        if form.is_valid():
+            student = form.save(commit=False)
+            student.save()
+            course = Course.objects.get(pk=course_id)
+            course.students.add(student)
+            return redirect('edit_course', course_id=course_id)
+    else:
+        form = StudentForm()
+    return render(request, 'course_administration/add_student.html', {'form': form, 'course_id': course_id})
+
+def upload_students(request, course_id):
+    if request.method == 'POST':
+        form = CSVUploadForm(request.POST, request.FILES)
+        if form.is_valid():
+            course = Course.objects.get(pk=course_id)
+            csv_file = request.FILES['csv_file']
+            # Process CSV file and add students to the course
+            # Implement this part according to your CSV processing logic
+            return redirect('edit_course', course_id=course_id)
+    else:
+        form = CSVUploadForm()
+    return render(request, 'course_administration/upload_students.html', {'form': form, 'course_id': course_id})
+

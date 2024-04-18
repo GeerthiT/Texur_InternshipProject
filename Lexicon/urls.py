@@ -20,7 +20,8 @@ from django.urls import path
 from Lexicon_App import views
 from django.contrib.auth import views as auth_views
 from Lexicon_App.views import delete_student, update_student
-
+from django.conf.urls.static import static
+from django.conf import settings
 
 
 
@@ -32,7 +33,7 @@ urlpatterns = [
     path("courses_admin/", views.courses, name="courses"),
     path("login_student/", views.login_student, name="login_student"),
     path("signup_student/", views.signup_student, name="signup_student"),
-    path("info_student/", views.info_student, name="info_student"),
+    path("info_student/<int:student_ID>/", views.info_student, name="info_student"),
     path("students/", views.students, name="students"),
     path("clogin_company/", views.clogin_company, name="clogin_company"),
     path("company_signup/", views.company_signup, name="Company_signup"),
@@ -46,4 +47,9 @@ urlpatterns = [
     path('companies/<int:company_id>/delete/', views.delete_company, name='delete_company'),
     path('companies/<int:company_id>/confirm_delete/', views.confirm_company_delete, name='confirm_company_delete'),
     path('update_company/<int:company_id>/', views.update_company, name='update_company'),
-]
+    path('send-email/', views.send_email, name='send_email'),
+    path("edit_course/<int:course_id>/", views.edit_course, name="edit_course"),
+    path("add_student/<int:course_id>/", views.add_student, name="add_student"),
+    path("upload_students/<int:course_id>/", views.upload_students, name="upload_students"),
+    path("add_course/", views.add_course, name="add_course"),
+]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

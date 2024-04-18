@@ -56,6 +56,7 @@ class StudentForm(forms.ModelForm):
             'first_name',
             'last_name',
             'student_ID',
+            'profile_picture',
             'social_security_number',
             'phone_number',
             'age',
@@ -64,7 +65,8 @@ class StudentForm(forms.ModelForm):
             'github_ID',
             'cv',
             'skills',
-            'courses',  # Include skills and courses fields here
+            'courses',
+                # Include skills and courses fields here
         )
 
     def __init__(self, *args, **kwargs):
@@ -126,3 +128,12 @@ class CompanyProfileForm(forms.Form):
         company.save()
 
         return company
+
+
+class CourseForm(forms.ModelForm):
+    class Meta:
+        model = Course
+        fields = ['name', 'start_date', 'end_date']
+
+class CSVUploadForm(forms.Form):
+    csv_file = forms.FileField(label='Upload CSV file')
