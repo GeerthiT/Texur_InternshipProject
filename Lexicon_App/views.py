@@ -164,11 +164,15 @@ def logout_all_portal(request):
     logout(request)
     return redirect('index')
 
-def students(request):
-    data = Student.objects.order_by('first_name')
-    data = Student.objects.order_by('first_name')
-    context = {'student_data': data }
-    return render(request,"students.html", context)
+def students(request, course_id):
+    # Get the course object based on the course ID
+    course = get_object_or_404(Course, pk=course_id)
+    
+    # Filter students enrolled in the specific course
+    student_data = course.students.all().order_by('first_name')
+    
+    context = {'student_data': student_data, 'course': course }
+    return render(request, "students.html", context)
 
 def companies(request):
     data = Company.objects.order_by('name')
