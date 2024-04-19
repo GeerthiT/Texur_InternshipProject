@@ -43,10 +43,10 @@
                     {% for course in course_data %}
                         <li class="list-group-item d-flex justify-content-between align-items-center" style="border-radius: 35px; margin-bottom: 10px;">
                             <span>
-                                {{ course.course_name }} ({{ course.start_date }} - {{ course.end_date }})
+                                {{ course.name }} ({{ course.start_date }} - {{ course.end_date }})
                             </span>
                             <span>
-                                <a href="#" class="btn-edit">Edit</a>
+                                <a href="{% url 'edit_course' course_id=course.courseID %}" class="btn-edit">Edit</a>
                                 <a href="#" class="btn-delete">Delete</a>
                             </span>
                         </li>
@@ -60,8 +60,8 @@
 
     <div class="container mt-2">
         <div class="row justify-content-end">
-            <div class="col-auto" style="margin-top: -80px; margin-right: 17px;">
-                <a href="#" class="btn btn-success btn-add">Add</a>
+            <div class="col-auto" style="margin-right: 17px;">
+                <a href="{% url 'add_course' %}" class="btn btn-success btn-add">Add</a>
             </div>
         </div>
     </div>

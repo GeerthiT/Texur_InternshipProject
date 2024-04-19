@@ -3,16 +3,19 @@ from Lexicon_App.models import Course, Skillset, Student,Company
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate,login,logout
 from django.contrib import messages
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseRedirect, HttpResponse, HttpResponseServerError
 import csv
+from io import TextIOWrapper
 from django.urls import reverse
 from django.core.mail import send_mail
 from django.contrib.auth.decorators import login_required
-from .forms import UserForm, StudentForm, CompanyProfileForm, CourseForm, CSVUploadForm
+from .forms import UserForm, StudentForm, CompanyProfileForm, CourseForm
 from django.contrib.auth.hashers import make_password
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
-
+from django.conf import settings
+from django.http import FileResponse, HttpResponseBadRequest
+import os
 
 def index(request):
     return render(request, "index.html")
@@ -151,7 +154,7 @@ def welcome_admin(request):
 def courses(request):
     data = Course.objects.order_by('name')
     context = {'course_data': data }
-    print(context)
+    #print(context)
     return render(request,"courses.html", context)
 
 
@@ -354,12 +357,16 @@ def add_course(request):
     return render(request, 'course_administration/add_course.html', {'form': form})    
 
 def edit_course(request, course_id):
-    course = Course.objects.get(pk=course_id)
+    course = get_object_or_404(Course, pk=course_id)
     if request.method == 'POST':
         form = CourseForm(request.POST, instance=course)
         if form.is_valid():
             form.save()
-            return redirect('courses')
+            # Check if a flag indicating the need to update students is set
+            if request.POST.get('update_students'):
+                return redirect('upload_students', course_id=course_id)
+            else:
+                return redirect('courses')
     else:
         form = CourseForm(instance=course)
     return render(request, 'course_administration/edit_course.html', {'form': form, 'course_id': course_id})
@@ -379,14 +386,47 @@ def add_student(request, course_id):
 
 def upload_students(request, course_id):
     if request.method == 'POST':
-        form = CSVUploadForm(request.POST, request.FILES)
-        if form.is_valid():
-            course = Course.objects.get(pk=course_id)
-            csv_file = request.FILES['csv_file']
-            # Process CSV file and add students to the course
-            # Implement this part according to your CSV processing logic
+        csv_file = request.FILES.get('csv_file')
+        if not csv_file:
+            messages.error(request, 'No file selected')
             return redirect('edit_course', course_id=course_id)
+
+        if not csv_file.name.endswith('.csv'):
+            messages.error(request, 'Invalid file format. Please upload a CSV file.')
+            return redirect('edit_course', course_id=course_id)
+
+        decoded_file = csv_file.read().decode('utf-8').splitlines()
+        csv_reader = csv.reader(decoded_file, delimiter=';')
+        course = Course.objects.get(pk=course_id)  # Retrieve the course instance
+
+        for row in csv_reader:
+            if len(row) < 3:
+                messages.warning(request, f'Skipping row: {row}. Each row should contain at least First Name, Last Name, and Email.')
+                continue
+
+            first_name, last_name, email = row[:3]  # Extract first name, last name, and email from the row
+            
+            # Assuming you have a mechanism to create or retrieve users based on email
+            user, created = User.objects.get_or_create(email=email, defaults={'username': email})
+            
+            # Check if a Student object already exists for this user
+            student, student_created = Student.objects.get_or_create(user=user)
+            
+            # Update the student details if it was already created
+            if not student_created:
+                student.first_name = first_name
+                student.last_name = last_name
+                student.save()
+            else:
+                student.first_name = first_name
+                student.last_name = last_name
+                student.save()
+            
+            course.students.add(student)
+
+        messages.success(request, 'Students uploaded successfully.')
+        return redirect('edit_course', course_id=course_id)
     else:
-        form = CSVUploadForm()
-    return render(request, 'course_administration/upload_students.html', {'form': form, 'course_id': course_id})
+        messages.error(request, 'Invalid request method')
+        return redirect('edit_course', course_id=course_id)
 
