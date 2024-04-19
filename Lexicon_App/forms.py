@@ -4,6 +4,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django import forms
 from .models import Company, Student
 from django.contrib.auth.forms import UserCreationForm
+
 # from django.db import models
 
 class admin_reg_form(UserCreationForm):
@@ -163,3 +164,5 @@ class CompanyProfileForm(forms.Form):
    
  
         return company
+    
+   

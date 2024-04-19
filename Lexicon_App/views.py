@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from Lexicon_App.models import Course, Skillset, Student,Company
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate,login,logout
@@ -14,12 +14,13 @@ from django.urls import reverse
 
 
 
+
 from django.shortcuts import render
 from django.contrib import messages
 from Lexicon_App.models import Course, Student, Company, Skillset
 from django.db.models import Q
 from django.contrib import messages
-from .forms import RegistrationForm, UserRegistrationForm
+from Lexicon_App.forms import RegistrationForm
 from .forms import CompanyProfileForm
 from .forms import CompanyProfileForm
 from django.contrib.auth.models import User
@@ -254,7 +255,7 @@ def search(request):
         return render(request, "search.html", {})
 
 
-def clogin_company(request):
+def company_login(request):
     if request.method == "POST":
         # Get data from the form
         username = request.POST.get("username")
@@ -264,10 +265,11 @@ def clogin_company(request):
         user = User.objects.create(username=username, password=password)
 
         # Redirect to a success page or do any other necessary processing
-        return render(request, "success.html")
-    else:
-        form = RegistrationForm()
-    return render(request, "Company_auth/Company_login.html", {"form": form})
+        return render(request, "company_dashboard.html")
+    
+    return render(request, "company_auth/company_login.html")
+
+
 def company_signup(request):
     if request.method == 'POST':
         form = CompanyProfileForm(request.POST)
@@ -275,12 +277,19 @@ def company_signup(request):
             password = form.cleaned_data.get('password')
             confirm_password = form.cleaned_data.get('confirm_password')
             messages.success(request, "Registration successful!")
-            return redirect('clogin_company')
+            return redirect('company_login')
         else:
             messages.error(request, "Form validation failed.")
     else:
         form = CompanyProfileForm()
-    return render(request, "Company_auth/Company_singup.html", {"form": form})
+    return render(request, "company_auth/company_signup.html", {"form": form})
+
+
+
+def company_dashboard(request):
+    company_info = request.user.company_profile  # Assuming you have a CompanyProfile model linked to User
+    InternshipPost = InternshipPost.objects.filter(company=company_info)
+    return render(request, 'company_auth/company_dashboard.html', {'company_info': company_info, 'Internship_Post': InternshipPost})
 
 
 def profile_matcherStudent(request):

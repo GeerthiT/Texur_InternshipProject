@@ -1,0 +1,18 @@
+{% extends "base.html" %} {% block content %}
+<div class="container">
+  <!-- Display company information -->
+  <h2>{{ company_info.name }}</h2>
+  <!-- Display job postings -->
+  <h3>Job Postings</h3>
+  <ul>
+    {% for job_post in job_posts %}
+    <li>{{ job_post.title }} - {{ job_post.date }}</li>
+    <!-- Add edit and delete buttons for job postings -->
+    <a href="{% url 'edit_job_post' job_post.id %}">Edit</a>
+    <a href="{% url 'delete_job_post' job_post.id %}">Delete</a>
+    {% endfor %}
+  </ul>
+  <!-- Add options to update company details -->
+  <a href="{% url 'update_company_info' %}">Update Company Info</a>
+</div>
+{% endblock %}

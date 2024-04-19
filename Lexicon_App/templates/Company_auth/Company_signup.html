@@ -7,7 +7,7 @@
   <h5 class="h5"><b>Fill your Information</b></h5>
   <br />
 
-  <form class="form" action="{% url 'clogin_company' %}" method="post">
+  <form class="form" action="{% url 'company_signup' %}" method="post">
     {% csrf_token %} {{ form.as_p }}
 
     <br />

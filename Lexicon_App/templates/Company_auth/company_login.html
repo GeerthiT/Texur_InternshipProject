@@ -8,16 +8,17 @@
           <img
             class="card-img-top"
             src="{% static 'images/employer-login.png' %}"
-            alt="students"
+            alt="Company"
             style="width: 70%"
           />
         </div>
         <!-- Column for Login Form -->
-        <div class="col-md-6">
-          <h2 class="Company_login"><b>Company Login</b></h2>
+
+        <div class="container">
+          <h2 class="h2"><b>Company Login</b></h2>
           <br />
-          <br />
-          <form method="post" action="{% url 'clogin_company' %}">
+
+          <form class="form" action="{% url 'company_login' %}" method="post">
             {% csrf_token %}
             <div class="mb-3">
               <label for="username" class="form-label">Username</label>
@@ -37,20 +38,19 @@
                 id="password"
               />
             </div>
-            <button type="submit" class="btn btn-block btn-primary">
-              Login
-            </button>
+            <button type="submit" class="btn btn-primary">Login</button>
           </form>
           <br />
           <br />
           <br />
           <h5 class="h5">
             Don’t have an account?
-            <a href="{% url 'Company_signup' %}">Sign Up</a> here
+            <a href="{% url 'company_signup' %}">Sign Up</a> here
           </h5>
         </div>
+
+        {% endblock %}
       </div>
     </div>
   </div>
 </div>
-{% endblock %}
