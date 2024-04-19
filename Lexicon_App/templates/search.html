@@ -1,46 +1,81 @@
-{% extends "base.html" %} {% load static %} {% block content %}
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
 
 <h1 class="text-center">Search</h1>
 <div class="container">
 
-<br>
-<div class="d-flex justify-content-center">
-<div class="card col-8">
-  
-    <div class="card-body">
-        <form method="POST" action="{% url 'search' %}">
-            {% csrf_token %}
-            <div class="mb-3">
-                <input type="text" class="form-control" placeholder="Search Course/Student/Skill/Company" name="searched" id="searchForm">
-            </div>
-            <button type="submit" class="btn btn-secondary">Search</button> 
-        </form>
-    </div>
-    
-  </div>
-</div>
-<br>
-{% for message in messages %}
-    <div class="alert alert-{{ message.tags }}">{{ message }}</div>
-{% endfor %}
-{% if results %}
-    <h2 class="text-start">Search Results:</h2>
-    <ul>
-        {% for result in results %}
-            {% if result.type == 'course' %}
-                <li>Course: {{ result.result }}</li>
-            {% elif result.type == 'student' %}
-                <li>Student: {{ result.result }}</li>
-            {% elif result.type == 'company' %}
-                <li>Company: {{ result.result }}</li>
-            {% endif %}
-        {% endfor %}
-    </ul>
+    <br>
+    <div class="d-flex justify-content-center">
+        <div class="card col-8">
 
-{% endif %}
-<br><br><br><br>
-<a href="{% url 'welcome_admin' %}"
-<button type="button" class="btn btn-danger">Back to home</button></a>
+            <div class="card-body">
+                <form method="POST" action="{% url 'search' %}">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <input type="text" class="form-control" placeholder="Search Course/Student/Skill/Company" name="searched" id="searchInput">
+                    </div>
+                    <button type="submit" class="btn btn-secondary">Search</button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+    <br>
+
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+    {% endfor %}
+
+    {% if results %}
+        <h2 class="text-start">Search Results:</h2>
+        <div class="row">
+            <div class="col-md-4">
+                <h3>Courses:</h3>
+                <ul>
+                    {% for result in results %}
+                        {% if result.type == 'course' %}
+                            <li>
+                                <a href="{% url 'courses' result.result.courseID %}">
+                                    {{ result.result.courseID }}
+                                </a></li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="col-md-4">
+                <h3>Students:</h3>
+                <ul>
+                    {% for result in results %}
+                        {% if result.type == 'student' %}
+                        <li>
+                            <a href="{% url 'info_student' result.result.student_ID %}">
+                                {{ result.result.first_name }} {{ result.result.last_name }}
+                            </a>
+                        </li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="col-md-4">
+                <h3>Companies:</h3>
+                <ul>
+                    {% for result in results %}
+                        {% if result.type == 'company' %}
+                            <li>{{ result.result }}</li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    {% endif %}
+
+    <br><br><br><br>
+    <a href="{% url 'welcome_admin' %}">
+        <button type="button" class="btn btn-danger">Back to home</button>
+    </a>
+</div>
+
 {% endblock %}
 
 <script>
@@ -50,4 +85,4 @@
             document.getElementById("searchForm").submit();
         }
     });
-    </script>
+</script>

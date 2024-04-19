@@ -7,21 +7,36 @@
 
 <body>
     <br>
-        {% for student, companies in matched_pairs.items %}
-            <div class="container p-3 border mb-4">
-                <strong>Student Name:</strong> {{ student.first_name }} {{ student.last_name }}<br>
+    {% for student, companies in matched_pairs.items %}
+    <div class="container p-3 border mb-4">
+        <strong>Student Name:</strong> {{ student.first_name }} {{ student.last_name }}<br>
+        <p>
+            <div class="row row-cols-1 row-cols-md-3 g-4">
                 {% for pair in companies %}
-                    <hr>
-                    <strong>Company Name:</strong> {{ pair.company.name }}<br>
-                    <strong>Common Skills:</strong>
-                    <ul>
-                        {% for skill in pair.common_skills %}
-                            <li>{{ skill }}</li>
-                        {% endfor %}
-                    </ul>
+                <div class="col">
+                    <div class="card">
+                        <div class="card-body">
+                            <h6 class="card-title fw-bold">Company Name: {{ pair.company.name }}</h6>
+                            <strong>Common Skills:</strong>
+                            <ul>
+                                {% for skill in pair.common_skills %}
+                                <li>{{ skill }}</li>
+                                {% endfor %}
+                            </ul>
+                            <!-- Form to send email -->
+                            <form action="#" method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="student_id" value="{{ student.pk }}">
+                                <button type="submit" class="btn btn-primary btn-sm">Send Email to student</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
                 {% endfor %}
             </div>
-        {% endfor %}
+        </p>
+    </div>
+    {% endfor %}
 </body>
 
 {% endblock %}

@@ -3,14 +3,14 @@ from Lexicon_App.models import Course, Skillset, Student,Company
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate,login,logout
 from django.contrib import messages
-from django.contrib.auth.forms import UserCreationForm
-from django.http import HttpResponseRedirect
-from django.views.decorators.csrf import csrf_protect
+from django.http import HttpResponseRedirect, HttpResponse
+import csv
+from django.urls import reverse
+from django.core.mail import send_mail
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from collections import defaultdict
 from django.urls import reverse
-
 
 
 
@@ -20,17 +20,12 @@ from django.contrib import messages
 from Lexicon_App.models import Course, Student, Company, Skillset
 from django.db.models import Q
 from django.contrib import messages
-from Lexicon_App.forms import RegistrationForm
+from .forms import RegistrationForm, UserRegistrationForm
 from .forms import CompanyProfileForm
 from .forms import CompanyProfileForm
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
-from django.contrib.auth.hashers import make_password
-from .models import Student 
-
-
-# Create your views here.
-
+from django.db.models import Q
 
 
 def index(request):
@@ -85,7 +80,9 @@ def login_student(request):
             # Log the user in
             login(request, user)
             # Redirect to a success page
-            return HttpResponseRedirect(reverse('info_student'))
+            print("successful login")
+            student = Student.objects.get(user=user)
+            return HttpResponseRedirect(reverse('info_student', args=[student.student_ID]))
         else:
             # Return an error message or render a login form with error message
             return render(request, 'login.html', {'error_message': 'Invalid username or password'})
@@ -96,92 +93,54 @@ def login_student(request):
        
 def signup_student(request):
     if request.method == 'POST':
-        form = RegistrationForm(request.POST)
-        if form.is_valid():
-            # Check if both 'password' and 'confirm_password' exist in cleaned_data
-            password = form.cleaned_data.get('password')
-            confirm_password = form.cleaned_data.get('confirm_password')
-            if password and confirm_password:
-                if password == confirm_password:
-                    # Proceed with user registration
-                    user = form.save(commit=False)
-                    user.password = make_password(password)  # Manually set hashed password
-                    user.save()
-                    # Get the selected course ID and skills IDs from the form
-                    selected_course_id = request.POST.get('courses')
-                    selected_skills_ids = request.POST.getlist('skills')
-
-                    # Save the selected course for the user
-                    user.course_id = selected_course_id
-                    user.save()
-
-                    # Save the selected skills for the user
-                    user.skills.add(*selected_skills_ids)
-                    # Get the selected course ID and skills IDs from the form
-                    selected_course_id = request.POST.get('courses')
-                    selected_skills_ids = request.POST.getlist('skills')
-
-                    # Save the selected course for the user
-                    user.course_id = selected_course_id
-                    user.save()
-
-                    # Save the selected skills for the user
-                    user.skills.add(*selected_skills_ids)
-                    messages.success(request, "Registration successful!")
-                    return redirect('login_student')
-                else:
-                    messages.error(request, "Passwords do not match.")
-            else:
-                messages.error(request, "Password or Confirm Password is missing.")
-        else:
-            # Handle form validation errors
-            messages.error(request, "Form validation failed.")
+        user_form = UserForm(request.POST)
+        student_form = StudentForm(request.POST, request.FILES)
+        if user_form.is_valid() and student_form.is_valid():
+            user = user_form.save()
+            student = student_form.save(commit=False)
+            student.user = user
+            student.save()
+            student_form.save_m2m()  # Save ManyToManyField data
+            return redirect('login_student')
     else:
-        skills = Skillset.objects.all()
-        courses = Course.objects.all()
-        for skill in skills:
-            print(f"Skill ID: {skill.id}, Name: {skill.name}")
-        for course in courses:
-            print(f"Course ID: {course.pk}, Name: {course.name}")
-        skills = Skillset.objects.all()
-        courses = Course.objects.all()
-        for skill in skills:
-            print(f"Skill ID: {skill.id}, Name: {skill.name}")
-        for course in courses:
-            print(f"Course ID: {course.pk}, Name: {course.name}")
-        form = RegistrationForm()
-    return render(request, 'student_auth/signup_student.html', {'form': form, 'skills': skills, 'courses':courses})
+        user_form = UserForm()
+        student_form = StudentForm()
+    return render(request, 'student_auth/signup_student.html', {'user_form': user_form, 'student_form': student_form})
+
+
+def info_student(request, student_ID):
+    # Query the Student model to retrieve information for the specified student ID
+    student = get_object_or_404(Student, student_ID=student_ID)
     
-
-def info_student(request):
-    # Assuming you have a way to identify the current logged-in user
-    current_user = request.user
-
-    # Query the Student model to retrieve information for the current user
-    try:
-        student = Student.objects.get(username=current_user.username)
-    except Student.DoesNotExist:
-        # Handle case where student info for the current user does not exist
-        student = None
-
     return render(request, 'student_auth/info_student.html', {'student': student})
 
 
+#Update a Student
+def update_student(request, student_id):
+    # Retrieve the student object using the provided ID
+    student = get_object_or_404(Student, pk=student_id)
 
-def info_student(request):
-    # Assuming you have a way to identify the current logged-in user
-    current_user = request.user
+    if request.method == 'POST':
+        # Populate the update form with current student data and submitted data
+        form = StudentUpdateForm(request.POST, instance=student)
+        if form.is_valid():
+            # Save the updated student object to the database
+            form.save()
+            return redirect('info_student')  # Redirect to student info page or any relevant page
+    else:
+        # If the request method is GET, display the update form populated with current student data
+        form = StudentUpdateForm(instance=student)
 
-    # Query the Student model to retrieve information for the current user
-    try:
-        student = Student.objects.get(username=current_user.username)
-    except Student.DoesNotExist:
-        # Handle case where student info for the current user does not exist
-        student = None
+    return render(request, 'student_auth/update_student.html', {'form': form, 'student': student})
 
-    return render(request, 'student_auth/info_student.html', {'student': student})
-
-
+# Delete a Student
+def delete_student(request, student_id):
+    # Retrieve the student object using the provided ID
+    student = get_object_or_404(Student, pk=student_id)
+    # Delete the student from DB
+    student.delete()
+    # Redirect to a relevant page
+    return redirect ('students')
 
 
 
@@ -206,6 +165,7 @@ def welcome_admin(request):
 def courses(request):
     data = Course.objects.order_by('name')
     context = {'course_data': data }
+    print(context)
     return render(request,"courses.html", context)
 
 
@@ -231,12 +191,14 @@ def search(request):
         searched = request.POST.get('searched')
 
         if searched:
+            # Search for courses, students, and companies matching the searched term
             courses = Course.objects.filter(name__icontains=searched)
-            students = Student.objects.filter(first_name__icontains=searched)
-            companies = Company.objects.filter(name__icontains=searched)
+            students = Student.objects.filter(Q(first_name__icontains=searched) | Q(last_name__icontains=searched) | Q(skills__name__icontains=searched))
+            companies = Company.objects.filter(Q(name__icontains=searched) | Q(required_skills__name__icontains=searched))
 
             results = []
 
+            # Append search results to the results list
             for course in courses:
                 results.append({'type': 'course', 'result': course})
             for student in students:
@@ -265,11 +227,10 @@ def company_login(request):
         user = User.objects.create(username=username, password=password)
 
         # Redirect to a success page or do any other necessary processing
-        return render(request, "company_dashboard.html")
-    
-    return render(request, "company_auth/company_login.html")
-
-
+        return render(request, "success.html")
+    else:
+        form = RegistrationForm()
+    return render(request, "Company_auth/Company_login.html", {"form": form})
 def company_signup(request):
     if request.method == 'POST':
         form = CompanyProfileForm(request.POST)
@@ -290,6 +251,31 @@ def company_dashboard(request):
     company_info = request.user.company_profile  # Assuming you have a CompanyProfile model linked to User
     InternshipPost = InternshipPost.objects.filter(company=company_info)
     return render(request, 'company_auth/company_dashboard.html', {'company_info': company_info, 'Internship_Post': InternshipPost})
+
+# Delete a company
+def delete_company(request, company_id):
+    # Retrieve the company object using the provided ID
+    company = get_object_or_404(Company, pk=company_id)
+    # Delete the company from the database
+    company.delete()
+    # Redirect to a relevant page
+    return redirect('company')  
+
+def confirm_company_delete(request, company_id):
+    company = get_object_or_404(Company, pk=company_id)
+    return render(request, 'confirm_company_delete.html', {'company': company})
+
+# Update a company
+def update_company(request, company_id):
+    company = get_object_or_404(Company, pk=company_id)
+    if request.method == 'POST':
+        form = CompanyUpdateForm(request.POST, instance=company)
+        if form.is_valid():
+            form.save()
+            return redirect('company_profile')  # Redirect to the company profile page after successful update
+    else:
+        form = CompanyUpdateForm(instance=company)
+    return render(request, 'update_company.html', {'form': form})
 
 
 def profile_matcherStudent(request):
@@ -352,9 +338,75 @@ def profile_matcherCompany(request):
         # Store the matched companies for the current student
         if matching_students:
             matched_pairs[company] = matching_students
-    print(matched_pairs)
-
-    # Pass the matched_pairs dictionary to the template for rendering
+   # Pass the matched_pairs dictionary to the template for rendering
     return render(request, 'profileMatcher_Company.html', {'matched_pairs': matched_pairs})
     
+
+#@login_required
+def send_email(request):
+    if request.method == 'POST':
+        student_id = request.POST.get('student_id')
+        try:
+            student = Student.objects.get(pk=student_id)
+        except ObjectDoesNotExist:
+            return HttpResponse('Student not found!', status=404)
+        
+        # Replace the below with your actual email sending logic
+        send_mail(
+            'Subject',
+            'Message body',
+            'sender@example.com',
+            [student.email],
+            fail_silently=False,
+        )
+        return redirect('email_sent')  # Redirect to a confirmation page
+    else:
+        return HttpResponse('Invalid request!', status=400)
+
+def add_course(request):
+    if request.method == 'POST':
+        form = CourseForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('courses')
+    else:
+        form = CourseForm()
+    return render(request, 'course_administration/add_course.html', {'form': form})    
+
+def edit_course(request, course_id):
+    course = Course.objects.get(pk=course_id)
+    if request.method == 'POST':
+        form = CourseForm(request.POST, instance=course)
+        if form.is_valid():
+            form.save()
+            return redirect('courses')
+    else:
+        form = CourseForm(instance=course)
+    return render(request, 'course_administration/edit_course.html', {'form': form, 'course_id': course_id})
+
+def add_student(request, course_id):
+    if request.method == 'POST':
+        form = StudentForm(request.POST)
+        if form.is_valid():
+            student = form.save(commit=False)
+            student.save()
+            course = Course.objects.get(pk=course_id)
+            course.students.add(student)
+            return redirect('edit_course', course_id=course_id)
+    else:
+        form = StudentForm()
+    return render(request, 'course_administration/add_student.html', {'form': form, 'course_id': course_id})
+
+def upload_students(request, course_id):
+    if request.method == 'POST':
+        form = CSVUploadForm(request.POST, request.FILES)
+        if form.is_valid():
+            course = Course.objects.get(pk=course_id)
+            csv_file = request.FILES['csv_file']
+            # Process CSV file and add students to the course
+            # Implement this part according to your CSV processing logic
+            return redirect('edit_course', course_id=course_id)
+    else:
+        form = CSVUploadForm()
+    return render(request, 'course_administration/upload_students.html', {'form': form, 'course_id': course_id})
 

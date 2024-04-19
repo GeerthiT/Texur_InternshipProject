@@ -21,9 +21,9 @@ class Course(models.Model):
     def __str__(self):
         return self.name
 
-
+# Student
 class Student(models.Model):
-    username = models.CharField(max_length=150, unique=True, default="")
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='student_profile')
     first_name = models.CharField(max_length=30, default="")
     last_name = models.CharField(max_length=30, default="")
     student_ID = models.AutoField(primary_key=True)
@@ -41,17 +41,12 @@ class Student(models.Model):
     linkedin_ID = models.URLField(null=True, blank=True)
     github_ID = models.URLField(null=True, blank=True)
     course = models.ManyToManyField(Course, related_name="students")
+    profile_picture = models.ImageField(upload_to='profile_pictures/', blank=True, null=True)
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
 
-    # class_name = models.ForeignKey(Class, on_delete=models.CASCADE)
-    # skills = models.ManyToManyField(max_length=100)
-    # certifications = models.ManyToManyField(Certification)
-    # language_proficiency = models.CharField(max_length=200)
-    # internships = models.ManyToManyField(max_length=100)
-    # portfolio_profile = models.URLField(null=True, blank=True)
-
+ 
 
 class Company(models.Model):
     companyID = models.CharField(max_length=100)
@@ -64,7 +59,11 @@ class Company(models.Model):
     def __str__(self):
         return self.name
 
+<<<<<<< HEAD
     
+=======
+
+>>>>>>> 1d746b9a728e402a6e49c666fd3ba61085fe463a
 
 
     
