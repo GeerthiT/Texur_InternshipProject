@@ -134,6 +134,8 @@ class CourseForm(forms.ModelForm):
     class Meta:
         model = Course
         fields = ['name', 'start_date', 'end_date']
+        widgets = {
+            'start_date': forms.DateInput(attrs={'type': 'date'}),
+            'end_date': forms.DateInput(attrs={'type': 'date'}),
+        }
 
-class CSVUploadForm(forms.Form):
-    csv_file = forms.FileField(label='Upload CSV file')
