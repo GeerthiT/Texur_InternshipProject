@@ -1,16 +1,29 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Update Student</title>
-</head>
-<body>
-    <h1>Update Student Information</h1>
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+<style>
+    .btn-success{
+        width: 150px;
+        margin-left: 32pc;
+    }
+    body 
+    {background-color: rgb(235, 244, 251);}
+.h1{
+    text-align: center;
+}
+</style>
+    <h1 class="h1">Update Student Information</h1>
+    <br>
+    
+    <div class="shadow p-4 mb-5 bg-body rounded">
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit">Update</button>
+        <br>
+
+        <button class="btn btn-success" type="submit"><b>Save</b></button>
     </form>
-</body>
-</html>
+</div>
+    {% endblock %}

@@ -10,6 +10,8 @@ from django.urls import reverse
 from .forms import UserForm, StudentForm
 from .forms import CompanyProfileForm
 from django.contrib.auth.hashers import make_password
+from .models import Student
+from .forms import StudentForm
 
 
 
@@ -107,27 +109,27 @@ def info_student(request):
 
 
 #Update a Student
-def update_student(request, student_id):
-    # Retrieve the student object using the provided ID
-    student = get_object_or_404(Student, pk=student_id)
+def update_student(request, email):
+    # Retrieve the student object using the provided email
+    student = get_object_or_404(Student, email=email)
 
     if request.method == 'POST':
         # Populate the update form with current student data and submitted data
-        form = StudentUpdateForm(request.POST, instance=student)
+        form = StudentForm(request.POST, instance=student)
         if form.is_valid():
             # Save the updated student object to the database
             form.save()
             return redirect('info_student')  # Redirect to student info page or any relevant page
     else:
         # If the request method is GET, display the update form populated with current student data
-        form = StudentUpdateForm(instance=student)
+        form = StudentForm(instance=student)
 
     return render(request, 'student_auth/update_student.html', {'form': form, 'student': student})
 
 # Delete a Student
-def delete_student(request, student_id):
+def delete_student(request, email):
     # Retrieve the student object using the provided ID
-    student = get_object_or_404(Student, pk=student_id)
+    student = get_object_or_404(Student, email=email)
     # Delete the student from DB
     student.delete()
     # Redirect to a relevant page

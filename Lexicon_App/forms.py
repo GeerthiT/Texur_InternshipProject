@@ -55,6 +55,7 @@ class StudentForm(forms.ModelForm):
         fields = (
             'first_name',
             'last_name',
+            'email',
             'student_ID',
             'profile_picture',
             'social_security_number',
@@ -73,6 +74,9 @@ class StudentForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         for field_name in self.fields:
             self.fields[field_name].widget.attrs['class'] = 'form-control'
+            instance = kwargs.get('instance')
+        if instance and instance.email:
+            self.fields['email'].disabled = True
 
 class CompanyProfileForm(forms.Form):
     Companyname = forms.CharField(max_length=100, widget=forms.TextInput(attrs={'class': 'form-control'}))
