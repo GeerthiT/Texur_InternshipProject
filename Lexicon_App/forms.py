@@ -4,6 +4,9 @@ from django.contrib.auth.forms import UserCreationForm
 from django import forms
 from .models import Company, Student, Skillset, Course
 from django.contrib.auth.forms import UserCreationForm
+from django.db import models
+from django.contrib.auth.models import User
+
 # from django.db import models
 
 class admin_reg_form(UserCreationForm):
@@ -105,9 +108,9 @@ class CompanyProfileForm(forms.Form):
                 "Password and Confirm Password fields do not match."
             )
  
-     
+ 
 
-    def save(self, commit=True):
+def save(self, commit=True):
         if not commit:
             raise NotImplementedError("Can't create Company instance without commit=True")
 
@@ -135,6 +138,7 @@ class CompanyProfileForm(forms.Form):
         )
         company.save()
 
+
         return company
 
 
@@ -147,3 +151,6 @@ class CourseForm(forms.ModelForm):
             'end_date': forms.DateInput(attrs={'type': 'date'}),
         }
 
+
+class CSVUploadForm(forms.Form):
+    csv_file = forms.FileField(label='Upload CSV file')

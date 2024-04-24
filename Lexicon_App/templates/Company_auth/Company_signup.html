@@ -1,6 +1,4 @@
-{% extends "base.html" %} 
-{% load static %} 
-{% block content %}
+{% extends "base.html" %} {% load static %} {% block content %}
 
 <div class="container">
   <h2 class="h2"><b>Company Profile</b></h2>
@@ -9,18 +7,18 @@
   <h5 class="h5"><b>Fill your Information</b></h5>
   <br />
 
-  <form class="form" action="{% url 'clogin_company' %}" method="post">
-    {% csrf_token %} 
-    {{ form.as_p }}
+  <form class="form" action="{% url 'company_signup' %}" method="post">
+    {% csrf_token %} {{ form.as_p }}
 
     <br />
 
     <button type="submit">Submit</button>
-
-    <!-- Add the delete button/link here -->
-    <a href="{% url 'delete_company' company.id %}" class="btn btn-danger">Delete Company</a>
   </form>
 </div>
 
-{% endblock %}
+<br />
+<br />
+<br />
+<br />
 
+{% endblock %}
