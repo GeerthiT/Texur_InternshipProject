@@ -1,8 +1,149 @@
+
 {% extends "base.html" %}
 {% load static %}
 
 {% block content %}
+<style>
+    .head1 {
+        text-align: center;
+    }
 
+    .form1{
+    margin-left: 500px;
+    }
+
+    .but{
+        margin-bottom: 20px;
+    }
+
+    body {background-color: rgb(235, 244, 251);}
+
+    .btn-primary {
+    width: 150px;
+    margin-left: 20px;
+}
+</style>
+
+
+<h1 class="head1">Personal Information</h1>
+<br>
+<div class="shadow p-4 mb-5 bg-body rounded">
+    <div style="display: flex; align-items: center;">
+        <!-- Profile Picture -->
+        <div class="picture">
+            {% if student.profile_picture %}
+                <img src="{{ student.profile_picture.url }}" alt="Profile Picture" style="width: 150px; height: 150px; border-radius: 50%;">
+            {% else %}
+                <p>No profile picture uploaded.</p>
+            {% endif %}
+        </div>
+    
+        <!-- Spacer -->
+        <div style="flex-grow: 1;"></div>
+    
+        <!-- Edit and Delete Buttons -->
+        <div class="but" style="display: flex;">
+            <!-- Update student -->
+            {% if student.email %}
+                <form action="{% url 'update_student' student.email %}" method="get">
+                    <button class="btn btn-block btn-info custom-width" type="submit"><b>Edit</b></button>
+                </form>
+                <div style="margin-right: 10px;"></div>
+    
+                <!-- Delete student -->
+                <form action="{% url 'delete_student' student.email %}" method="post">
+                    {% csrf_token %}
+                    <button class="btn btn-block btn-warning custom-width" type="submit"><b>Delete</b></button>
+                </form>
+            {% endif %}
+        </div>
+    </div>
+    <br>
+    <br>
+
+    
+ 
+   <div class="form1">
+
+    {% if student %}
+        {% if editing %}
+            <form  id="editForm" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <!-- Input fields for editable student information -->
+                <p><strong>First Name:</strong> <input type="text" id="firstNameInput" name="first_name" value="{{ student.first_name }}"></p>
+                <p><strong>Last Name:</strong> <input type="text" id="lastNameInput" name="last_name" value="{{ student.last_name }}"></p>
+                <p><strong>User:</strong> <input type="text" id="userInput" name="user" value="{{ student.user }}"></p>
+                <p><strong>Email:</strong> <input type="email" id="emailInput" name="email" value="{{ student.email }}"></p>
+                <p><strong>Student ID:</strong> <input type="text" id="studentIDInput" name="student_ID" value="{{ student.student_ID }}"></p>
+                <p><strong>Social Security Number:</strong> <input type="text" id="ssnInput" name="social_security_number" value="{{ student.social_security_number }}"></p>
+                <p><strong>Phone Number:</strong> <input type="text" id="phoneInput" name="phone_number" value="{{ student.phone_number }}"></p>
+                <p><strong>Age:</strong> <input type="number" id="ageInput" name="age" value="{{ student.age }}"></p>
+                <p><strong>Postal Address:</strong> <input type="text" id="addressInput" name="postal_address" value="{{ student.postal_address }}"></p>
+                <p><strong>Skills:</strong> 
+                    <select name="skills" id="skillsInput" multiple>
+                        {% for skill in student.skills.all %}
+                            <option value="{{ skill.name }}" selected>{{ skill.name }}</option>
+                        {% endfor %}
+                        <!-- You can populate this dropdown with options from a database or predefined list -->
+                    </select>
+                </p>
+                <p><strong>Courses:</strong>
+                    <select name="courses" id="coursesInput" multiple>
+                        {% for course in student.course.all %}
+                            <option value="{{ course.name }}" selected>{{ course.name }}</option>
+                        {% endfor %}
+                        <!-- You can populate this dropdown with options from a database or predefined list -->
+                    </select>
+                </p>
+                <p><strong>Linkedin ID:</strong> <input type="text" id="linkedinIDInput" name="linkedin_ID" value="{{ student.linkedin_ID }}"></p>
+                <p><strong>Github ID:</strong> <input type="text" id="githubIDInput" name="github_ID" value="{{ student.github_ID }}"></p>
+              <!-- Add input fields for other editable student information -->
+              <div style="text-align: center;">
+                <button class="btn btn-block btn-success" type="submit" style="width: 100px;">Sign Up</button>
+              </div>
+            </form>
+    {% else %}
+         
+            <p><strong>First Name:</strong> {{ student.first_name }}</p>
+            <p><strong>Last Name:</strong> {{ student.last_name }}</p>
+            <p><strong>user:</strong> {{ student.user }}</p>
+            <p><strong>Email:</strong> {{ student.email }}</p>
+            <p><strong>Student ID:</strong> {{ student.student_ID }}</p>
+            <p><strong>Social Security Number:</strong> {{ student.social_security_number }}</p>
+            <p><strong>Phone Number:</strong> {{ student.phone_number }}</p>
+            <p><strong>Age:</strong> {{ student.age }}</p>
+            <p><strong>Postal Address:</strong> {{ student.postal_address }}</p>
+            <p><strong>Skills:</strong>
+                {% for skill in student.skills.all %}
+                    {{ skill.name }}{% if not forloop.last %}, {% endif %}
+                {% endfor %}
+            </p>
+            <p><strong>Courses:</strong>
+                {% for course in student.course.all %}
+                    {{ course.name }}{% if not forloop.last %}, {% endif %}
+                {% endfor %}
+            </p>
+            <p><strong>Linkedin ID:</strong> {{ student.linkedin_ID }}</p>
+            <p><strong>Github ID:</strong> {{ student.github_ID }}</p>
+<br>
+
+            {% if student.cv %}
+            <button class="btn btn-primary" onclick="window.open('{{ student.cv.url }}')">Download CV</button>
+            {% endif %}
+            {% endif %}
+        {% else %}
+            <p>No student information found.</p>
+         {% endif %}
+      
+    
+</div>
+
+
+
+ 
+</div>
+
+=======
 <h1>Personal Information</h1>
 <br>
 <div class="info_student">
@@ -40,5 +181,6 @@
         <p>No student information found.</p>
     {% endif %}
 </div>
+
 
 {% endblock %}

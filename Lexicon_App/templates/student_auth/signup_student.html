@@ -21,7 +21,12 @@
   {% csrf_token %}
   {{ user_form.as_p }}
   {{ student_form.as_p }}
-  <button type="submit">Sign Up</button>
+ 
+  <br>
+  <div style="text-align: center;">
+    <button class="btn btn-block btn-success" type="submit" style="width: 100px;">Sign Up</button>
+  </div>
+  
 </form>
 
    <style>
