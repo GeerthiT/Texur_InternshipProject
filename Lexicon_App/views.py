@@ -81,7 +81,7 @@ def login_student(request):
             return HttpResponseRedirect(reverse('info_student', args=[student.student_ID]))
         else:
             # Return an error message or render a login form with error message
-            return render(request, 'login.html', {'error_message': 'Invalid username or password'})
+            return render(request, 'student_auth/login_student.html', {'error_message': 'Invalid username or password'})
     else:
         # Render the login form
         return render(request, 'student_auth/login_student.html')

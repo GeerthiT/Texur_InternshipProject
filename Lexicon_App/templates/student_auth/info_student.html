@@ -142,45 +142,45 @@
 
  
 </div>
-
+<!--
 =======
-<h1>Personal Information</h1>
-<br>
-<div class="info_student">
-    {% if student %}
-        <p><strong>First Name:</strong> {{ student.first_name }}</p>
-        <p><strong>Last Name:</strong> {{ student.last_name }}</p>
-        <p><strong>Email:</strong> {{ student.email }}</p>
-        {% if student.profile_picture %}
-            <img src="{{ student.profile_picture.url }}" alt="Profile Picture">
-        {% else %}
-            <p><em>No profile picture available</em></p>
-        {% endif %}
-        <p><strong>Student ID:</strong> {{ student.student_ID }}</p>
-        <p><strong>Social Security Number:</strong> {{ student.social_security_number }}</p>
-        <p><strong>Phone Number:</strong> {{ student.phone_number }}</p>
-        <p><strong>Age:</strong> {{ student.age }}</p>
-        <p><strong>Postal Address:</strong> {{ student.postal_address }}</p>
-        <p><strong>Skills:</strong>
-            {% for skill in student.skills.all %}
-                {{ skill.name }}{% if not forloop.last %}, {% endif %}
-            {% endfor %}
-        </p>
-        <p><strong>Courses:</strong>
-            {% for course in student.course.all %}
-                {{ course.name }}{% if not forloop.last %}, {% endif %}
-            {% endfor %}
-        </p>
-        <p><strong>Linkedin ID:</strong> {{ student.linkedin_ID }}</p>
-        <p><strong>Github ID:</strong> {{ student.github_ID }}</p>
-        <!-- Add more fields as needed -->
-        {% if student.cv %}
-            <button class="btn btn-primary" onclick="window.open('{{ student.cv.url }}')">Download CV</button>
-        {% endif %}
-    {% else %}
-        <p>No student information found.</p>
-    {% endif %}
-</div>
-
+        <h1>Personal Information</h1>
+        <br>
+        <div class="info_student">
+            {% if student %}
+                <p><strong>First Name:</strong> {{ student.first_name }}</p>
+                <p><strong>Last Name:</strong> {{ student.last_name }}</p>
+                <p><strong>Email:</strong> {{ student.email }}</p>
+                {% if student.profile_picture %}
+                    <img src="{{ student.profile_picture.url }}" alt="Profile Picture">
+                {% else %}
+                    <p><em>No profile picture available</em></p>
+                {% endif %}
+                <p><strong>Student ID:</strong> {{ student.student_ID }}</p>
+                <p><strong>Social Security Number:</strong> {{ student.social_security_number }}</p>
+                <p><strong>Phone Number:</strong> {{ student.phone_number }}</p>
+                <p><strong>Age:</strong> {{ student.age }}</p>
+                <p><strong>Postal Address:</strong> {{ student.postal_address }}</p>
+                <p><strong>Skills:</strong>
+                    {% for skill in student.skills.all %}
+                        {{ skill.name }}{% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                </p>
+                <p><strong>Courses:</strong>
+                    {% for course in student.course.all %}
+                        {{ course.name }}{% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                </p>
+                <p><strong>Linkedin ID:</strong> {{ student.linkedin_ID }}</p>
+                <p><strong>Github ID:</strong> {{ student.github_ID }}</p>
+                Add more fields as needed 
+                {% if student.cv %}
+                    <button class="btn btn-primary" onclick="window.open('{{ student.cv.url }}')">Download CV</button>
+                {% endif %}
+            {% else %}
+                <p>No student information found.</p>
+            {% endif %}
+        </div>
+-->
 
 {% endblock %}

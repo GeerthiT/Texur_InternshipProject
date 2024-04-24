@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+{% load static %} 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LEXICON Courses</title>
+</head>
+
+{% block content %}
+    <style>
+        .btn-edit {
+            background-color: #f5df1f;
+            border-radius: 35px;
+            padding: 5px 19.34px;
+            color: #000000;
+            text-decoration: none;
+        }
+        .btn-info {
+            background-color: #1fa7f5;
+            border-radius: 35px;
+            padding: 5px 19.34px;
+            color: #fcfbfb;
+            text-decoration: none;
+        }
+
+        .btn-delete {
+            background-color: #e41512;
+            border-radius: 35px;
+            padding: 5px 10px;
+            color: #000000;
+            text-decoration: none;
+        }
+
+        .btn-add {
+            background-color: #09EB12;
+            border-radius: 35px;
+            padding: 1px 17.9px;
+            color: #000000;
+            text-decoration: none;
+        }
+    </style>
+
+    <h1 class="text-center">List of Courses</h1>
+    <div class="courses-container">
+        <div class="container mt-2">
+            {% if course_data %}
+                <ul class="list-group">
+                    {% for course in course_data %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center" style="border-radius: 35px; margin-bottom: 10px;">
+                            <span>
+                                {{ course.name }} ({{ course.start_date }} - {{ course.end_date }})
+                            </span>
+                            <span>
+                                <a href="{% url 'students' course_id=course.courseID %}" class="btn-info">View students</a>
+                                <a href="{% url 'edit_course' course_id=course.courseID %}" class="btn-edit">Edit</a>
+                                
+                            </span>
+                        </li>
+                    <!--    <p>
+                            <a href="{% url 'add_student' course_id=course.courseID %}">Add Student</a>
+                        </p>
+                        <p>
+                            <a href="{% static 'student_list.csv' %}" download>Download file format to upload students list</a>
+                        </p>
+                       
+                        <p>
+                            <label for="csv-file">Upload Students CSV:</label>
+                            <input type="file" id="csv-file" name="csv_file" accept=".csv">
+                            
+                            <button id="upload-csv-btn" type="button">Upload</button>
+                        </p>
+                        <script>
+                            document.getElementById("upload-csv-btn").addEventListener("click", function() {
+                                var formData = new FormData();
+                                var fileInput = document.getElementById('csv-file');
+                                formData.append('csv_file', fileInput.files[0]);
+                                
+                                fetch("{% url 'upload_students' course_id=course.courseID %}", {
+                                    method: 'POST',
+                                    body: formData,
+                                    headers: {
+                                        'X-CSRFToken': '{{ csrf_token }}'
+                                    }
+                                }).then(function(response) {
+                                    if (response.ok) {
+                                        alert('CSV file uploaded successfully.');
+                                    } else {
+                                        alert('Failed to upload CSV file.');
+                                    }
+                                }).catch(function(error) {
+                                    console.error('Error uploading CSV file:', error);
+                                });
+                            });
+                            </script> --> 
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>No courses found.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    
+    
+    <button type="submit" form="course-form">Save Changes</button>
+   
+   
+{% endblock %}
+
