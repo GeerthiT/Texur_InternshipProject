@@ -97,7 +97,9 @@
                 <p><strong>Linkedin ID:</strong> <input type="text" id="linkedinIDInput" name="linkedin_ID" value="{{ student.linkedin_ID }}"></p>
                 <p><strong>Github ID:</strong> <input type="text" id="githubIDInput" name="github_ID" value="{{ student.github_ID }}"></p>
               <!-- Add input fields for other editable student information -->
-                <button type="submit" name="action" value="save">Save</button>
+              <div style="text-align: center;">
+                <button class="btn btn-block btn-success" type="submit" style="width: 100px;">Sign Up</button>
+              </div>
             </form>
     {% else %}
          

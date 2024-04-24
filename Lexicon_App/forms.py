@@ -25,7 +25,7 @@ class UserForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ('username', 'email')  
+        fields = ('username',)  
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -77,6 +77,10 @@ class StudentForm(forms.ModelForm):
             instance = kwargs.get('instance')
         if instance and instance.email:
             self.fields['email'].disabled = True
+
+# class PasswordForm(UserCreationForm):
+#     class Meta(UserCreationForm.Meta):
+#         fields = ['password1', 'password2']
 
 class CompanyProfileForm(forms.Form):
     Companyname = forms.CharField(max_length=100, widget=forms.TextInput(attrs={'class': 'form-control'}))
