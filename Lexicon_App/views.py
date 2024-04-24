@@ -10,7 +10,7 @@ from django.core.mail import send_mail
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from collections import defaultdict
-from django.urls import reverse
+
 
 
 
@@ -19,13 +19,16 @@ from django.shortcuts import render
 from django.contrib import messages
 from Lexicon_App.models import Course, Student, Company, Skillset
 from django.db.models import Q
-from django.contrib import messages
-from .forms import RegistrationForm, UserRegistrationForm
+
+
+from .forms import CompanyProfileForm, StudentForm, UserForm, UserRegistrationForm
 from .forms import CompanyProfileForm
-from .forms import CompanyProfileForm
+
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
+
+from Lexicon_App import models
 
 
 def index(request):
@@ -216,7 +219,8 @@ def search(request):
     else:
         return render(request, "search.html", {})
 
-
+    # company  views.py starts
+    
 def company_login(request):
     if request.method == "POST":
         # Get data from the form
@@ -227,10 +231,10 @@ def company_login(request):
         user = User.objects.create(username=username, password=password)
 
         # Redirect to a success page or do any other necessary processing
-        return render(request, "success.html")
+        return render(request, "company_auth/company_dashboard.html")
     else:
-        form = RegistrationForm()
-    return render(request, "Company_auth/Company_login.html", {"form": form})
+        form = UserRegistrationForm()
+    return render(request, "company_auth/company_login.html", {"form": form})
 def company_signup(request):
     if request.method == 'POST':
         form = CompanyProfileForm(request.POST)
@@ -248,9 +252,10 @@ def company_signup(request):
 
 
 def company_dashboard(request):
-    company_info = request.user.company_profile  # Assuming you have a CompanyProfile model linked to User
+    company_info = request.user.company_profile  
     InternshipPost = InternshipPost.objects.filter(company=company_info)
     return render(request, 'company_auth/company_dashboard.html', {'company_info': company_info, 'Internship_Post': InternshipPost})
+
 
 # Delete a company
 def delete_company(request, company_id):
@@ -275,7 +280,11 @@ def update_company(request, company_id):
             return redirect('company_profile')  # Redirect to the company profile page after successful update
     else:
         form = CompanyUpdateForm(instance=company)
-    return render(request, 'update_company.html', {'form': form})
+    return render(request, 'update_company.html', {'form': form}) 
+
+  # internship views.py 
+
+
 
 
 def profile_matcherStudent(request):

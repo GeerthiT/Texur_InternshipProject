@@ -4,6 +4,8 @@ from django.contrib.auth.forms import UserCreationForm
 from django import forms
 from .models import Company, Student, Skillset, Course
 from django.contrib.auth.forms import UserCreationForm
+from django.db import models
+from django.contrib.auth.models import User
 
 # from django.db import models
 
@@ -74,6 +76,15 @@ class StudentForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         for field_name in self.fields:
             self.fields[field_name].widget.attrs['class'] = 'form-control'
+            
+class UserRegistrationForm(forms.ModelForm):
+    password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control'}))
+    confirm_password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control'}))
+ 
+    class Meta:
+        model = User
+        fields = ['username', 'password', 'confirm_password']
+                   
 
 class CompanyProfileForm(forms.Form):
     Companyname = forms.CharField(max_length=100, widget=forms.TextInput(attrs={'class': 'form-control'}))
@@ -98,9 +109,9 @@ class CompanyProfileForm(forms.Form):
                 "Password and Confirm Password fields do not match."
             )
  
-     
+ 
 
-    def save(self, commit=True):
+def save(self, commit=True):
         if not commit:
             raise NotImplementedError("Can't create Company instance without commit=True")
 
@@ -127,14 +138,7 @@ class CompanyProfileForm(forms.Form):
             address=address
         )
         company.save()
-<<<<<<< HEAD
- 
-   
- 
-        return company
-    
-   
-=======
+
 
         return company
 
@@ -146,4 +150,4 @@ class CourseForm(forms.ModelForm):
 
 class CSVUploadForm(forms.Form):
     csv_file = forms.FileField(label='Upload CSV file')
->>>>>>> 1d746b9a728e402a6e49c666fd3ba61085fe463a
+
