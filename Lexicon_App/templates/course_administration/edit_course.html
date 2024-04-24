@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+<h1>Edit course</h1>
+<p>
+    <form id="course-form" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+    </form>
+</p>
+
+<p>
+    <a href="{% url 'add_student' course_id=course_id %}">Add Student</a>
+</p>
+<p>
+    <a href="{% static 'student_list.csv' %}" download>Download file format to upload students list</a>
+</p>
+
+<p>
+    <label for="csv-file">Upload Students CSV:</label>
+    <input type="file" id="csv-file" name="csv_file" accept=".csv">
+    
+    <button id="upload-csv-btn" type="button">Upload</button>
+</p>
+
+<button type="submit" form="course-form">Save Changes</button>
+
+<script>
+document.getElementById("upload-csv-btn").addEventListener("click", function() {
+    var formData = new FormData();
+    var fileInput = document.getElementById('csv-file');
+    formData.append('csv_file', fileInput.files[0]);
+    
+    fetch("{% url 'upload_students' course_id=course_id %}", {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-CSRFToken': '{{ csrf_token }}'
+        }
+    }).then(function(response) {
+        if (response.ok) {
+            alert('CSV file uploaded successfully.');
+        } else {
+            alert('Failed to upload CSV file.');
+        }
+    }).catch(function(error) {
+        console.error('Error uploading CSV file:', error);
+    });
+});
+</script>
+
+{% endblock %}

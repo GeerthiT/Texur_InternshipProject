@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+<h1>EDIT course - upload csv</h1>
+<p>
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="file" name="csv_file">
+        <button type="submit">Upload Students</button>
+    </form>
+
+</p>
+
+{% endblock %}

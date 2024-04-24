@@ -24,7 +24,10 @@
                     <div class="card-body">
                         <strong>Student: {{ student_info.student.first_name }} {{ student_info.student.last_name }}</strong>
                         <br><br>
-                        <p><strong>Course:</strong> {{ student_info.student.course.name }}</p>
+                        <p><strong>Course:</strong> 
+                            {% for course in student_info.student.course.all %}
+                            {{ course.name }}{% if not forloop.last %}, {% endif %}
+                        {% endfor %}</p>
                         <p class="card-text"><strong>Email:</strong> {{ student_info.student.email }}</p>
                         <!-- Form to send email -->
                         <form action="{% url 'send_email' %}" method="post">

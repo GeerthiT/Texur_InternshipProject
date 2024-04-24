@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+<h1>Send Email</h1>
+    <form action="{% url 'send_email' %}" method="post">
+        {% csrf_token %}
+        <label for="student_id">Student ID:</label>
+        <input type="text" id="student_id" name="student_id">
+        <button type="submit">Send Email</button>
+    </form>
+
+{% endblock %}
