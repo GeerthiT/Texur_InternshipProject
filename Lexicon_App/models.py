@@ -53,11 +53,12 @@ class Company(models.Model):
     name = models.CharField(max_length=100)
     contact_details = models.CharField(max_length=100, default='')
     accepting_interns = models.BooleanField(default=False)
-    openings_job_description = models.TextField(blank=True)
+    openings_internship_description = models.TextField(blank=True)
     required_skills = models.ManyToManyField(Skillset)
 
     def __str__(self):
         return self.name
+
 
 
 
