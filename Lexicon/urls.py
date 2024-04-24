@@ -40,6 +40,7 @@ urlpatterns = [
     path("company_signup/", views.company_signup, name="Company_signup"),
     path("search/", views.search, name="search"),
     path("courses/", views.courses, name="courses"),
+    path("student_list/", views.student_list, name="student_list"),
     path("company/", views.companies, name="company"),
     path('profileMatcher_Student/', views.profile_matcherStudent, name='profile_matcherStudent'),
     path('profileMatcher_Company/', views.profile_matcherCompany, name='profile_matcherCompany'),

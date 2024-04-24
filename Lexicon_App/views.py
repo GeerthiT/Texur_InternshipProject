@@ -157,7 +157,11 @@ def courses(request):
     #print(context)
     return render(request,"courses.html", context)
 
-
+def student_list(request):
+    data = Course.objects.order_by('name')
+    context = {'course_data': data }
+    #print(context)
+    return render(request,"student_auth/student_list.html", context)
 
 
 def logout_all_portal(request):
