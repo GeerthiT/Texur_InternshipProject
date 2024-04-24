@@ -3,32 +3,16 @@ from Lexicon_App.models import Course, Skillset, Student,Company
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate,login,logout
 from django.contrib import messages
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseRedirect, HttpResponse, HttpResponseServerError
 import csv
+from io import TextIOWrapper
 from django.urls import reverse
 from django.core.mail import send_mail
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect
-from collections import defaultdict
-
-
-
-
-
-from django.shortcuts import render
-from django.contrib import messages
-from Lexicon_App.models import Course, Student, Company, Skillset
-from django.db.models import Q
-
-
-from .forms import CompanyProfileForm, StudentForm, UserForm, UserRegistrationForm
-from .forms import CompanyProfileForm
-
-from django.contrib.auth.models import User
+from .forms import UserForm, StudentForm, CompanyProfileForm, CourseForm, CSVUploadForm
+from django.contrib.auth.hashers import make_password
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
-
-from Lexicon_App import models
 
 
 def index(request):
@@ -94,6 +78,8 @@ def login_student(request):
         return render(request, 'student_auth/login_student.html')
 
        
+
+       
 def signup_student(request):
     if request.method == 'POST':
         user_form = UserForm(request.POST)
@@ -119,27 +105,27 @@ def info_student(request, student_ID):
 
 
 #Update a Student
-def update_student(request, student_id):
-    # Retrieve the student object using the provided ID
-    student = get_object_or_404(Student, pk=student_id)
+def update_student(request, email):
+    # Retrieve the student object using the provided email
+    student = get_object_or_404(Student, email=email)
 
     if request.method == 'POST':
         # Populate the update form with current student data and submitted data
-        form = StudentUpdateForm(request.POST, instance=student)
+        form = StudentForm(request.POST, instance=student)
         if form.is_valid():
             # Save the updated student object to the database
             form.save()
             return redirect('info_student')  # Redirect to student info page or any relevant page
     else:
         # If the request method is GET, display the update form populated with current student data
-        form = StudentUpdateForm(instance=student)
+        form = StudentForm(instance=student)
 
     return render(request, 'student_auth/update_student.html', {'form': form, 'student': student})
 
 # Delete a Student
-def delete_student(request, student_id):
+def delete_student(request, email):
     # Retrieve the student object using the provided ID
-    student = get_object_or_404(Student, pk=student_id)
+    student = get_object_or_404(Student, email=email)
     # Delete the student from DB
     student.delete()
     # Redirect to a relevant page
@@ -168,7 +154,7 @@ def welcome_admin(request):
 def courses(request):
     data = Course.objects.order_by('name')
     context = {'course_data': data }
-    print(context)
+    #print(context)
     return render(request,"courses.html", context)
 
 
@@ -178,11 +164,15 @@ def logout_all_portal(request):
     logout(request)
     return redirect('index')
 
-def students(request):
-    data = Student.objects.order_by('first_name')
-    data = Student.objects.order_by('first_name')
-    context = {'student_data': data }
-    return render(request,"students.html", context)
+def students(request, course_id):
+    # Get the course object based on the course ID
+    course = get_object_or_404(Course, pk=course_id)
+    
+    # Filter students enrolled in the specific course
+    student_data = course.students.all().order_by('first_name')
+    
+    context = {'student_data': student_data, 'course': course }
+    return render(request, "students.html", context)
 
 def companies(request):
     data = Company.objects.order_by('name')
@@ -383,12 +373,16 @@ def add_course(request):
     return render(request, 'course_administration/add_course.html', {'form': form})    
 
 def edit_course(request, course_id):
-    course = Course.objects.get(pk=course_id)
+    course = get_object_or_404(Course, pk=course_id)
     if request.method == 'POST':
         form = CourseForm(request.POST, instance=course)
         if form.is_valid():
             form.save()
-            return redirect('courses')
+            # Check if a flag indicating the need to update students is set
+            if request.POST.get('update_students'):
+                return redirect('upload_students', course_id=course_id)
+            else:
+                return redirect('courses')
     else:
         form = CourseForm(instance=course)
     return render(request, 'course_administration/edit_course.html', {'form': form, 'course_id': course_id})
@@ -408,14 +402,47 @@ def add_student(request, course_id):
 
 def upload_students(request, course_id):
     if request.method == 'POST':
-        form = CSVUploadForm(request.POST, request.FILES)
-        if form.is_valid():
-            course = Course.objects.get(pk=course_id)
-            csv_file = request.FILES['csv_file']
-            # Process CSV file and add students to the course
-            # Implement this part according to your CSV processing logic
+        csv_file = request.FILES.get('csv_file')
+        if not csv_file:
+            messages.error(request, 'No file selected')
             return redirect('edit_course', course_id=course_id)
+
+        if not csv_file.name.endswith('.csv'):
+            messages.error(request, 'Invalid file format. Please upload a CSV file.')
+            return redirect('edit_course', course_id=course_id)
+
+        decoded_file = csv_file.read().decode('utf-8').splitlines()
+        csv_reader = csv.reader(decoded_file, delimiter=';')
+        course = Course.objects.get(pk=course_id)  # Retrieve the course instance
+
+        for row in csv_reader:
+            if len(row) < 3:
+                messages.warning(request, f'Skipping row: {row}. Each row should contain at least First Name, Last Name, and Email.')
+                continue
+
+            first_name, last_name, email = row[:3]  # Extract first name, last name, and email from the row
+            
+            # Assuming you have a mechanism to create or retrieve users based on email
+            user, created = User.objects.get_or_create(email=email, defaults={'username': email})
+            
+            # Check if a Student object already exists for this user
+            student, student_created = Student.objects.get_or_create(user=user)
+            
+            # Update the student details if it was already created
+            if not student_created:
+                student.first_name = first_name
+                student.last_name = last_name
+                student.save()
+            else:
+                student.first_name = first_name
+                student.last_name = last_name
+                student.save()
+            
+            course.students.add(student)
+
+        messages.success(request, 'Students uploaded successfully.')
+        return redirect('edit_course', course_id=course_id)
     else:
-        form = CSVUploadForm()
-    return render(request, 'course_administration/upload_students.html', {'form': form, 'course_id': course_id})
+        messages.error(request, 'Invalid request method')
+        return redirect('edit_course', course_id=course_id)
 

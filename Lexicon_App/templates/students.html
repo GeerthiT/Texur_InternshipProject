@@ -1,6 +1,15 @@
 {% extends "base.html" %} {% load static %} {% block content %}
+<style>
+    .btn-info {
+            background-color: #1fa7f5;
+            border-radius: 35px;
+            padding: 5px 10px;
+            color: #fcfbfb;
+            text-decoration: none;
+        }
+</style>
 
-<h1 class="text-center">List of courses</h1>
+<h1 class="text-center">List of Students</h1>
 <div class="container">
 
 <br />
@@ -11,7 +20,8 @@
         {% for student in student_data %}
             
             <ul>
-                <li>{{ student.first_name }} {{ student.last_name }} {{ student.email }}</li>
+                <li>{{ student.first_name }} {{ student.last_name }} {{ student.email }}
+                <a href="{% url 'info_student' student_ID=student.student_ID %}" class="btn-info">View details</a></li>
             </ul>
         {% endfor %}   
 

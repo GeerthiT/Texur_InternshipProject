@@ -28,7 +28,7 @@ class UserForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ('username', 'email')  
+        fields = ('username',)  
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -58,6 +58,7 @@ class StudentForm(forms.ModelForm):
         fields = (
             'first_name',
             'last_name',
+            'email',
             'student_ID',
             'profile_picture',
             'social_security_number',
@@ -76,15 +77,13 @@ class StudentForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         for field_name in self.fields:
             self.fields[field_name].widget.attrs['class'] = 'form-control'
-            
-class UserRegistrationForm(forms.ModelForm):
-    password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control'}))
-    confirm_password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control'}))
- 
-    class Meta:
-        model = User
-        fields = ['username', 'password', 'confirm_password']
-                   
+            instance = kwargs.get('instance')
+        if instance and instance.email:
+            self.fields['email'].disabled = True
+
+# class PasswordForm(UserCreationForm):
+#     class Meta(UserCreationForm.Meta):
+#         fields = ['password1', 'password2']
 
 class CompanyProfileForm(forms.Form):
     Companyname = forms.CharField(max_length=100, widget=forms.TextInput(attrs={'class': 'form-control'}))
@@ -147,7 +146,11 @@ class CourseForm(forms.ModelForm):
     class Meta:
         model = Course
         fields = ['name', 'start_date', 'end_date']
+        widgets = {
+            'start_date': forms.DateInput(attrs={'type': 'date'}),
+            'end_date': forms.DateInput(attrs={'type': 'date'}),
+        }
+
 
 class CSVUploadForm(forms.Form):
     csv_file = forms.FileField(label='Upload CSV file')
-

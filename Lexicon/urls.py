@@ -36,8 +36,16 @@ urlpatterns = [
     path('company_dashboard/', views.company_dashboard, name='company_dashboard'),
     path("login_student/", views.login_student, name="login_student"),
     path("signup_student/", views.signup_student, name="signup_student"),
+
+    path("info_student/", views.info_student, name="info_student"),
+    path("update_student/<str:email>/", views.update_student, name="update_student"),
+    path("delete_student/<str:email>/", views.delete_student, name="delete_student"),
+
     path("info_student/<int:student_ID>/", views.info_student, name="info_student"),
+
     path("students/", views.students, name="students"),
+    path("clogin_company/", views.clogin_company, name="clogin_company"),
+    path("company_signup/", views.company_signup, name="Company_signup"),
     path("search/", views.search, name="search"),
     path("courses/", views.courses, name="courses"),
     path("company/", views.companies, name="company"),

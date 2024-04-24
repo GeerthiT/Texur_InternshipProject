@@ -7,8 +7,19 @@
 <p>
     <form method="post">
         {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Save</button>
+        <div class="form-group">
+            <label for="id_name">Course Name:</label>
+            {{ form.name }}
+        </div><br><br>
+        <div class="form-group">
+            <label for="id_start_date">Start Date:</label>
+            {{ form.start_date }}
+        </div><br>
+        <div class="form-group">
+            <label for="id_end_date">End Date:</label>
+            {{ form.end_date }}
+        </div><br>
+        <button type="submit" class="btn btn-primary">Save</button>
     </form>
 </p>
 
