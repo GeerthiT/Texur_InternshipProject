@@ -11,11 +11,18 @@ from django.core.mail import send_mail
 from django.contrib.auth.decorators import login_required
 from .forms import UserForm, StudentForm, CompanyProfileForm, CourseForm
 from django.contrib.auth.hashers import make_password
+
+from .models import Student
+from .forms import StudentForm
+
+
+
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
 from django.conf import settings
 from django.http import FileResponse, HttpResponseBadRequest
 import os
+
 
 def index(request):
     return render(request, "index.html")
@@ -80,6 +87,8 @@ def login_student(request):
         return render(request, 'student_auth/login_student.html')
 
        
+
+       
 def signup_student(request):
     if request.method == 'POST':
         user_form = UserForm(request.POST)
@@ -105,27 +114,27 @@ def info_student(request, student_ID):
 
 
 #Update a Student
-def update_student(request, student_id):
-    # Retrieve the student object using the provided ID
-    student = get_object_or_404(Student, pk=student_id)
+def update_student(request, email):
+    # Retrieve the student object using the provided email
+    student = get_object_or_404(Student, email=email)
 
     if request.method == 'POST':
         # Populate the update form with current student data and submitted data
-        form = StudentUpdateForm(request.POST, instance=student)
+        form = StudentForm(request.POST, instance=student)
         if form.is_valid():
             # Save the updated student object to the database
             form.save()
             return redirect('info_student')  # Redirect to student info page or any relevant page
     else:
         # If the request method is GET, display the update form populated with current student data
-        form = StudentUpdateForm(instance=student)
+        form = StudentForm(instance=student)
 
     return render(request, 'student_auth/update_student.html', {'form': form, 'student': student})
 
 # Delete a Student
-def delete_student(request, student_id):
+def delete_student(request, email):
     # Retrieve the student object using the provided ID
-    student = get_object_or_404(Student, pk=student_id)
+    student = get_object_or_404(Student, email=email)
     # Delete the student from DB
     student.delete()
     # Redirect to a relevant page

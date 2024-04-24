@@ -1,8 +1,20 @@
 
+
+div.topbar {
+  /* background: #202020; */
+
+  background-size: auto 45px;
+  padding: 10px;
+
+  background-size: auto 45px;
+  padding: 10px;
+
+
  #header {
     background:#ff0;
     padding:10px;
  }
+
 
 
 
@@ -362,6 +374,10 @@ h5{
     border-radius: 1pc;
   }
 
+  
+
+
+
 
 .content {
     min-height: calc(100vh - 60px); /* Adjust this value to match the height of your footer */
@@ -383,3 +399,4 @@ h5{
   text-align: center;
   padding: 20px 0;
 }
+
