@@ -51,15 +51,15 @@ class UserForm(forms.ModelForm):
 
 class StudentForm(forms.ModelForm):
     skills = forms.ModelMultipleChoiceField(queryset=Skillset.objects.all(), widget=forms.CheckboxSelectMultiple, required=False)
-    courses = forms.ModelMultipleChoiceField(queryset=Course.objects.all(), widget=forms.CheckboxSelectMultiple, required=False)
+    courses = forms.ModelChoiceField(queryset=Course.objects.all(), empty_label=None, required=True)
 
     class Meta:
         model = Student
         fields = (
             'first_name',
             'last_name',
+            'password',
             'email',
-            'password',  
             'student_ID',
             'profile_picture',
             'social_security_number',
@@ -71,16 +71,14 @@ class StudentForm(forms.ModelForm):
             'cv',
             'skills',
             'courses',
-                # Include skills and courses fields here
         )
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field_name in self.fields:
             self.fields[field_name].widget.attrs['class'] = 'form-control'
-            instance = kwargs.get('instance')
-        if instance and instance.email:
-            self.fields['email'].disabled = True
+        self.fields['skills'].widget = forms.CheckboxSelectMultiple()  # Render skills as checkboxes
+        self.fields['courses'].widget.attrs['class'] = 'form-select'  # Add Bootstrap form-select class to courses dropdown
 
 # class PasswordForm(UserCreationForm):
 #     class Meta(UserCreationForm.Meta):
