@@ -115,7 +115,7 @@ def update_student(request, email):
         if form.is_valid():
             # Save the updated student object to the database
             form.save()
-            return redirect('info_student')  # Redirect to student info page or any relevant page
+            return redirect('info_student', student_ID=student.student_ID)  # Redirect to student info page or any relevant page
     else:
         # If the request method is GET, display the update form populated with current student data
         form = StudentForm(instance=student)
