@@ -59,6 +59,7 @@ class StudentForm(forms.ModelForm):
             'first_name',
             'last_name',
             'email',
+            'password',  
             'student_ID',
             'profile_picture',
             'social_security_number',
