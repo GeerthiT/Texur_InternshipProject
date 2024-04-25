@@ -10,13 +10,14 @@ class Skillset(models.Model):
     def __str__(self):
         return self.name
 
-
 class Course(models.Model):
     courseID = models.AutoField(primary_key=True)
     name = models.CharField(max_length=100)
-    # student_ID = models.ManyToManyField(Student)
     start_date = models.DateField()
     end_date = models.DateField()
+    
+    # Define a many-to-many relationship with Skillset
+    skills = models.ManyToManyField(Skillset)
 
     def __str__(self):
         return self.name

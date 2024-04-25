@@ -8,8 +8,18 @@
     <form method="POST">
         {% csrf_token %}
         {{ form.as_p }}
+    
+        <!-- Display course skills -->
+        <label for="id_skills">Course Skills:</label>
+        <ul>
+            {% for skill in course.skills.all %}
+                <li>{{ skill.name }}</li>
+            {% endfor %}
+        </ul>
+    
         <button type="submit">Add Student</button>
     </form>
+    
     <br><br><br><br><br>
 </p>
 

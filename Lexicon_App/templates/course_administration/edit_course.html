@@ -44,27 +44,32 @@
 </style>
 
 <h1>Edit course</h1>
-<p>
-    <form id="course-form" method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ form.as_p }}
-    </form>
-</p>
+<form id="course-form" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+
+    <div class="form-group">
+        <label for="id_skills">Skills:</label>
+        <select multiple class="form-control col-md-6" id="id_skills" name="skills">
+            {% for skill in form.initial.skills %}
+            <option value="{{ skill.pk }}" selected>{{ skill.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+</form>
+<br>
 <a href="{% url 'students' course_id=course_id %}" class="btn-info">View students</a>
+<a href="{% url 'add_student' course_id=course_id %}" class="btn-edit">Add Student</a>
+<br><p><br>
+<a href="{% static 'student_list.csv' %}" download>Download file format to upload students list</a>
 
-    <a href="{% url 'add_student' course_id=course_id %}" class="btn-edit">Add Student</a>
-</p>
-<p>
-    <a href="{% static 'student_list.csv' %}" download>Download file format to upload students list</a>
-</p>
-
-<p>
+<br><br>
     <label for="csv-file">Upload Students CSV:</label>
     <input type="file" id="csv-file" name="csv_file" accept=".csv">
     
     <button id="upload-csv-btn" type="button">Upload</button>
 </p>
-
+</p>
 <button class="btn-add" type="submit" form="course-form">Save Changes</button>
 
 <script>
