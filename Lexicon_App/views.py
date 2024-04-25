@@ -310,8 +310,17 @@ def profile_matcherStudent(request):
         if matching_companies:
             matched_pairs[student] = matching_companies
 
+    # Debugging: Print matched_pairs dictionary to inspect the data
+    #print("Matched Pairs:")
+    for student, companies in matched_pairs.items():
+        print(f"Student: {student.first_name} {student.last_name}")
+        for pair in companies:
+            print(f"Company: {pair['company'].name}")
+            print(f"Common Skills: {[skill.name for skill in pair['common_skills']]}")
+
     # Pass the matched_pairs dictionary to the template for rendering
     return render(request, 'profileMatcher_Student.html', {'matched_pairs': matched_pairs})
+
 
 def profile_matcherCompany(request):
     # Retrieve all students
@@ -370,14 +379,32 @@ def add_course(request):
     if request.method == 'POST':
         form = CourseForm(request.POST)
         if form.is_valid():
-            form.save()
+            # Save the course object without committing to the database yet
+            course = form.save(commit=False)
+            
+            # Save the course object to the database
+            course.save()
+            
+            # Add skills to the course object
+            skills = request.POST.getlist('skills')  # Assuming skills are submitted as a list
+            for skill_name  in skills:
+                skill = get_object_or_404(Skillset, name=skill_name)
+                course.skills.add(skill)
+            
+            # Save the course object with the associated skills
+            course.save()
+
             return redirect('courses')
     else:
         form = CourseForm()
-    return render(request, 'course_administration/add_course.html', {'form': form})    
+    return render(request, 'course_administration/add_course.html', {'form': form})   
 
 def edit_course(request, course_id):
     course = get_object_or_404(Course, pk=course_id)
+    
+    # Retrieve the skills associated with the course
+    course_skills = course.skills.all()
+    
     if request.method == 'POST':
         form = CourseForm(request.POST, instance=course)
         if form.is_valid():
@@ -388,8 +415,11 @@ def edit_course(request, course_id):
             else:
                 return redirect('courses')
     else:
-        form = CourseForm(instance=course)
+        # Pass the course_skills to the form as initial data
+        form = CourseForm(instance=course, initial={'skills': course_skills})
+    
     return render(request, 'course_administration/edit_course.html', {'form': form, 'course_id': course_id})
+
 
 def add_student(request, course_id):
     if request.method == 'POST':

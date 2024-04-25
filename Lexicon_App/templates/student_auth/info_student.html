@@ -82,7 +82,7 @@
                 <p><strong>Skills:</strong> 
                     <select name="skills" id="skillsInput" multiple>
                         {% for skill in student.skills.all %}
-                            <option value="{{ skill.name }}" selected>{{ skill.name }}</option>
+                            {{ skill.name }}{% if not forloop.last %}, {% endif %}
                         {% endfor %}
                         <!-- You can populate this dropdown with options from a database or predefined list -->
                     </select>

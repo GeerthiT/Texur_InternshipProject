@@ -4,23 +4,47 @@
 {% block content %}
 
 <h1>Add course</h1>
-<p>
-    <form method="post">
-        {% csrf_token %}
-        <div class="form-group">
-            <label for="id_name">Course Name:</label>
-            {{ form.name }}
-        </div><br><br>
-        <div class="form-group">
-            <label for="id_start_date">Start Date:</label>
-            {{ form.start_date }}
-        </div><br>
-        <div class="form-group">
-            <label for="id_end_date">End Date:</label>
-            {{ form.end_date }}
-        </div><br>
-        <button type="submit" class="btn btn-primary">Save</button>
-    </form>
-</p>
+<form method="post">
+    {% csrf_token %}
+    <div class="form-group">
+        <label for="id_name">Course Name:</label>
+        {{ form.name }}
+    </div>
+    <br>
+    <div class="form-group">
+        <label for="id_start_date">Start Date:</label>
+        {{ form.start_date }}
+    </div>
+    <br>
+    <div class="form-group">
+        <label for="id_end_date">End Date:</label>
+        {{ form.end_date }}
+    </div>
+    <br>
+    <div class="form-group" id="skills">
+        <label for="id_skills">Skills:</label>
+        <div id="skill-fields">
+            <!-- JavaScript will add skill fields here -->
+        </div>
+        <button type="button" class="btn btn-success" onclick="addSkillField()">Add Skill</button>
+    </div>
+    <br>
+    <button type="submit" class="btn btn-primary">Save</button>
+</form>
+
+<script>
+    function addSkillField() {
+        var skillField = document.createElement("input");
+        skillField.type = "text";
+        skillField.name = "skills";
+        skillField.className = "form-control";
+        skillField.placeholder = "Enter skill name";
+        
+        var skillContainer = document.getElementById("skill-fields");
+        skillContainer.appendChild(skillField);
+        skillContainer.appendChild(document.createElement("br"));
+    }
+</script>
+
 
 {% endblock %}

@@ -20,13 +20,13 @@
         {% for student in student_data %}
             
             <ul>
-                <li>{{ student.first_name }} {{ student.last_name }} {{ student.email }}
+                <li>{{ student.first_name }} {{ student.last_name }} - {{ student.email }}
                 <a href="{% url 'info_student' student_ID=student.student_ID %}" class="btn-info">View details</a></li>
             </ul>
         {% endfor %}   
 
     {% endif %}
-</div>
-<a href="{% url 'welcome_admin' %}"
+</div><br>
+<a href="{% url 'welcome_admin' %}">
 <button type="button" class="btn btn-danger">Back to home</button></a>
 {% endblock %}
