@@ -55,7 +55,7 @@
                             <span>
                                 <a href="{% url 'students' course_id=course.courseID %}" class="btn-info">View students</a>
                                 <a href="{% url 'edit_course' course_id=course.courseID %}" class="btn-edit">Edit</a>
-                                <a href="{% url 'profile_matcherStudent' %}" class="btn-add">Profile Matcher</a>
+                                <a href="{% url 'profile_matcherStudent' course_id=course.courseID %}" class="btn-add">Profile Matcher</a>
                                 
                             </span>
                         </li>
