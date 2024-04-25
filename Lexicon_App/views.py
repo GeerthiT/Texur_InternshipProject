@@ -9,7 +9,7 @@ from io import TextIOWrapper
 from django.urls import reverse
 from django.core.mail import send_mail
 from django.contrib.auth.decorators import login_required
-from .forms import UserForm, StudentForm, CompanyProfileForm, CourseForm, CSVUploadForm
+from .forms import UserForm, StudentForm, CompanyProfileForm, CourseForm, CSVUploadForm, UserRegistrationForm
 from django.contrib.auth.hashers import make_password
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
@@ -217,14 +217,24 @@ def company_login(request):
         username = request.POST.get("username")
         password = request.POST.get("password")
 
-        # Save data to the database
-        user = User.objects.create(username=username, password=password)
+        # Authenticate user
+        user = authenticate(request, username=username, password=password)
 
-        # Redirect to a success page or do any other necessary processing
-        return render(request, "company_auth/company_dashboard.html")
+        if user is not None:
+            # User is authenticated, log them in
+            login(request, user)
+            # Redirect to the company dashboard
+            return redirect('company_dashboard')  
+        else:
+            # Authentication failed, handle it appropriately (e.g., show error message)
+            error_message = "Invalid username or password."
+            return render(request, "company_auth/company_login.html", {"form": UserRegistrationForm(), "error_message": error_message})
     else:
         form = UserRegistrationForm()
-    return render(request, "company_auth/company_login.html", {"form": form})
+        return render(request, "company_auth/company_login.html", {"form": form})
+    
+    
+
 def company_signup(request):
     if request.method == 'POST':
         form = CompanyProfileForm(request.POST)
