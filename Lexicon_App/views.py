@@ -395,10 +395,25 @@ def add_student(request, course_id):
     if request.method == 'POST':
         form = StudentForm(request.POST)
         if form.is_valid():
+            # Extract password from form data
+            password = form.cleaned_data['password']
+
+            # Create a new User object
+            user = User.objects.create_user(
+                username=form.cleaned_data['email'],
+                email=form.cleaned_data['email'],
+                password=password  # Use provided password
+            )
+
+            # Create a new Student object and associate it with the user
             student = form.save(commit=False)
+            student.user = user
             student.save()
+            
+            # Retrieve the course and add the student to it
             course = Course.objects.get(pk=course_id)
             course.students.add(student)
+            
             return redirect('edit_course', course_id=course_id)
     else:
         form = StudentForm()
