@@ -72,7 +72,7 @@ def login_student(request):
             return HttpResponseRedirect(reverse('info_student', args=[student.student_ID]))
         else:
             # Return an error message or render a login form with error message
-            return render(request, 'login.html', {'error_message': 'Invalid username or password'})
+            return render(request, 'student_auth/login_student.html', {'error_message': 'Invalid username or password'})
     else:
         # Render the login form
         return render(request, 'student_auth/login_student.html')
@@ -115,7 +115,7 @@ def update_student(request, email):
         if form.is_valid():
             # Save the updated student object to the database
             form.save()
-            return redirect('info_student')  # Redirect to student info page or any relevant page
+            return redirect('info_student', student_ID=student.student_ID)  # Redirect to student info page or any relevant page
     else:
         # If the request method is GET, display the update form populated with current student data
         form = StudentForm(instance=student)
@@ -157,7 +157,11 @@ def courses(request):
     #print(context)
     return render(request,"courses.html", context)
 
-
+def student_list(request):
+    data = Course.objects.order_by('name')
+    context = {'course_data': data }
+    #print(context)
+    return render(request,"student_auth/student_list.html", context)
 
 
 def logout_all_portal(request):

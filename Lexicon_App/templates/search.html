@@ -36,8 +36,8 @@
                     {% for result in results %}
                         {% if result.type == 'course' %}
                             <li>
-                                <a href="{% url 'courses' result.result.courseID %}">
-                                    {{ result.result.courseID }}
+                                <a href="{% url 'edit_course' result.result.courseID %}">
+                                    {{ result.result.name }}
                                 </a></li>
                         {% endif %}
                     {% endfor %}
