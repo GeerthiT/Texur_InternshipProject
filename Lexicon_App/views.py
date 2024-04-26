@@ -244,7 +244,7 @@ def company_signup(request):
     if request.method == 'POST':
         form = CompanyProfileForm(request.POST)
         if form.is_valid():
-            # Extract company data
+            # Extract cleaned data
             company_name = form.cleaned_data['company_name']
             company_size = form.cleaned_data['company_size']
             website = form.cleaned_data['website']
@@ -255,8 +255,12 @@ def company_signup(request):
             address = form.cleaned_data['address']
             password = form.cleaned_data['password']
 
-            # Create Company instance
+            # Create User instance
+            user = User.objects.create_user(username=email, email=email, password=password)
+
+            # Create Company instance and associate with user
             company = Company.objects.create(
+                user=user,  # Assign the user to the company
                 name=company_name,
                 size=company_size,
                 website=website,
@@ -267,9 +271,6 @@ def company_signup(request):
                 address=address
             )
 
-            # Create User instance
-            user = User.objects.create_user(username=email, email=email, password=password)
-            
             # Authenticate user
             user = authenticate(request, username=email, password=password)
             if user is not None:
