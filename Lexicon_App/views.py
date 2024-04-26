@@ -281,9 +281,12 @@ def update_company(request, company_id):
 
 
 
-def profile_matcherStudent(request):
-    # Retrieve all students
-    students = Student.objects.all()
+def profile_matcherStudent(request, course_id):
+    # Retrieve the course object
+    course = Course.objects.get(pk=course_id)
+
+    # Retrieve all students associated with the course
+    students = course.students.all()
 
     # Initialize an empty dictionary to store matched student-company pairs
     matched_pairs = {}
@@ -293,11 +296,11 @@ def profile_matcherStudent(request):
         # Retrieve the skills of the student
         student_skills = student.skills.all()
 
-        # Find companies that match the student's skills
+        # Find companies that match the student's skills and the course's associated skills
         matching_companies = []
         for company in Company.objects.all():
             # Retrieve the required skills of the company
-            required_skills = company.required_skills.all()
+            required_skills = company.required_skills.filter(course=course)
             # Find common skills between student and company
             common_skills = set(student_skills).intersection(required_skills)
             if common_skills:
@@ -310,16 +313,9 @@ def profile_matcherStudent(request):
         if matching_companies:
             matched_pairs[student] = matching_companies
 
-    # Debugging: Print matched_pairs dictionary to inspect the data
-    #print("Matched Pairs:")
-    for student, companies in matched_pairs.items():
-        print(f"Student: {student.first_name} {student.last_name}")
-        for pair in companies:
-            print(f"Company: {pair['company'].name}")
-            print(f"Common Skills: {[skill.name for skill in pair['common_skills']]}")
-
     # Pass the matched_pairs dictionary to the template for rendering
     return render(request, 'profileMatcher_Student.html', {'matched_pairs': matched_pairs})
+
 
 
 def profile_matcherCompany(request):
