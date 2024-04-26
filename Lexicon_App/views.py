@@ -9,10 +9,11 @@ from io import TextIOWrapper
 from django.urls import reverse
 from django.core.mail import send_mail
 from django.contrib.auth.decorators import login_required
-from .forms import UserForm, StudentForm, CompanyProfileForm, CourseForm, CSVUploadForm
+from .forms import UserForm, StudentForm, CompanyProfileForm, CourseForm, CSVUploadForm, UserRegistrationForm
 from django.contrib.auth.hashers import make_password
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
+from django.db import IntegrityError
 
 
 def index(request):
@@ -221,22 +222,66 @@ def company_login(request):
         username = request.POST.get("username")
         password = request.POST.get("password")
 
-        # Save data to the database
-        user = User.objects.create(username=username, password=password)
+        # Authenticate user
+        user = authenticate(request, username=username, password=password)
 
-        # Redirect to a success page or do any other necessary processing
-        return render(request, "company_auth/company_dashboard.html")
+        if user is not None:
+            # User is authenticated, log them in
+            login(request, user)
+            print("successful login")
+            return redirect('index')  
+        else:
+            # Authentication failed, handle it appropriately (e.g., show error message)
+            error_message = "Invalid username or password."
+            return render(request, "company_auth/company_login.html", {"form": UserRegistrationForm(), "error_message": error_message})
     else:
         form = UserRegistrationForm()
-    return render(request, "company_auth/company_login.html", {"form": form})
+        return render(request, "company_auth/company_login.html", {"form": form})
+        
+
+
 def company_signup(request):
     if request.method == 'POST':
         form = CompanyProfileForm(request.POST)
         if form.is_valid():
-            password = form.cleaned_data.get('password')
-            confirm_password = form.cleaned_data.get('confirm_password')
-            messages.success(request, "Registration successful!")
-            return redirect('company_login')
+            # Extract cleaned data
+            company_name = form.cleaned_data['company_name']
+            company_size = form.cleaned_data['company_size']
+            website = form.cleaned_data['website']
+            contact_person_name = form.cleaned_data['contact_person_name']
+            contact_person_position = form.cleaned_data['contact_person_position']
+            email = form.cleaned_data['email']
+            phone = form.cleaned_data['phone']
+            address = form.cleaned_data['address']
+            password = form.cleaned_data['password']
+
+            # Create User instance
+            user = User.objects.create_user(username=email, email=email, password=password)
+
+            # Create Company instance and associate with user
+            company = Company.objects.create(
+                user=user,  # Assign the user to the company
+                name=company_name,
+                size=company_size,
+                website=website,
+                contact_person_name=contact_person_name,
+                contact_person_position=contact_person_position,
+                email=email,
+                phone=phone,
+                address=address
+            )
+
+            # Authenticate user
+            user = authenticate(request, username=email, password=password)
+            if user is not None:
+                # User is authenticated, log them in
+                login(request, user)
+                print("successful login")
+                return redirect('company_login')
+            else:
+                # Authentication failed, handle it appropriately (e.g., show error message)
+                error_message = "Failed to authenticate user."
+                return render(request, "company_auth/company_signup.html", {"form": form, "error_message": error_message})
         else:
             messages.error(request, "Form validation failed.")
     else:
