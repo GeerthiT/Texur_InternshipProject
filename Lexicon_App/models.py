@@ -49,6 +49,7 @@ class Student(models.Model):
  
 
 class Company(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     companyID = models.CharField(max_length=100)
     name = models.CharField(max_length=100)
     contact_details = models.CharField(max_length=100, default='')
@@ -60,7 +61,10 @@ class Company(models.Model):
         return self.name
 
 
-
+class InternshipPost(models.Model):
+    company = models.ForeignKey('Company', on_delete=models.CASCADE)
+    title = models.CharField(max_length=100)
+    description = models.TextField()
 
 
     

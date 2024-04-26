@@ -72,7 +72,7 @@ def login_student(request):
             return HttpResponseRedirect(reverse('info_student', args=[student.student_ID]))
         else:
             # Return an error message or render a login form with error message
-            return render(request, 'login.html', {'error_message': 'Invalid username or password'})
+            return render(request, 'student_auth/login_student.html', {'error_message': 'Invalid username or password'})
     else:
         # Render the login form
         return render(request, 'student_auth/login_student.html')
@@ -115,7 +115,7 @@ def update_student(request, email):
         if form.is_valid():
             # Save the updated student object to the database
             form.save()
-            return redirect('info_student')  # Redirect to student info page or any relevant page
+            return redirect('info_student', student_ID=student.student_ID)  # Redirect to student info page or any relevant page
     else:
         # If the request method is GET, display the update form populated with current student data
         form = StudentForm(instance=student)
@@ -157,7 +157,11 @@ def courses(request):
     #print(context)
     return render(request,"courses.html", context)
 
-
+def student_list(request):
+    data = Course.objects.order_by('name')
+    context = {'course_data': data }
+    #print(context)
+    return render(request,"student_auth/student_list.html", context)
 
 
 def logout_all_portal(request):
@@ -224,7 +228,7 @@ def company_login(request):
             # User is authenticated, log them in
             login(request, user)
             # Redirect to the company dashboard
-            return redirect('company_dashboard')  
+            return redirect('company_dashboard')
         else:
             # Authentication failed, handle it appropriately (e.g., show error message)
             error_message = "Invalid username or password."
@@ -232,8 +236,8 @@ def company_login(request):
     else:
         form = UserRegistrationForm()
         return render(request, "company_auth/company_login.html", {"form": form})
-    
-    
+        
+
 
 def company_signup(request):
     if request.method == 'POST':
@@ -401,10 +405,25 @@ def add_student(request, course_id):
     if request.method == 'POST':
         form = StudentForm(request.POST)
         if form.is_valid():
+            # Extract password from form data
+            password = form.cleaned_data['password']
+
+            # Create a new User object
+            user = User.objects.create_user(
+                username=form.cleaned_data['email'],
+                email=form.cleaned_data['email'],
+                password=password  # Use provided password
+            )
+
+            # Create a new Student object and associate it with the user
             student = form.save(commit=False)
+            student.user = user
             student.save()
+            
+            # Retrieve the course and add the student to it
             course = Course.objects.get(pk=course_id)
             course.students.add(student)
+            
             return redirect('edit_course', course_id=course_id)
     else:
         form = StudentForm()
