@@ -6,8 +6,11 @@
 </form>
 <br />
 <h2>Delete Job Post</h2>
-<p>Are you sure you want to delete this job post?</p>
-<form method="post" action="{% url 'delete_job_post' job_post.id %}">
+<p>Are you sure you want to delete this internship post?</p>
+<form
+  method="post"
+  action="{% url 'delete_internship_post' internship_post.id %}"
+>
   {% csrf_token %}
   <button type="submit">Delete</button>
 </form>
