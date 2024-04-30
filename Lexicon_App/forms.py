@@ -188,6 +188,20 @@ def save(self, commit=True):
 
 
 class CourseForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(CourseForm, self).__init__(*args, **kwargs)
+        
+        # Retrieve all skills from the database
+        all_skills = Skillset.objects.all()
+        # Set queryset for the skills field
+        self.fields['skills'].queryset = all_skills
+
+        # If the instance has associated skills, mark them as selected
+        if 'instance' in kwargs:
+            instance = kwargs['instance']
+            if instance.pk:
+                self.fields['skills'].initial = instance.skills.all()
+
     class Meta:
         model = Course
         fields = ['name', 'start_date', 'end_date']
