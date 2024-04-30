@@ -426,10 +426,12 @@ def add_course(request):
             # Save the course object to the database
             course.save()
             
-            # Add skills to the course object
+            # Process skills
             skills = request.POST.getlist('skills')  # Assuming skills are submitted as a list
-            for skill_name  in skills:
-                skill = get_object_or_404(Skillset, name=skill_name)
+            for skill_name in skills:
+                # Check if the skill already exists in the database
+                skill, created = Skillset.objects.get_or_create(name=skill_name)
+                # Add the skill to the course
                 course.skills.add(skill)
             
             # Save the course object with the associated skills
@@ -438,28 +440,43 @@ def add_course(request):
             return redirect('courses')
     else:
         form = CourseForm()
-    return render(request, 'course_administration/add_course.html', {'form': form})   
+    return render(request, 'course_administration/add_course.html', {'form': form})
 
 def edit_course(request, course_id):
     course = get_object_or_404(Course, pk=course_id)
     
-    # Retrieve the skills associated with the course
-    course_skills = course.skills.all()
-    
     if request.method == 'POST':
         form = CourseForm(request.POST, instance=course)
         if form.is_valid():
-            form.save()
+            # Save the form data without committing to the database yet
+            course = form.save(commit=False)
+            
+            # Get the selected skills from the form data
+            selected_skill_ids = request.POST.getlist('skills')
+            selected_skills = Skillset.objects.filter(pk__in=selected_skill_ids)
+            
+            # Clear existing skills and add selected skills
+            course.skills.clear()
+            course.skills.add(*selected_skills)
+            
+            # Save the course object to update the changes in the database
+            course.save()
+            
             # Check if a flag indicating the need to update students is set
             if request.POST.get('update_students'):
                 return redirect('upload_students', course_id=course_id)
             else:
                 return redirect('courses')
     else:
-        # Pass the course_skills to the form as initial data
+        # Retrieve all skills from the database
+        all_skills = Skillset.objects.all()
+        # Retrieve the skills associated with the course
+        course_skills = course.skills.all()
+        
+        # Pass both all_skills and course_skills to the form
         form = CourseForm(instance=course, initial={'skills': course_skills})
     
-    return render(request, 'course_administration/edit_course.html', {'form': form, 'course_id': course_id})
+    return render(request, 'course_administration/edit_course.html', {'form': form, 'course_id': course_id, 'all_skills': all_skills, 'course_skills': course_skills})
 
 
 def add_student(request, course_id):
