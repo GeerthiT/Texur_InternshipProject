@@ -1,0 +1,12 @@
+{% block content %}
+<div class="container">
+    <h2>Confirm Deletion</h2>
+    <p>Are you sure you want to delete this course?</p>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-danger">Delete</button>
+        <a href="{% url 'courses' %}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+{% endblock %}

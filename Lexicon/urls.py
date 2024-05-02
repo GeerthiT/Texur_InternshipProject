@@ -25,6 +25,7 @@ from django.conf import settings
 
 
 
+
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("", views.index, name="index"),
@@ -44,14 +45,14 @@ urlpatterns = [
     path("info_student/<int:student_ID>/", views.info_student, name="info_student"),
 
     path("students/", views.students, name="students"),
-    path("clogin_company/", views.clogin_company, name="clogin_company"),
+    # path("clogin_company/", views.clogin_company, name="clogin_company"),
     path("company_signup/", views.company_signup, name="Company_signup"),
     path("search/", views.search, name="search"),
     path("courses/", views.courses, name="courses"),
     path("company/", views.companies, name="company"),
     path('profileMatcher_Student/', views.profile_matcherStudent, name='profile_matcherStudent'),
     path('profileMatcher_company/', views.profile_matcherCompany, name='profile_matcherCompany'),
-    path('students/<int:student_id>/delete/', delete_student, name='delete_student'),
+    # path('students/<int:student_id>/delete/', delete_student, name='delete_student'),
     path('students/<int:student_id>/update/', update_student, name='update_student'),
     path('companies/<int:company_id>/delete/', views.delete_company, name='delete_company'),
     path('companies/<int:company_id>/confirm_delete/', views.confirm_company_delete, name='confirm_company_delete'),
@@ -61,4 +62,6 @@ urlpatterns = [
     path("add_student/<int:course_id>/", views.add_student, name="add_student"),
     path("upload_students/<int:course_id>/", views.upload_students, name="upload_students"),
     path("add_course/", views.add_course, name="add_course"),
+    path("del_course/", views.delete_course, name="del_course"),
+
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

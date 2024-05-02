@@ -13,6 +13,8 @@ from .forms import UserForm, StudentForm, CompanyProfileForm, CourseForm, CSVUpl
 from django.contrib.auth.hashers import make_password
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
+from .models import Course
+from .forms import ConfirmationForm
 
 
 def index(request):
@@ -386,6 +388,18 @@ def edit_course(request, course_id):
     else:
         form = CourseForm(instance=course)
     return render(request, 'course_administration/edit_course.html', {'form': form, 'course_id': course_id})
+
+# delete course in courses.html
+def delete_course(request, course_id):
+    course = Course.objects.get(pk=course_id)
+    if request.method == 'POST':
+        form = ConfirmationForm(request.POST)
+        if form.is_valid() and form.cleaned_data['confirm']:
+            course.delete()
+            return redirect('courses/')
+    else:
+        form = ConfirmationForm()
+    return render(request, 'del_course.html', {'form': form, 'course_id': course_id})
 
 def add_student(request, course_id):
     if request.method == 'POST':

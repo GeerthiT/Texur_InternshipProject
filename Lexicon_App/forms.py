@@ -7,6 +7,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.db import models
 from django.contrib.auth.models import User
 
+
 # from django.db import models
 
 class admin_reg_form(UserCreationForm):
@@ -14,6 +15,9 @@ class admin_reg_form(UserCreationForm):
         model = User
         fields = ['username','email','password1','password2']
 
+# delete operation for courses.html
+class ConfirmationForm(forms.Form):
+    confirm = forms.BooleanField(label='Confirm deletion', required=True)
 
 
 
