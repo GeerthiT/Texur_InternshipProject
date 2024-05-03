@@ -63,4 +63,6 @@ urlpatterns = [
     path("add_student/<int:course_id>/", views.add_student, name="add_student"),
     path("upload_students/<int:course_id>/", views.upload_students, name="upload_students"),
     path("add_course/", views.add_course, name="add_course"),
+    path('add_skill/', views.add_skill, name='add_skill'),
+    path('editCourse_skill/<int:course_id>/', views.editCourse_skill, name='editCourse_skill')
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
