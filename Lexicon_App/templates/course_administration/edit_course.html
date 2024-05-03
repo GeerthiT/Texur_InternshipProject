@@ -50,7 +50,7 @@
 <form id="course-form" method="post" enctype="multipart/form-data">
     {% csrf_token %}
     {{ form.as_p }}
-
+<!--
     <div class="form-group">
         <label for="id_skills">Skills:</label>
         <select multiple class="form-control custom-select" id="id_skills" name="skills">
@@ -59,7 +59,7 @@
             {% endfor %}
         </select>
     </div>
-
+-->
     <br>
     <a href="{% url 'students' course_id=course_id %}" class="btn-info">View students</a>
     <a href="{% url 'add_student' course_id=course_id %}" class="btn-edit">Add Student</a>
