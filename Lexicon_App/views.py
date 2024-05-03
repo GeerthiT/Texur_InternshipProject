@@ -14,6 +14,7 @@ from django.contrib.auth.hashers import make_password
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
 from django.db import IntegrityError
+from django.db import transaction
 
 
 def index(request):
@@ -344,8 +345,8 @@ def profile_matcherStudent(request, course_id):
         # Find companies that match the student's skills and the course's associated skills
         matching_companies = []
         for company in Company.objects.all():
-            # Retrieve the required skills of the company
-            required_skills = company.required_skills.filter(course=course)
+            # Retrieve the required skills of the company for the current course
+            required_skills = company.required_skills.filter(Q(course=course) | Q(course=None))
             # Find common skills between student and company
             common_skills = set(student_skills).intersection(required_skills)
             if common_skills:
@@ -420,27 +421,24 @@ def add_course(request):
     if request.method == 'POST':
         form = CourseForm(request.POST)
         if form.is_valid():
-            # Save the course object without committing to the database yet
-            course = form.save(commit=False)
-            course.save()
+            with transaction.atomic():
+                # Save the course object without committing to the database yet
+                course = form.save(commit=False)
+                course.save()
 
-            # Process skills
-            skills = request.POST.getlist('skills')  # Existing skills
-            new_skill_name = request.POST.get('new_skill')  # New skill entered by the user
+                # Process existing skills
+                skills = form.cleaned_data['skills']
+                for skill in skills:
+                    course.skills.add(skill)
 
-            for skill_id in skills:
-                if skill_id.startswith('new_'):
-                    # If it's a new skill, create it and associate it with the course
-                    new_skill_name = skill_id.replace('new_', '').replace('-', ' ')
-                    skill, created = Skillset.objects.get_or_create(name=new_skill_name)
-                    course.skills.add(skill)
-                else:
-                    # If it's an existing skill, add it to the course
-                    skill = Skillset.objects.get(pk=skill_id)
-                    course.skills.add(skill)
-            print(course)
-            # Save the course object with the associated skills
-            course.save()
+                # Process new skill
+                new_skill_name = form.cleaned_data['new_skill']
+                if new_skill_name:
+                    new_skill, created = Skillset.objects.get_or_create(name=new_skill_name)
+                    course.skills.add(new_skill)
+
+                # Save the course object with the associated skills
+                course.save()
 
             # Redirect to avoid form resubmission
             return redirect('courses')
@@ -449,11 +447,33 @@ def add_course(request):
 
     # Retrieve all skills from the database
     all_skills = Skillset.objects.all()
-    # Pass both all_skills and course_skills to the form
-    course_skills = request.POST.getlist('skills')
-    form = CourseForm(initial={'skills': course_skills})
-    print(course_skills)
     return render(request, 'course_administration/add_course.html', {'form': form, 'all_skills': all_skills})
+
+def add_skill(request):
+    if request.method == 'POST':
+        new_skill_name = request.POST.get('new_skill')
+        if new_skill_name:
+            # Capitalize the first letter of the skill name
+            new_skill_name = new_skill_name.capitalize()
+            # Check if a skill with the same name already exists
+            existing_skill = Skillset.objects.filter(name=new_skill_name).first()
+            if not existing_skill:
+                Skillset.objects.create(name=new_skill_name)
+            return redirect('add_course')
+    return render(request, 'course_administration/add_skill.html')
+
+def editCourse_skill(request, course_id):
+    if request.method == 'POST':
+        new_skill_name = request.POST.get('new_skill')
+        if new_skill_name:
+            # Capitalize the first letter of the skill name
+            new_skill_name = new_skill_name.capitalize()
+            # Check if a skill with the same name already exists
+            existing_skill = Skillset.objects.filter(name=new_skill_name).first()
+            if not existing_skill:
+                Skillset.objects.create(name=new_skill_name)
+            return redirect(reverse('edit_course', kwargs={'course_id': course_id}))
+    return render(request, 'course_administration/add_skill.html')
 
 def edit_course(request, course_id):
     course = get_object_or_404(Course, pk=course_id)

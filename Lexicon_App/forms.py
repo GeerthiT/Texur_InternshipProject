@@ -226,7 +226,8 @@ def save(self, commit=True):
 
 
 class CourseForm(forms.ModelForm):
-    skills = forms.ModelMultipleChoiceField(queryset=Skillset.objects.all(), widget=forms.SelectMultiple(attrs={'class': 'form-control'}))
+    skills = forms.ModelMultipleChoiceField(queryset=Skillset.objects.all(), widget=forms.SelectMultiple(attrs={'class': 'custom-skill-field'}))
+    new_skill = forms.CharField(max_length=100, required=False)
 
     class Meta:
         model = Course
@@ -249,6 +250,9 @@ class CourseForm(forms.ModelForm):
             instance = kwargs['instance']
             if instance.pk:
                 self.fields['skills'].initial = instance.skills.all()
+
+        self.fields.pop('new_skill', None)
+
 
 
 

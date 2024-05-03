@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<style>
+    .btn-more {
+        background-color: #ffff98;
+        border-radius: 35px;
+        padding: 5px 19.34px;
+        color: #000000;
+        text-decoration: none;
+    }
+</style>
+
+<h1>Add Skill</h1>
+<form method="post">
+    {% csrf_token %}
+    <input type="text" name="new_skill" placeholder="Enter skill name">
+    <button type="submit" class="btn-more ">Add Skill</button>
+</form>
+
+{% endblock %}
