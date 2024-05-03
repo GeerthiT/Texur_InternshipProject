@@ -422,25 +422,38 @@ def add_course(request):
         if form.is_valid():
             # Save the course object without committing to the database yet
             course = form.save(commit=False)
-            
-            # Save the course object to the database
             course.save()
-            
+
             # Process skills
-            skills = request.POST.getlist('skills')  # Assuming skills are submitted as a list
-            for skill_name in skills:
-                # Check if the skill already exists in the database
-                skill, created = Skillset.objects.get_or_create(name=skill_name)
-                # Add the skill to the course
-                course.skills.add(skill)
-            
+            skills = request.POST.getlist('skills')  # Existing skills
+            new_skill_name = request.POST.get('new_skill')  # New skill entered by the user
+
+            for skill_id in skills:
+                if skill_id.startswith('new_'):
+                    # If it's a new skill, create it and associate it with the course
+                    new_skill_name = skill_id.replace('new_', '').replace('-', ' ')
+                    skill, created = Skillset.objects.get_or_create(name=new_skill_name)
+                    course.skills.add(skill)
+                else:
+                    # If it's an existing skill, add it to the course
+                    skill = Skillset.objects.get(pk=skill_id)
+                    course.skills.add(skill)
+            print(course)
             # Save the course object with the associated skills
             course.save()
 
+            # Redirect to avoid form resubmission
             return redirect('courses')
     else:
         form = CourseForm()
-    return render(request, 'course_administration/add_course.html', {'form': form})
+
+    # Retrieve all skills from the database
+    all_skills = Skillset.objects.all()
+    # Pass both all_skills and course_skills to the form
+    course_skills = request.POST.getlist('skills')
+    form = CourseForm(initial={'skills': course_skills})
+    print(course_skills)
+    return render(request, 'course_administration/add_course.html', {'form': form, 'all_skills': all_skills})
 
 def edit_course(request, course_id):
     course = get_object_or_404(Course, pk=course_id)
