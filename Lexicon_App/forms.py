@@ -238,6 +238,7 @@ class CourseForm(forms.ModelForm):
         }
 
     def __init__(self, *args, **kwargs):
+        add_new_skill = kwargs.pop('add_new_skill', True)  # Retrieve the flag indicating whether to include the 'new_skill' field
         super(CourseForm, self).__init__(*args, **kwargs)
 
         # Retrieve all skills from the database
@@ -251,7 +252,10 @@ class CourseForm(forms.ModelForm):
             if instance.pk:
                 self.fields['skills'].initial = instance.skills.all()
 
-        self.fields.pop('new_skill', None)
+        if not add_new_skill:
+            # Remove the 'new_skill' field from the form
+            self.fields.pop('new_skill')
+
 
 
 

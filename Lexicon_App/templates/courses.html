@@ -52,6 +52,13 @@
     <h1 class="text-center">List of Courses</h1>
     <div class="courses-container">
         <div class="container mt-2">
+            <div class="row justify-content-end">
+                <div class="col-auto" style="margin-right: 17px;">
+                    <a href="{% url 'add_course' %}" class="btn btn-success btn-add">Add</a>
+                </div>
+            </div>
+        </div><br>
+        <div class="container mt-2">
             {% if course_data %}
                 <ul class="list-group">
                     {% for course in course_data %}
@@ -73,13 +80,7 @@
         </div>
     </div>
 
-    <div class="container mt-2">
-        <div class="row justify-content-end">
-            <div class="col-auto" style="margin-right: 17px;">
-                <a href="{% url 'add_course' %}" class="btn btn-success btn-add">Add</a>
-            </div>
-        </div>
-    </div>
+    
 <br>
     <div style="text-align: center;">
         <a href="{% url 'welcome_admin' %}" class="btn-back">Back</a>
