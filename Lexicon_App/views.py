@@ -102,8 +102,8 @@ def signup_student(request):
 def info_student(request, student_ID):
     # Query the Student model to retrieve information for the specified student ID
     student = get_object_or_404(Student, student_ID=student_ID)
-    
-    return render(request, 'student_auth/info_student.html', {'student': student})
+    course = student.course
+    return render(request, 'student_auth/info_student.html', {'student': student, 'course': course})
 
 
 #Update a Student
@@ -177,7 +177,7 @@ def students(request, course_id):
     # Filter students enrolled in the specific course
     student_data = course.students.all().order_by('first_name')
     
-    context = {'student_data': student_data, 'course': course }
+    context = {'student_data': student_data, 'course': course, 'course_id': course_id }
     return render(request, "students.html", context)
 
 def companies(request):
@@ -443,7 +443,7 @@ def add_course(request):
             # Redirect to avoid form resubmission
             return redirect('courses')
     else:
-        form = CourseForm()
+        form = CourseForm(add_new_skill=True)
 
     # Retrieve all skills from the database
     all_skills = Skillset.objects.all()
@@ -473,7 +473,7 @@ def editCourse_skill(request, course_id):
             if not existing_skill:
                 Skillset.objects.create(name=new_skill_name)
             return redirect(reverse('edit_course', kwargs={'course_id': course_id}))
-    return render(request, 'course_administration/add_skill.html')
+    return render(request, 'course_administration/addSkill_fromEditCourse.html', {'course_id': course_id})
 
 def edit_course(request, course_id):
     course = get_object_or_404(Course, pk=course_id)
@@ -501,13 +501,14 @@ def edit_course(request, course_id):
             else:
                 return redirect('courses')
     else:
-        # Retrieve all skills from the database
-        all_skills = Skillset.objects.all()
         # Retrieve the skills associated with the course
         course_skills = course.skills.all()
         
-        # Pass both all_skills and course_skills to the form
-        form = CourseForm(instance=course, initial={'skills': course_skills})
+        # Pass the course_skills to the form without including the 'new_skill' field
+        form = CourseForm(instance=course, initial={'skills': course_skills}, add_new_skill=False)
+    
+    # Retrieve all skills from the database
+    all_skills = Skillset.objects.all()
     
     return render(request, 'course_administration/edit_course.html', {'form': form, 'course_id': course_id, 'all_skills': all_skills, 'course_skills': course_skills})
 

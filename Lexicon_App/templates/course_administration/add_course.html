@@ -4,7 +4,7 @@
 {% block content %}
 <style>
     .custom-select {
-        width: 15%; /* Adjust as needed */
+        width: 25%; /* Adjust as needed */
     }
     .btn-add {
         background-color: #77DD77;
@@ -49,35 +49,49 @@
     <div class="form-group custom-select" style="display: inline-block;">
         <label for="id_skills">Skills:</label><br>
         {{ form.skills }}
-        
-    </div><br>
+    </div>
+    
     <a href="{% url 'add_skill' %}" class="btn-more" style="display: inline-block; vertical-align: top;">Add Skill</a>
-
     <br><br>
     
     <div style="text-align: center;">
         <a href="{% url 'courses' %}" class="btn-back">Back</a>
         <button type="submit" class="btn-add">Save</button>
-        
     </div>
 </form>
 
+
 <script>
-    // Function to add new skill to the list
-    function addNewSkill() {
-        var newSkillInput = document.getElementById("id_new_skill");
-        var newSkillValue = newSkillInput.value.trim();
-        if (newSkillValue !== "") {
-            var selectSkills = document.getElementById("id_skills");
-            var option = document.createElement("option");
-            option.text = newSkillValue;
-            option.value = "new_" + newSkillValue.toLowerCase().replace(/\s+/g, "-");
-            option.selected = true;
-            selectSkills.add(option);
-            newSkillInput.value = ""; // Clear the input field
-            newSkillInput.focus(); // Focus back on the input field
+    // Function to save form data to sessionStorage
+    function saveFormData() {
+        var form = document.getElementById("course-form");
+        for (var i = 0; i < form.elements.length; i++) {
+            var element = form.elements[i];
+            if (element.type !== "button") {
+                sessionStorage.setItem(element.name, element.value);
+            }
         }
     }
+
+    // Function to retrieve form data from sessionStorage and populate the form
+    function populateFormData() {
+        var form = document.getElementById("course-form");
+        for (var i = 0; i < form.elements.length; i++) {
+            var element = form.elements[i];
+            if (element.type !== "button") {
+                var storedValue = sessionStorage.getItem(element.name);
+                if (storedValue !== null) {
+                    element.value = storedValue;
+                }
+            }
+        }
+    }
+
+    // Call populateFormData() when the page loads to populate the form with saved data
+    window.onload = populateFormData;
+
+    // Call saveFormData() before navigating away from the page to save form data
+    window.onbeforeunload = saveFormData;
 </script>
 
 
