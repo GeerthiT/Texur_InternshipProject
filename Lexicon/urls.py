@@ -36,8 +36,8 @@ urlpatterns = [
     path('company_dashboard/', views.company_dashboard, name='company_dashboard'),
     path("login_student/", views.login_student, name="login_student"),
     path("signup_student/", views.signup_student, name="signup_student"),
-
     
+    path("display_students/", views.display_students, name="display_students"),
     path("update_student/<str:email>/", views.update_student, name="update_student"),
     path("delete_student/<str:email>/", views.delete_student, name="delete_student"),
 

@@ -67,7 +67,7 @@ class StudentForm(forms.ModelForm):
         fields = (
             "first_name",
             "last_name",
-            "password",
+            
             "email",
             "student_ID",
             "profile_picture",

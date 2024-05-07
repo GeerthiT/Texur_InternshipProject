@@ -15,6 +15,12 @@
         text-decoration: none;
     }
 </style>
+<h1 class="text-center">Students without Internship</h1>
+<ul>
+    {% for student in students_without_internship %}
+    <li>{{ student.name }}</li>
+    {% endfor %}
+</ul>
 
 <h1 class="text-center">List of students - {{ course.name }}</h1>
 <div class="container">

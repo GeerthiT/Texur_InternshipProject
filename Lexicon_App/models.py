@@ -34,7 +34,7 @@ class Student(models.Model):
     age = models.IntegerField(null=True, blank=True)
     email = models.EmailField("User Email")
     social_security_number = models.CharField(max_length=20)
-    postal_address = models.CharField(max_length=200)
+    postal_address = models.CharField(max_length=200, default='Unknown')
     skills = models.ManyToManyField(Skillset)
     knowledge_level = models.CharField(max_length=100)
     GDPR_consent = models.BooleanField(default=False)
@@ -43,6 +43,7 @@ class Student(models.Model):
     github_ID = models.URLField(null=True, blank=True)
     course = models.ManyToManyField(Course, related_name="students")
     profile_picture = models.ImageField(upload_to='profile_pictures/', blank=True, null=True)
+    has_internship = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
@@ -50,20 +51,20 @@ class Student(models.Model):
  
 
 class Company(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, default=1)
     companyID = models.CharField(max_length=100)
     name = models.CharField(max_length=100)
     contact_details = models.CharField(max_length=100, default='')
     accepting_interns = models.BooleanField(default=False)
     openings_internship_description = models.TextField(blank=True)
     required_skills = models.ManyToManyField(Skillset)
-    size = models.CharField(max_length=100)
-    website = models.URLField()
-    contact_person_name = models.CharField(max_length=100)
-    contact_person_position = models.CharField(max_length=100)
-    email = models.EmailField()
-    phone = models.CharField(max_length=15)
-    address = models.CharField(max_length=255)
+    size = models.CharField(max_length=100, default='Unknown')
+    website = models.URLField(default='http://example.com')
+    contact_person_name = models.CharField(max_length=100, default='Unknown')
+    contact_person_position = models.CharField(max_length=100, default='Unknown')
+    email = models.EmailField("User Email", default="info@example.com")
+    phone = models.CharField(max_length=15, default='Unknown')
+    address = models.CharField(max_length=255, default='Unknown')
 
     def __str__(self):
         return self.name
