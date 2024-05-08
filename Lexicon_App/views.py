@@ -78,10 +78,7 @@ def login_student(request):
     else:
         # Render the login form
         return render(request, 'student_auth/login_student.html')
-
-       
-
-       
+     
 def signup_student(request):
     if request.method == 'POST':
         user_form = UserForm(request.POST)
@@ -133,6 +130,10 @@ def delete_student(request, email):
     # Redirect to a relevant page
     return redirect ('students')
 
+def display_students(request):
+    # Exclude students with internships
+    students = Student.objects.filter(has_internship=False)
+    return render(request, 'students.html', {'students': students})
 
 
 def welcome_admin(request):
