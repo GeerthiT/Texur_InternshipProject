@@ -81,18 +81,32 @@ def login_student(request):
      
 def signup_student(request):
     if request.method == 'POST':
+        print("POST data:", request.POST)
+
         user_form = UserForm(request.POST)
         student_form = StudentForm(request.POST, request.FILES)
         if user_form.is_valid() and student_form.is_valid():
             user = user_form.save()
             student = student_form.save(commit=False)
             student.user = user
+
+            course_id = request.POST.get('courses')
+            if course_id:
+                course = get_object_or_404(Course, pk=course_id)
+                student.course = course
+
             student.save()
-            student_form.save_m2m()  # Save ManyToManyField data
+            student_form.save_m2m()
+            
             return redirect('login_student')
+        
     else:
         user_form = UserForm()
         student_form = StudentForm()
+        student_form.fields['skills'].queryset = Skillset.objects.all()
+        student_form.fields['courses'].queryset = Course.objects.all()
+
+    print("Courses queryset:", student_form.fields['courses'].queryset)
     return render(request, 'student_auth/signup_student.html', {'user_form': user_form, 'student_form': student_form})
 
 
@@ -100,6 +114,7 @@ def info_student(request, student_ID):
     # Query the Student model to retrieve information for the specified student ID
     student = get_object_or_404(Student, student_ID=student_ID)
     course = student.course
+    print(course)
     return render(request, 'student_auth/info_student.html', {'student': student, 'course': course})
 
 
