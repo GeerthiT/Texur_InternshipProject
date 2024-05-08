@@ -135,10 +135,11 @@
     
 </div>
 <br>
+{% if request.user.is_staff %}
 <div style="text-align: left;">
     <a href="{% url 'courses' %}" class="btn-back">Back</a> 
 </div>
-
+{% endif %}
  
 </div>
 
