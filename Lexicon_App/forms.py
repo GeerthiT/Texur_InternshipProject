@@ -67,7 +67,6 @@ class StudentForm(forms.ModelForm):
         fields = (
             "first_name",
             "last_name",
-            
             "email",
             "student_ID",
             "profile_picture",
@@ -92,11 +91,6 @@ class StudentForm(forms.ModelForm):
         self.fields["courses"].widget.attrs[
             "class"
         ] = "form-select"  # Add Bootstrap form-select class to courses dropdown
-
-
-# class PasswordForm(UserCreationForm):
-#     class Meta(UserCreationForm.Meta):
-#         fields = ['password1', 'password2']
 
 
 class CompanyProfileForm(forms.Form):
