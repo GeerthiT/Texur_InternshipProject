@@ -41,7 +41,7 @@ class Student(models.Model):
     cv = models.FileField(upload_to="cv/", null=True, blank=True)
     linkedin_ID = models.URLField(null=True, blank=True)
     github_ID = models.URLField(null=True, blank=True)
-    course = models.ManyToManyField(Course, related_name="students")
+    course = models.ForeignKey(Course, on_delete=models.SET_NULL, null=True, blank=True, related_name="students")
     profile_picture = models.ImageField(upload_to='profile_pictures/', blank=True, null=True)
     has_internship = models.BooleanField(default=False)
 
