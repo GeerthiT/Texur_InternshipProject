@@ -16,6 +16,8 @@
         {% endfor %}   
 
     {% endif %}
+    <!-- Add the delete button/link here -->
+    <a href="{% url 'delete_company' company.id %}" class="btn btn-danger"> Delete Company </a> 
 </div>
 <a href="{% url 'welcome_admin' %}"
 <button type="button" class="btn btn-danger">Back to home</button></a>

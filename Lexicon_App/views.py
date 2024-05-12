@@ -9,7 +9,7 @@ from io import TextIOWrapper
 from django.urls import reverse
 from django.core.mail import send_mail
 from django.contrib.auth.decorators import login_required
-from .forms import UserForm, StudentForm, CompanyProfileForm, CourseForm, CSVUploadForm, UserRegistrationForm
+from .forms import CompanyRegistrationForm, UserForm, StudentForm, CourseForm
 from django.contrib.auth.hashers import make_password
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
@@ -18,7 +18,6 @@ from django.db import transaction
 
 
 def index(request):
-    return render(request, "index.html")
     return render(request, "index.html")
 
 
@@ -238,45 +237,50 @@ def company_login(request):
         # Get data from the form
         username = request.POST.get("username")
         password = request.POST.get("password")
-
-        # Authenticate user
-        user = authenticate(request, username=username, password=password)
-
-        if user is not None:
+               # Authenticate user
+        user = authenticate(username = username, password = password)
+            
+        if user is not None and user.is_active:
             # User is authenticated, log them in
             login(request, user)
-            print("successful login")
-            return redirect('index')  
+            company = Company.objects.get(user=user)
+            return HttpResponseRedirect(reverse('company',company))
         else:
             # Authentication failed, handle it appropriately (e.g., show error message)
+            print("Invalid username or password")
             error_message = "Invalid username or password."
-            return render(request, "company_auth/company_login.html", {"form": UserRegistrationForm(), "error_message": error_message})
+            return render(request, "company_auth/company_login.html", { "error_message": error_message})
     else:
-        form = UserRegistrationForm()
-        return render(request, "company_auth/company_login.html", {"form": form})
-        
-
+            return render(request, "company_auth/company_login.html")
 
 def company_signup(request):
     if request.method == 'POST':
-        form = CompanyProfileForm(request.POST)
-        if form.is_valid():
-            password = form.cleaned_data.get('password')
-            confirm_password = form.cleaned_data.get('confirm_password')
-            messages.success(request, "Registration successful!")
+        company_registration = CompanyRegistrationForm(request.POST)
+        if company_registration.is_valid():
+            username = company_registration.cleaned_data["username"]
+            password = company_registration.cleaned_data["password"]
+            # Saving logic for the user
+            user = User(username = username, password = password)
+            user.save()
+            
+            company = company_registration.save(commit=False)
+            company.user = user
+          # check if it was really saved or not.
+          # company_registration.save_m2m()
+            company_registration.save()
+            company_registration.save_m2m()
             return redirect('company_login')
         else:
-            messages.error(request, "Form validation failed.")
+          messages.error(request, "Form validation failed.")
     else:
-        form = CompanyProfileForm()
-    return render(request, "company_auth/company_signup.html", {"form": form})
+      company_form = CompanyRegistrationForm()
+      return render(request, "company_auth/company_signup.html", {"company_registration_form": company_form})
 
 
-
-def company_dashboard(request):
+def company(request):
     company_info = request.user.company_profile  
     InternshipPost = InternshipPost.objects.filter(company=company_info)
-    return render(request, 'company_auth/company_dashboard.html', {'company_info': company_info, 'Internship_Post': InternshipPost})
+    return render(request, 'company.html', {'company_info': company_info, 'Internship_Post': InternshipPost})
 
 
 # Delete a company
