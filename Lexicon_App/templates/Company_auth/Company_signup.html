@@ -9,9 +9,7 @@
 
   <form class="form" action="{% url 'company_signup' %}" method="post">
     {% csrf_token %} {{ form.as_p }}
-
     <br />
-
     <button type="submit">Submit</button>
   </form>
 </div>

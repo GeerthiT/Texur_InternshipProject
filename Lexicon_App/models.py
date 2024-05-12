@@ -49,13 +49,23 @@ class Student(models.Model):
  
 
 class Company(models.Model):
+    SIZE_CHOICES = [
+        ('startup', 'Startup'),
+        ('small', 'Small'),
+        ('medium', 'Medium'),
+        ('large', 'Large'),
+        ('enterprise', 'Enterprise'),
+    ]
+
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    companyID = models.CharField(max_length=100)
     name = models.CharField(max_length=100)
-    contact_details = models.CharField(max_length=100, default='')
-    accepting_interns = models.BooleanField(default=False)
-    openings_internship_description = models.TextField(blank=True)
-    required_skills = models.ManyToManyField(Skillset)
+    size = models.CharField(max_length=20, choices=SIZE_CHOICES)
+    website = models.URLField()
+    contact_person_name = models.CharField(max_length=100)
+    contact_person_position = models.CharField(max_length=100)
+    email = models.EmailField()
+    phone = models.CharField(max_length=15)
+    address = models.CharField(max_length=255)
 
     def __str__(self):
         return self.name

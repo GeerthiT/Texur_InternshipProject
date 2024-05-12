@@ -13,6 +13,8 @@ from .forms import UserForm, StudentForm, CompanyProfileForm, CourseForm, CSVUpl
 from django.contrib.auth.hashers import make_password
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
+from django.db import IntegrityError
+from django.db import transaction
 
 
 def index(request):
@@ -76,32 +78,44 @@ def login_student(request):
     else:
         # Render the login form
         return render(request, 'student_auth/login_student.html')
-
-       
-
-       
+     
 def signup_student(request):
     if request.method == 'POST':
+        print("POST data:", request.POST)
+
         user_form = UserForm(request.POST)
         student_form = StudentForm(request.POST, request.FILES)
         if user_form.is_valid() and student_form.is_valid():
             user = user_form.save()
             student = student_form.save(commit=False)
             student.user = user
+
+            course_id = request.POST.get('courses')
+            if course_id:
+                course = get_object_or_404(Course, pk=course_id)
+                student.course = course
+
             student.save()
-            student_form.save_m2m()  # Save ManyToManyField data
+            student_form.save_m2m()
+            
             return redirect('login_student')
+        
     else:
         user_form = UserForm()
         student_form = StudentForm()
+        student_form.fields['skills'].queryset = Skillset.objects.all()
+        student_form.fields['courses'].queryset = Course.objects.all()
+
+    print("Courses queryset:", student_form.fields['courses'].queryset)
     return render(request, 'student_auth/signup_student.html', {'user_form': user_form, 'student_form': student_form})
 
 
 def info_student(request, student_ID):
     # Query the Student model to retrieve information for the specified student ID
     student = get_object_or_404(Student, student_ID=student_ID)
-    
-    return render(request, 'student_auth/info_student.html', {'student': student})
+    course = student.course
+    print(course)
+    return render(request, 'student_auth/info_student.html', {'student': student, 'course': course})
 
 
 #Update a Student
@@ -131,6 +145,10 @@ def delete_student(request, email):
     # Redirect to a relevant page
     return redirect ('students')
 
+def display_students(request):
+    # Exclude students with internships
+    students = Student.objects.filter(has_internship=False)
+    return render(request, 'students.html', {'students': students})
 
 
 def welcome_admin(request):
@@ -175,7 +193,7 @@ def students(request, course_id):
     # Filter students enrolled in the specific course
     student_data = course.students.all().order_by('first_name')
     
-    context = {'student_data': student_data, 'course': course }
+    context = {'student_data': student_data, 'course': course, 'course_id': course_id }
     return render(request, "students.html", context)
 
 def companies(request):
@@ -227,8 +245,8 @@ def company_login(request):
         if user is not None:
             # User is authenticated, log them in
             login(request, user)
-            # Redirect to the company dashboard
-            return redirect('company_dashboard')
+            print("successful login")
+            return redirect('index')  
         else:
             # Authentication failed, handle it appropriately (e.g., show error message)
             error_message = "Invalid username or password."
@@ -243,10 +261,44 @@ def company_signup(request):
     if request.method == 'POST':
         form = CompanyProfileForm(request.POST)
         if form.is_valid():
-            password = form.cleaned_data.get('password')
-            confirm_password = form.cleaned_data.get('confirm_password')
-            messages.success(request, "Registration successful!")
-            return redirect('company_login')
+            # Extract cleaned data
+            company_name = form.cleaned_data['company_name']
+            company_size = form.cleaned_data['company_size']
+            website = form.cleaned_data['website']
+            contact_person_name = form.cleaned_data['contact_person_name']
+            contact_person_position = form.cleaned_data['contact_person_position']
+            email = form.cleaned_data['email']
+            phone = form.cleaned_data['phone']
+            address = form.cleaned_data['address']
+            password = form.cleaned_data['password']
+
+            # Create User instance
+            user = User.objects.create_user(username=email, email=email, password=password)
+
+            # Create Company instance and associate with user
+            company = Company.objects.create(
+               user=user,  # Assign the user to the company
+                name=company_name,
+                size=company_size,
+                website=website,
+                contact_person_name=contact_person_name,
+                contact_person_position=contact_person_position,
+                email=email,
+                phone=phone,
+                address=address
+            )
+
+            # Authenticate user
+            user = authenticate(request, username=email, password=password)
+            if user is not None:
+                # User is authenticated, log them in
+                login(request, user)
+                print("successful login")
+                return redirect('company_login')
+            else:
+                # Authentication failed, handle it appropriately (e.g., show error message)
+                error_message = "Failed to authenticate user."
+                return render(request, "company_auth/company_signup.html", {"form": form, "error_message": error_message})
         else:
             messages.error(request, "Form validation failed.")
     else:
@@ -291,9 +343,12 @@ def update_company(request, company_id):
 
 
 
-def profile_matcherStudent(request):
-    # Retrieve all students
-    students = Student.objects.all()
+def profile_matcherStudent(request, course_id):
+    # Retrieve the course object
+    course = Course.objects.get(pk=course_id)
+
+    # Retrieve all students associated with the course
+    students = course.students.all()
 
     # Initialize an empty dictionary to store matched student-company pairs
     matched_pairs = {}
@@ -303,11 +358,11 @@ def profile_matcherStudent(request):
         # Retrieve the skills of the student
         student_skills = student.skills.all()
 
-        # Find companies that match the student's skills
+        # Find companies that match the student's skills and the course's associated skills
         matching_companies = []
         for company in Company.objects.all():
-            # Retrieve the required skills of the company
-            required_skills = company.required_skills.all()
+            # Retrieve the required skills of the company for the current course
+            required_skills = company.required_skills.filter(Q(course=course) | Q(course=None))
             # Find common skills between student and company
             common_skills = set(student_skills).intersection(required_skills)
             if common_skills:
@@ -322,6 +377,8 @@ def profile_matcherStudent(request):
 
     # Pass the matched_pairs dictionary to the template for rendering
     return render(request, 'profileMatcher_Student.html', {'matched_pairs': matched_pairs})
+
+
 
 def profile_matcherCompany(request):
     # Retrieve all students
@@ -380,26 +437,97 @@ def add_course(request):
     if request.method == 'POST':
         form = CourseForm(request.POST)
         if form.is_valid():
-            form.save()
+            with transaction.atomic():
+                # Save the course object without committing to the database yet
+                course = form.save(commit=False)
+                course.save()
+
+                # Process existing skills
+                skills = form.cleaned_data['skills']
+                for skill in skills:
+                    course.skills.add(skill)
+
+                # Process new skill
+                new_skill_name = form.cleaned_data['new_skill']
+                if new_skill_name:
+                    new_skill, created = Skillset.objects.get_or_create(name=new_skill_name)
+                    course.skills.add(new_skill)
+
+                # Save the course object with the associated skills
+                course.save()
+
+            # Redirect to avoid form resubmission
             return redirect('courses')
     else:
-        form = CourseForm()
-    return render(request, 'course_administration/add_course.html', {'form': form})    
+        form = CourseForm(add_new_skill=True)
+
+    # Retrieve all skills from the database
+    all_skills = Skillset.objects.all()
+    return render(request, 'course_administration/add_course.html', {'form': form, 'all_skills': all_skills})
+
+def add_skill(request):
+    if request.method == 'POST':
+        new_skill_name = request.POST.get('new_skill')
+        if new_skill_name:
+            # Capitalize the first letter of the skill name
+            new_skill_name = new_skill_name.capitalize()
+            # Check if a skill with the same name already exists
+            existing_skill = Skillset.objects.filter(name=new_skill_name).first()
+            if not existing_skill:
+                Skillset.objects.create(name=new_skill_name)
+            return redirect('add_course')
+    return render(request, 'course_administration/add_skill.html')
+
+def editCourse_skill(request, course_id):
+    if request.method == 'POST':
+        new_skill_name = request.POST.get('new_skill')
+        if new_skill_name:
+            # Capitalize the first letter of the skill name
+            new_skill_name = new_skill_name.capitalize()
+            # Check if a skill with the same name already exists
+            existing_skill = Skillset.objects.filter(name=new_skill_name).first()
+            if not existing_skill:
+                Skillset.objects.create(name=new_skill_name)
+            return redirect(reverse('edit_course', kwargs={'course_id': course_id}))
+    return render(request, 'course_administration/addSkill_fromEditCourse.html', {'course_id': course_id})
 
 def edit_course(request, course_id):
     course = get_object_or_404(Course, pk=course_id)
+    
     if request.method == 'POST':
         form = CourseForm(request.POST, instance=course)
         if form.is_valid():
-            form.save()
+            # Save the form data without committing to the database yet
+            course = form.save(commit=False)
+            
+            # Get the selected skills from the form data
+            selected_skill_ids = request.POST.getlist('skills')
+            selected_skills = Skillset.objects.filter(pk__in=selected_skill_ids)
+            
+            # Clear existing skills and add selected skills
+            course.skills.clear()
+            course.skills.add(*selected_skills)
+            
+            # Save the course object to update the changes in the database
+            course.save()
+            
             # Check if a flag indicating the need to update students is set
             if request.POST.get('update_students'):
                 return redirect('upload_students', course_id=course_id)
             else:
                 return redirect('courses')
     else:
-        form = CourseForm(instance=course)
-    return render(request, 'course_administration/edit_course.html', {'form': form, 'course_id': course_id})
+        # Retrieve the skills associated with the course
+        course_skills = course.skills.all()
+        
+        # Pass the course_skills to the form without including the 'new_skill' field
+        form = CourseForm(instance=course, initial={'skills': course_skills}, add_new_skill=False)
+    
+    # Retrieve all skills from the database
+    all_skills = Skillset.objects.all()
+    
+    return render(request, 'course_administration/edit_course.html', {'form': form, 'course_id': course_id, 'all_skills': all_skills, 'course_skills': course_skills})
+
 
 def add_student(request, course_id):
     if request.method == 'POST':
@@ -474,4 +602,3 @@ def upload_students(request, course_id):
     else:
         messages.error(request, 'Invalid request method')
         return redirect('edit_course', course_id=course_id)
-
