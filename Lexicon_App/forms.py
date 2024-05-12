@@ -165,6 +165,7 @@ class CompanyProfileForm(forms.Form):
         return company
 
 
+ 
 class UserRegistrationForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput)
     confirm_password = forms.CharField(widget=forms.PasswordInput)

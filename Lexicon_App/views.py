@@ -261,44 +261,10 @@ def company_signup(request):
     if request.method == 'POST':
         form = CompanyProfileForm(request.POST)
         if form.is_valid():
-            # Extract cleaned data
-            company_name = form.cleaned_data['company_name']
-            company_size = form.cleaned_data['company_size']
-            website = form.cleaned_data['website']
-            contact_person_name = form.cleaned_data['contact_person_name']
-            contact_person_position = form.cleaned_data['contact_person_position']
-            email = form.cleaned_data['email']
-            phone = form.cleaned_data['phone']
-            address = form.cleaned_data['address']
-            password = form.cleaned_data['password']
-
-            # Create User instance
-            user = User.objects.create_user(username=email, email=email, password=password)
-
-            # Create Company instance and associate with user
-            company = Company.objects.create(
-               user=user,  # Assign the user to the company
-                name=company_name,
-                size=company_size,
-                website=website,
-                contact_person_name=contact_person_name,
-                contact_person_position=contact_person_position,
-                email=email,
-                phone=phone,
-                address=address
-            )
-
-            # Authenticate user
-            user = authenticate(request, username=email, password=password)
-            if user is not None:
-                # User is authenticated, log them in
-                login(request, user)
-                print("successful login")
-                return redirect('company_login')
-            else:
-                # Authentication failed, handle it appropriately (e.g., show error message)
-                error_message = "Failed to authenticate user."
-                return render(request, "company_auth/company_signup.html", {"form": form, "error_message": error_message})
+            password = form.cleaned_data.get('password')
+            confirm_password = form.cleaned_data.get('confirm_password')
+            messages.success(request, "Registration successful!")
+            return redirect('company_login')
         else:
             messages.error(request, "Form validation failed.")
     else:

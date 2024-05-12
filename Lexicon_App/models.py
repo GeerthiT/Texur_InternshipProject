@@ -67,6 +67,10 @@ class Company(models.Model):
     phone = models.CharField(max_length=15)
     address = models.CharField(max_length=255)
 
+    accepting_interns = models.BooleanField(default=False)
+    openings_internship_description = models.TextField(blank=True)
+    required_skills = models.ManyToManyField(Skillset)
+
     def __str__(self):
         return self.name
 
