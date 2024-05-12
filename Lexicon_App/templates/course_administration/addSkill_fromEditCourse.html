@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<style>
+    .btn-more {
+        background-color: #ffff98;
+        border-radius: 35px;
+        padding: 5px 19.34px;
+        color: #000000;
+        text-decoration: none;
+    }
+    .btn-back{
+        background-color: #bc3545;
+        border-radius: 35px;
+        padding: 11px 25px;
+        color: #fdfdfd;
+        text-decoration: none;
+    }
+</style>
+
+<h1>Add Skill</h1>
+<form method="post">
+    {% csrf_token %}
+    <input type="text" name="new_skill" placeholder="Enter skill name">
+    <button type="submit" class="btn-more ">Add Skill</button>
+</form>
+<br><br>
+<div style="text-align: center;">
+    <a href="{% url 'edit_course' course_id=course_id %}" class="btn-back">Back</a>
+</div>
+{% endblock %}

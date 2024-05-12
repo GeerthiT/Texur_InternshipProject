@@ -2,7 +2,14 @@
 {% load static %}
 
 {% block content %}
-
+<style>
+  .heading2{
+    text-align: center;
+  }
+  .heading5{
+    text-align: center;
+  }
+</style>
   <h2 class="heading2"><b>Student Profile</b></h2>
   <br/>
     <h5 class="heading5"><b>Fill your Personal Information</b></h5>
@@ -21,6 +28,8 @@
   {% csrf_token %}
   {{ user_form.as_p }}
   {{ student_form.as_p }}
+
+ 
  
   <br>
   <div style="text-align: center;">

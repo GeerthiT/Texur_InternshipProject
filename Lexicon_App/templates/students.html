@@ -7,7 +7,20 @@
             color: #fcfbfb;
             text-decoration: none;
         }
+        .btn-back{
+        background-color: #bc3545;
+        border-radius: 35px;
+        padding: 11px 25px;
+        color: #fdfdfd;
+        text-decoration: none;
+    }
 </style>
+<h1 class="text-center">Students without Internship</h1>
+<ul>
+    {% for student in students_without_internship %}
+    <li>{{ student.name }}</li>
+    {% endfor %}
+</ul>
 
 <h1 class="text-center">List of students - {{ course.name }}</h1>
 <div class="container">
@@ -20,13 +33,16 @@
         {% for student in student_data %}
             
             <ul>
-                <li>{{ student.first_name }} {{ student.last_name }} {{ student.email }}
+                <li>{{ student.first_name }} {{ student.last_name }} - {{ student.email }}
                 <a href="{% url 'info_student' student_ID=student.student_ID %}" class="btn-info">View details</a></li>
             </ul>
         {% endfor %}   
 
     {% endif %}
+</div><br>
+
+<div style="text-align: center;">
+    <a href="{% url 'courses' %}" class="btn-back">Back</a>
 </div>
-<a href="{% url 'welcome_admin' %}"
-<button type="button" class="btn btn-danger">Back to home</button></a>
+
 {% endblock %}

@@ -14,16 +14,15 @@
     text-align: center;
 }
 </style>
-    <h1 class="h1">Update Student Information</h1>
-    <br>
-    
-    <div class="shadow p-4 mb-5 bg-body rounded">
-    <form method="post">
+<h1 class="heading">Update Student Information</h1>
+<br>
+
+<div class="shadow p-4 mb-5 bg-body rounded">
+    <form method="post" enctype="multipart/form-data">  <!-- Add enctype for file uploads -->
         {% csrf_token %}
         {{ form.as_p }}
         <br>
-
-        <button class="btn btn-success" type="submit"><b>Save</b></button>
+        <button class="btn btn-success btn-save" type="submit"><b>Save</b></button>
     </form>
 </div>
     {% endblock %}

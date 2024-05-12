@@ -22,6 +22,13 @@
     width: 150px;
     margin-left: 20px;
 }
+.btn-back{
+        background-color: #bc3545;
+        border-radius: 35px;
+        padding: 11px 25px;
+        color: #fdfdfd;
+        text-decoration: none;
+    }
 </style>
 
 
@@ -82,19 +89,13 @@
                 <p><strong>Skills:</strong> 
                     <select name="skills" id="skillsInput" multiple>
                         {% for skill in student.skills.all %}
-                            <option value="{{ skill.name }}" selected>{{ skill.name }}</option>
+                            {{ skill.name }}{% if not forloop.last %}, {% endif %}
                         {% endfor %}
                         <!-- You can populate this dropdown with options from a database or predefined list -->
                     </select>
                 </p>
-                <p><strong>Courses:</strong>
-                    <select name="courses" id="coursesInput" multiple>
-                        {% for course in student.course.all %}
-                            <option value="{{ course.name }}" selected>{{ course.name }}</option>
-                        {% endfor %}
-                        <!-- You can populate this dropdown with options from a database or predefined list -->
-                    </select>
-                </p>
+                <p><strong>Course:</strong> {{ student.course.name }}</p>
+                
                 <p><strong>Linkedin ID:</strong> <input type="text" id="linkedinIDInput" name="linkedin_ID" value="{{ student.linkedin_ID }}"></p>
                 <p><strong>Github ID:</strong> <input type="text" id="githubIDInput" name="github_ID" value="{{ student.github_ID }}"></p>
               <!-- Add input fields for other editable student information -->
@@ -118,11 +119,7 @@
                     {{ skill.name }}{% if not forloop.last %}, {% endif %}
                 {% endfor %}
             </p>
-            <p><strong>Courses:</strong>
-                {% for course in student.course.all %}
-                    {{ course.name }}{% if not forloop.last %}, {% endif %}
-                {% endfor %}
-            </p>
+            <p><strong>Course:</strong> {{ student.course.name }}</p>
             <p><strong>Linkedin ID:</strong> {{ student.linkedin_ID }}</p>
             <p><strong>Github ID:</strong> {{ student.github_ID }}</p>
 <br>
@@ -137,11 +134,15 @@
       
     
 </div>
-
-
-
+<br>
+{% if request.user.is_staff %}
+<div style="text-align: left;">
+    <a href="{% url 'courses' %}" class="btn-back">Back</a> 
+</div>
+{% endif %}
  
 </div>
+
 <!--
 =======
         <h1>Personal Information</h1>

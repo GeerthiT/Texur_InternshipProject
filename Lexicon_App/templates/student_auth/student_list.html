@@ -34,12 +34,19 @@
         }
 
         .btn-add {
-            background-color: #09EB12;
+            background-color: #02AB72;
             border-radius: 35px;
-            padding: 1px 17.9px;
+            padding: 5px 19.34px;
             color: #000000;
             text-decoration: none;
         }
+        .btn-back{
+        background-color: #bc3545;
+        border-radius: 35px;
+        padding: 11px 25px;
+        color: #fdfdfd;
+        text-decoration: none;
+    }
     </style>
 
     <h1 class="text-center">List of Courses</h1>
@@ -55,45 +62,11 @@
                             <span>
                                 <a href="{% url 'students' course_id=course.courseID %}" class="btn-info">View students</a>
                                 <a href="{% url 'edit_course' course_id=course.courseID %}" class="btn-edit">Edit</a>
+                                <a href="{% url 'profile_matcherStudent' course_id=course.courseID %}" class="btn-add">Profile Matcher</a>
                                 
                             </span>
                         </li>
-                    <!--    <p>
-                            <a href="{% url 'add_student' course_id=course.courseID %}">Add Student</a>
-                        </p>
-                        <p>
-                            <a href="{% static 'student_list.csv' %}" download>Download file format to upload students list</a>
-                        </p>
-                       
-                        <p>
-                            <label for="csv-file">Upload Students CSV:</label>
-                            <input type="file" id="csv-file" name="csv_file" accept=".csv">
-                            
-                            <button id="upload-csv-btn" type="button">Upload</button>
-                        </p>
-                        <script>
-                            document.getElementById("upload-csv-btn").addEventListener("click", function() {
-                                var formData = new FormData();
-                                var fileInput = document.getElementById('csv-file');
-                                formData.append('csv_file', fileInput.files[0]);
-                                
-                                fetch("{% url 'upload_students' course_id=course.courseID %}", {
-                                    method: 'POST',
-                                    body: formData,
-                                    headers: {
-                                        'X-CSRFToken': '{{ csrf_token }}'
-                                    }
-                                }).then(function(response) {
-                                    if (response.ok) {
-                                        alert('CSV file uploaded successfully.');
-                                    } else {
-                                        alert('Failed to upload CSV file.');
-                                    }
-                                }).catch(function(error) {
-                                    console.error('Error uploading CSV file:', error);
-                                });
-                            });
-                            </script> --> 
+
                     {% endfor %}
                 </ul>
             {% else %}
@@ -101,10 +74,10 @@
             {% endif %}
         </div>
     </div>
-
-    
-    
-    <button type="submit" form="course-form">Save Changes</button>
+<br><br>
+    <div style="text-align: center;">
+        <a href="{% url 'welcome_admin' %}" class="btn-back">Back</a>
+    </div>
    
    
 {% endblock %}

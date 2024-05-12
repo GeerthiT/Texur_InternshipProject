@@ -2,25 +2,98 @@
 {% load static %}
 
 {% block content %}
-
+<style>
+    .custom-select {
+        width: 25%; /* Adjust as needed */
+    }
+    .btn-add {
+        background-color: #77DD77;
+        border-radius: 35px;
+        padding: 5px 19.34px;
+        color: #000000;
+        text-decoration: none;
+    }
+    .btn-more {
+        background-color: #ffff98;
+        border-radius: 35px;
+        padding: 5px 19.34px;
+        color: #000000;
+        text-decoration: none;
+    }
+    .btn-back{
+        background-color: #bc3545;
+        border-radius: 35px;
+        padding: 11px 25px;
+        color: #fdfdfd;
+        text-decoration: none;
+    }
+</style>
 <h1>Add course</h1>
-<p>
-    <form method="post">
-        {% csrf_token %}
-        <div class="form-group">
-            <label for="id_name">Course Name:</label>
-            {{ form.name }}
-        </div><br><br>
-        <div class="form-group">
-            <label for="id_start_date">Start Date:</label>
-            {{ form.start_date }}
-        </div><br>
-        <div class="form-group">
-            <label for="id_end_date">End Date:</label>
-            {{ form.end_date }}
-        </div><br>
-        <button type="submit" class="btn btn-primary">Save</button>
-    </form>
-</p>
+<form method="post">
+    {% csrf_token %}
+    <div class="form-group">
+        <label for="id_name">Course Name:</label>
+        {{ form.name }}
+    </div>
+    <br>
+    <div class="form-group">
+        <label for="id_start_date">Start Date:</label>
+        {{ form.start_date }}
+    </div>
+    <br>
+    <div class="form-group">
+        <label for="id_end_date">End Date:</label>
+        {{ form.end_date }}
+    </div>
+    <br>
+    <div class="form-group custom-select" style="display: inline-block;">
+        <label for="id_skills">Skills:</label><br>
+        {{ form.skills }}
+    </div>
+    
+    <a href="{% url 'add_skill' %}" class="btn-more" style="display: inline-block; vertical-align: top;">Add Skill</a>
+    <br><br>
+    
+    <div style="text-align: center;">
+        <a href="{% url 'courses' %}" class="btn-back">Back</a>
+        <button type="submit" class="btn-add">Save</button>
+    </div>
+</form>
+
+
+<script>
+    // Function to save form data to sessionStorage
+    function saveFormData() {
+        var form = document.getElementById("course-form");
+        for (var i = 0; i < form.elements.length; i++) {
+            var element = form.elements[i];
+            if (element.type !== "button") {
+                sessionStorage.setItem(element.name, element.value);
+            }
+        }
+    }
+
+    // Function to retrieve form data from sessionStorage and populate the form
+    function populateFormData() {
+        var form = document.getElementById("course-form");
+        for (var i = 0; i < form.elements.length; i++) {
+            var element = form.elements[i];
+            if (element.type !== "button") {
+                var storedValue = sessionStorage.getItem(element.name);
+                if (storedValue !== null) {
+                    element.value = storedValue;
+                }
+            }
+        }
+    }
+
+    // Call populateFormData() when the page loads to populate the form with saved data
+    window.onload = populateFormData;
+
+    // Call saveFormData() before navigating away from the page to save form data
+    window.onbeforeunload = saveFormData;
+</script>
+
+
 
 {% endblock %}

@@ -3,8 +3,13 @@
 
 {% block content %}
 <style>
+    
+    .custom-skill-field {
+        width: 15%; /* Adjust the width as needed */
+    }
+
     .btn-edit {
-        background-color: #f5df1f;
+        background-color: #f89246;
         border-radius: 35px;
         padding: 5px 19.34px;
         color: #000000;
@@ -37,35 +42,63 @@
     .btn-add {
         background-color: #77DD77;
         border-radius: 35px;
-        padding: 1px 17.9px;
+        padding: 6px 17.9px;
+        color: #000000;
+        text-decoration: none;
+    }
+    .custom-select {
+    width: 20%; /* Adjust as needed */
+}
+.btn-skill {
+        background-color: #ffff98;
+        border-radius: 35px;
+        padding: 5px 19.34px;
+        color: #000000;
+        text-decoration: none;
+    }
+.btn-csv {
+        background-color: #b19cd9;
+        border-radius: 35px;
+        padding: 5px 19.34px;
+        color: #000000;
+        text-decoration: none;
+    }
+.btn-back{
+        background-color: #bc3545;
+        border-radius: 35px;
+        padding: 11px 25px;
+        color: #fdfdfd;
+        text-decoration: none;
+    }
+.btn-save{
+        background-color: #77DD77;
+        border-radius: 35px;
+        padding: 50px 50px;
         color: #000000;
         text-decoration: none;
     }
 </style>
 
 <h1>Edit course</h1>
-<p>
-    <form id="course-form" method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ form.as_p }}
-    </form>
-</p>
-<a href="{% url 'students' course_id=course_id %}" class="btn-info">View students</a>
-
+<form id="course-form" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}<a href="{% url 'editCourse_skill' course_id=course_id %}" class="btn-skill" style="display: inline-block; vertical-align: top;">Add Skill</a>
+    
+    <br><br>
+    <a href="{% url 'students' course_id=course_id %}" class="btn-info">View students</a>
     <a href="{% url 'add_student' course_id=course_id %}" class="btn-edit">Add Student</a>
-</p>
-<p>
+    <br><p><br>
     <a href="{% static 'student_list.csv' %}" download>Download file format to upload students list</a>
-</p>
-
-<p>
+    <br><br>
     <label for="csv-file">Upload Students CSV:</label>
     <input type="file" id="csv-file" name="csv_file" accept=".csv">
-    
-    <button id="upload-csv-btn" type="button">Upload</button>
-</p>
-
-<button class="btn-add" type="submit" form="course-form">Save Changes</button>
+    <button id="upload-csv-btn" type="button" class="btn-csv">Upload</button>
+    </p>
+    <div style="text-align: center;">
+        <a href="{% url 'courses' %}" class="btn-back">Back</a>
+    <button class="btn-add" type="submit" class=".btn-save">Save</button>
+    </div>
+</form>
 
 <script>
 document.getElementById("upload-csv-btn").addEventListener("click", function() {
@@ -90,5 +123,6 @@ document.getElementById("upload-csv-btn").addEventListener("click", function() {
     });
 });
 </script>
+
 
 {% endblock %}

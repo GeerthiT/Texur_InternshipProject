@@ -163,8 +163,7 @@ class CompanyProfileForm(forms.Form):
         user = User.objects.create_user(username=email, email=email, password=password)
 
         return company
-
-
+ 
  
 class UserRegistrationForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput)
@@ -254,4 +253,4 @@ class CourseForm(forms.ModelForm):
 
 
 class CSVUploadForm(forms.Form):
-    csv_file = forms.FileField(label="Upload CSV file")
+    csv_file = forms.FileField(label='Upload CSV file')

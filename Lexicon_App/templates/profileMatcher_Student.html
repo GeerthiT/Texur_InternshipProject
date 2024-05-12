@@ -2,7 +2,15 @@
 {% load static %}
 
 {% block content %}
-
+<style>
+    .btn-back{
+        background-color: #bc3545;
+        border-radius: 35px;
+        padding: 11px 25px;
+        color: #fdfdfd;
+        text-decoration: none;
+    }
+</style>
 <h1>Skills Mapping</h1>
 
 <body>
@@ -37,6 +45,11 @@
         </p>
     </div>
     {% endfor %}
+
+    <div style="text-align: center;">
+        <a href="{% url 'student_list' %}" class="btn-back">Back</a>
+    </div>
 </body>
+
 
 {% endblock %}
