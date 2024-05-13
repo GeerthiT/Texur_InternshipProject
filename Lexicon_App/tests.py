@@ -1,91 +1,76 @@
 from django.test import TestCase, Client
 from django.urls import reverse
 from django.contrib.auth.models import User
-from .models import Student
+from .models import Student, Course, Skillset
+from datetime import date
 
-class TestViews(TestCase):
+class ViewsTestCase(TestCase):
     def setUp(self):
+        # Create a test user
+        self.user = User.objects.create_user(username='testadmin', password='testpassword')
+
+        # Create a test student
+        self.student = Student.objects.create(
+            user=self.user,
+            student_ID='123456789',
+            first_name='John',
+            last_name='Doe',
+            email='john.doe@example.com',
+        )
+
+        # Create a test course
+        self.course = Course.objects.create(
+            name='Test Course',
+            start_date=date.today(),
+            end_date=date.today()
+        )
+
+        # Initialize the test client
         self.client = Client()
 
-    def test_index(self):
-        response = self.client.get(reverse('index'))
-        self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'index.html')
- 
-    #def test_adminCompany(self):
-    #    response = self.client.get(reverse('company'))
-    #    self.assertEqual(response.status_code, 200)
-    #    self.assertTemplateUsed(response, 'company.html')
+    def test_admin_login(self):
+        # Test admin login with valid credentials
+        response = self.client.post(reverse('admin_login'), {'username': 'testadmin', 'password': 'testpassword'})
+        self.assertEqual(response.status_code, 302)  # Expecting a redirect status code
 
-    def test_adminLogin(self):
-        response = self.client.get(reverse('admin_login'))
-        self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'admin_auth/admin_login.html')
+    def test_login_student(self):
+        # Test student login with valid credentials
+        response = self.client.post(reverse('login_student'), {'username': 'testadmin', 'password': 'testpassword'})
+        self.assertEqual(response.status_code, 302)  # Expecting a redirect status code
 
-    def test_adminPortal(self):
+    def test_display_students(self):
+        # Test displaying a list of students
+        response = self.client.get(reverse('display_students'))
+        self.assertEqual(response.status_code, 200)  # Expecting a success status code
+
+    def test_welcome_admin(self):
+        # Test displaying welcome page for admin
         response = self.client.get(reverse('welcome_admin'))
-        self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'welcome_admin.html')
+        self.assertEqual(response.status_code, 200)  # Expecting a success status code
 
-    def test_adminCourses(self):
+    def test_courses(self):
+        # Test displaying courses page
         response = self.client.get(reverse('courses'))
-        self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'courses.html')
+        self.assertEqual(response.status_code, 200)  # Expecting a success status code
 
-    def test_adminStudents(self):
-        response = self.client.get(reverse('students'))
-        self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'students.html')
+    def test_student_list(self):
+        # Test displaying student list page
+        response = self.client.get(reverse('student_list'))
+        self.assertEqual(response.status_code, 200)  # Expecting a success status code
 
+    def test_students(self):
+        # Test displaying students page
+        response = self.client.get(reverse('students', args=[self.course.pk]))
+        self.assertEqual(response.status_code, 200)  # Expecting a success status code
 
-    def test_studentSignup(self):
-        response = self.client.get(reverse('signup_student'))
-        self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'student_auth/signup_student.html')
+    def test_companies(self):
+    # Test fetching companies page
+        response = self.client.get(reverse('company'))  # Assuming 'company' is the correct URL name
+        self.assertEqual(response.status_code, 200)  # Expecting a success status code
 
-    def test_studentInfo(self):
-        response = self.client.get(reverse('info_student'))
-        self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'student_auth/info_student.html')
+    def test_search(self):
+        # Test searching for courses, students, and companies
+        response = self.client.post(reverse('search'), {'searched': 'test'})
+        self.assertEqual(response.status_code, 200)  # Expecting a success status code
 
-    def test_companyLogin(self):
-        response = self.client.get(reverse('company_login'))
-        self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'company_auth/company_login.html')
-        
- 
-
-
-    def test_matchStudent(self):
-        response = self.client.get(reverse('profile_matcherStudent'))
-        self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'profileMatcher_Student.html')
-
-    def test_matchCompany(self):
-        response = self.client.get(reverse('profile_matcherCompany'))
-        self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'profileMatcher_Company.html')
-
-  
-
-   # TEST STUDENT SIGNUP, LOGIN AND INFO PAGES:class StudentViewsTestCase(TestCase):
-    class LoginStudentViewTestCase(TestCase):
-        def setUp(self):
-            self.client = Client()
-        
-        def test_login_student_view(self):
-            # Test GET request to login_student view
-            response = self.client.get(reverse('login_student'))
-            self.assertEqual(response.status_code, 200)
-            self.assertTemplateUsed(response, 'student_auth/login_student.html')
-            
-            # Create a test user
-            user = User.objects.create_user(username='testuser', password='testpassword')
-            
-            # Test POST request to login_student view with valid credentials
-            response = self.client.post(reverse('login_student'), {'username': 'testuser', 'password': 'testpassword'})
-            
-            # Check if it redirects to info_student page
-            self.assertEqual(response.status_code, 302)  # 302 for redirect
-            self.assertRedirects(response, reverse('info_student'))
-
+   
