@@ -1,0 +1,93 @@
+{% extends "base.html" %} {% load static %} {% block content %}
+<style>
+  .head1 {
+    text-align: center;
+  }
+
+  .form1 {
+    margin-left: 500px;
+  }
+
+  .but {
+    margin-bottom: 20px;
+  }
+
+  body {
+    background-color: rgb(235, 244, 251);
+  }
+
+  .btn-primary {
+    width: 150px;
+    margin-left: 20px;
+  }
+
+  .btn-back {
+    background-color: #bc3545;
+    border-radius: 35px;
+    padding: 11px 25px;
+    color: #fdfdfd;
+    text-decoration: none;
+  }
+</style>
+
+<h1 class="head1">Company Information</h1>
+<br />
+<div class="shadow p-4 mb-5 bg-body rounded">
+  <div style="display: flex; align-items: center">
+    <!-- Spacer -->
+    <div style="flex-grow: 1"></div>
+
+    <!-- Edit and Delete Buttons -->
+    <div class="but" style="display: flex">
+      <!-- Update company -->
+      {% if editing %}
+      <form action="{% url 'update_company' company.id %}" method="get">
+        <button class="btn btn-block btn-info custom-width" type="submit">
+          <b>Edit</b>
+        </button>
+      </form>
+      <div style="margin-right: 10px"></div>
+
+      <!-- Delete company -->
+      <form action="{% url 'delete_company' company.id %}" method="post">
+        {% csrf_token %}
+        <button class="btn btn-block btn-warning custom-width" type="submit">
+          <b>Delete</b>
+        </button>
+      </form>
+      {% endif %}
+    </div>
+  </div>
+  <br />
+  <br />
+
+  <div class="form1">
+    {% if company %}
+    <p><strong>Company Name:</strong> {{ company.company_name }}</p>
+    <p><strong>Company Size:</strong> {{ company.company_size }}</p>
+    <p><strong>Website:</strong> {{ company.website }}</p>
+    <p>
+      <strong>Contact Person Name:</strong> {{ company.contact_person_name }}
+    </p>
+    <p>
+      <strong>Contact Person Position:</strong> {{
+      company.contact_person_position }}
+    </p>
+    <p><strong>Email:</strong> {{ company.email }}</p>
+    <p><strong>Phone:</strong> {{ company.phone }}</p>
+    <p><strong>Address:</strong> {{ company.address }}</p>
+    <!-- Add more fields as needed -->
+    {% else %}
+    <p>No company information found.</p>
+    {% endif %}
+  </div>
+
+  <br />
+  {% if request.user.is_staff %}
+  <div style="text-align: left">
+    <a href="{% url 'companies' %}" class="btn-back">Back</a>
+  </div>
+  {% endif %}
+</div>
+
+{% endblock %}

@@ -9,7 +9,7 @@ from io import TextIOWrapper
 from django.urls import reverse
 from django.core.mail import send_mail
 from django.contrib.auth.decorators import login_required
-from .forms import UserForm, StudentForm, CompanyProfileForm, CourseForm, CSVUploadForm, UserRegistrationForm
+from .forms import CompanyRegistrationForm, UserForm, StudentForm, CourseForm
 from django.contrib.auth.hashers import make_password
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
@@ -18,7 +18,6 @@ from django.db import transaction
 
 
 def index(request):
-    return render(request, "index.html")
     return render(request, "index.html")
 
 
@@ -238,79 +237,58 @@ def company_login(request):
         # Get data from the form
         username = request.POST.get("username")
         password = request.POST.get("password")
-
-        # Authenticate user
-        user = authenticate(request, username=username, password=password)
-
-        if user is not None:
+               # Authenticate user
+        user = authenticate(request,username = username, password = password)
+        
+            
+       
+        if user is not None and user.is_active:
             # User is authenticated, log them in
             login(request, user)
-            print("successful login")
-            return redirect('index')  
+            company = Company.objects.get(user=user)
+            
+            return redirect('company_info')
         else:
             # Authentication failed, handle it appropriately (e.g., show error message)
+            print("Invalid username or password")
             error_message = "Invalid username or password."
-            return render(request, "company_auth/company_login.html", {"form": UserRegistrationForm(), "error_message": error_message})
+            return render(request, "company_auth/company_login.html", { "error_message": error_message})
+      
     else:
-        form = UserRegistrationForm()
-        return render(request, "company_auth/company_login.html", {"form": form})
-        
-
+            return render(request, "company_auth/company_login.html")
 
 def company_signup(request):
     if request.method == 'POST':
-        form = CompanyProfileForm(request.POST)
-        if form.is_valid():
-            # Extract cleaned data
-            company_name = form.cleaned_data['company_name']
-            company_size = form.cleaned_data['company_size']
-            website = form.cleaned_data['website']
-            contact_person_name = form.cleaned_data['contact_person_name']
-            contact_person_position = form.cleaned_data['contact_person_position']
-            email = form.cleaned_data['email']
-            phone = form.cleaned_data['phone']
-            address = form.cleaned_data['address']
-            password = form.cleaned_data['password']
-
-            # Create User instance
-            user = User.objects.create_user(username=email, email=email, password=password)
-
-            # Create Company instance and associate with user
-            company = Company.objects.create(
-                user=user,  # Assign the user to the company
-                name=company_name,
-                size=company_size,
-                website=website,
-                contact_person_name=contact_person_name,
-                contact_person_position=contact_person_position,
-                email=email,
-                phone=phone,
-                address=address
-            )
-
-            # Authenticate user
-            user = authenticate(request, username=email, password=password)
-            if user is not None:
-                # User is authenticated, log them in
-                login(request, user)
-                print("successful login")
-                return redirect('company_login')
-            else:
-                # Authentication failed, handle it appropriately (e.g., show error message)
-                error_message = "Failed to authenticate user."
-                return render(request, "company_auth/company_signup.html", {"form": form, "error_message": error_message})
+        company_registration = CompanyRegistrationForm(request.POST)
+        if company_registration.is_valid():
+            username = company_registration.cleaned_data["username"]
+            password = company_registration.cleaned_data["password"]
+            # Saving logic for the user
+            user = User(username = username, password = password)
+            user.save()
+            
+            company = company_registration.save(commit=False)
+            company.user = user
+          # check if it was really saved or not.
+          # company_registration.save_m2m()
+            company_registration.save()
+            company_registration.save_m2m()
+            return redirect('company_login')
         else:
-            messages.error(request, "Form validation failed.")
+          messages.error(request, "Form validation failed.")
     else:
-        form = CompanyProfileForm()
-    return render(request, "company_auth/company_signup.html", {"form": form})
+      company_form = CompanyRegistrationForm()
+      return render(request, "company_auth/company_signup.html", {"company_registration_form": company_form})
 
+def company_info(request, company_id):
+    # Query the Company model to retrieve information for the specified company ID
+    company = get_object_or_404(Company, id=company_id)
+    return render(request, 'company_auth/company_info.html', {'company': company}) 
 
-
-def company_dashboard(request):
+def company(request):
     company_info = request.user.company_profile  
     InternshipPost = InternshipPost.objects.filter(company=company_info)
-    return render(request, 'company_auth/company_dashboard.html', {'company_info': company_info, 'Internship_Post': InternshipPost})
+    return render(request, 'company.html', {'company_info': company_info, 'Internship_Post': InternshipPost})
 
 
 # Delete a company
@@ -602,4 +580,3 @@ def upload_students(request, course_id):
     else:
         messages.error(request, 'Invalid request method')
         return redirect('edit_course', course_id=course_id)
-

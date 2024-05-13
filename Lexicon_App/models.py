@@ -3,7 +3,6 @@ from django.contrib.auth.models import User
 
 # Create your models here.
 
-
 class Skillset(models.Model):
     name = models.CharField(max_length=100)
 
@@ -48,12 +47,10 @@ class Student(models.Model):
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
 
- 
 
 class Company(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, default=1)
-    companyID = models.CharField(max_length=100)
-    name = models.CharField(max_length=100)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='company_profile')
+    name = models.CharField(max_length=100, default='')
     contact_details = models.CharField(max_length=100, default='')
     accepting_interns = models.BooleanField(default=False)
     openings_internship_description = models.TextField(blank=True)
@@ -66,9 +63,8 @@ class Company(models.Model):
     phone = models.CharField(max_length=15, default='Unknown')
     address = models.CharField(max_length=255, default='Unknown')
 
-    def __str__(self):
+def __str__(self):
         return self.name
-
 
 class InternshipPost(models.Model):
     company = models.ForeignKey('Company', on_delete=models.CASCADE)
@@ -95,5 +91,3 @@ class testStudent(models.Model):
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
     email = models.EmailField()
-
-

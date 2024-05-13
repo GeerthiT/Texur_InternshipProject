@@ -120,59 +120,72 @@ class CompanyProfileForm(forms.Form):
     address = forms.CharField(
         max_length=255, widget=forms.TextInput(attrs={"class": "form-control"})
     )
-    password = forms.CharField(
-        widget=forms.PasswordInput(attrs={"class": "form-control"})
-    )
-    confirm_password = forms.CharField(
-        widget=forms.PasswordInput(attrs={"class": "form-control"})
-    )
+    
     terms_conditions = forms.BooleanField(required=True)
-
-    def clean(self):
-        cleaned_data = super().clean()
-        password = cleaned_data.get("password")
-        confirm_password = cleaned_data.get("confirm_password")
-
-        if password != confirm_password:
-            raise ValidationError("Password and Confirm Password fields do not match.")
-
-    def save(self):
-        # Extract cleaned data
-        company_name = self.cleaned_data["company_name"]
-        company_size = self.cleaned_data["company_size"]
-        website = self.cleaned_data["website"]
-        contact_person_name = self.cleaned_data["contact_person_name"]
-        contact_person_position = self.cleaned_data["contact_person_position"]
-        email = self.cleaned_data["email"]
-        phone = self.cleaned_data["phone"]
-        address = self.cleaned_data["address"]
-        password = self.cleaned_data["password"]
-
-        # Saving logic for the company
-        company = Company.objects.create(
-            name=company_name,
-            size=company_size,
-            website=website,
-            contact_person_name=contact_person_name,
-            contact_person_position=contact_person_position,
-            phone=phone,
-            address=address,
+    
+    class Meta:
+            model = Company
+            fields = (
+            "company_name",
+            "company_size",
+            "website",
+            "contact_person_name",
+            "contact_person_position",
+            "email",
+            "phone",
+            "age",
+            "address",
+            "terms_conditions"
         )
-
-        # Create User instance
-        user = User.objects.create_user(username=email, email=email, password=password)
-
-        return company
-
-
-class UserRegistrationForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+            
+class CompanyRegistrationForm(forms.ModelForm):
+    username = forms.CharField(widget=forms.TextInput)
     password = forms.CharField(widget=forms.PasswordInput)
     confirm_password = forms.CharField(widget=forms.PasswordInput)
-
+    company_name = forms.CharField(
+        max_length=100, widget=forms.TextInput(attrs={"class": "form-control"})
+    )
+    company_size = forms.ChoiceField(
+        choices=[
+            ("", "Select the Company size"),
+            ("Startup", "Startup"),
+            ("Small", "Small"),
+            ("Medium", "Medium"),
+            ("Large", "Large"),
+            ("Enterprise", "Enterprise"),
+        ],
+        widget=forms.Select(attrs={"class": "form-control"}),
+    )
+    website = forms.URLField(widget=forms.URLInput(attrs={"class": "form-control"}))
+    contact_person_name = forms.CharField(
+        max_length=100, widget=forms.TextInput(attrs={"class": "form-control"})
+    )
+    contact_person_position = forms.CharField(
+        max_length=100, widget=forms.TextInput(attrs={"class": "form-control"})
+    )
+    email = forms.EmailField(widget=forms.EmailInput(attrs={"class": "form-control"}))
+    phone = forms.CharField(
+        max_length=15, widget=forms.TextInput(attrs={"class": "form-control"})
+    )
+    address = forms.CharField(
+        max_length=255, widget=forms.TextInput(attrs={"class": "form-control"})
+    )
+   
     class Meta:
-        model = User
-        fields = ["username", "password", "confirm_password"]
-
+            model = Company
+            fields = (
+            "company_name",
+            "company_size",
+            "website",
+            "contact_person_name",
+            "contact_person_position",
+            "email",
+            "phone",
+            "address"
+        )
+   
     def clean(self):
         cleaned_data = self.cleaned_data
         password = cleaned_data.get("password")
@@ -182,39 +195,49 @@ class UserRegistrationForm(forms.ModelForm):
             raise forms.ValidationError("Passwords do not match.")
 
         return cleaned_data
-
-
-def save(self, commit=True):
-    if not commit:
-        raise NotImplementedError("Can't create Company instance without commit=True")
-
-    # Extract cleaned data
-    company_name = self.cleaned_data["Companyname"]
-    company_size = self.cleaned_data["Companysize"]
-    website = self.cleaned_data["Website"]
-    contact_person_name = self.cleaned_data["name"]
-    contact_person_position = self.cleaned_data["position"]
-    email = self.cleaned_data["email"]
-    phone = self.cleaned_data["phone"]
-    password = self.cleaned_data["password"]
-    address = self.cleaned_data["address"]
-
-    # Saving logic for the company
-    company = Company(
-        name=company_name,
-        size=company_size,
-        website=website,
-        contact_person_name=contact_person_name,
-        contact_person_position=contact_person_position,
-        email=email,
-        phone=phone,
-        address=address,
-    )
-    company.save()
-
-    return company
-
-
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field_name in self.fields:
+            self.fields[field_name].widget.attrs["class"] = "form-control"
+            '''
+            def save(self, commit=True):
+                if not commit:
+                    raise NotImplementedError("Can't create Company instance without commit=True")
+                username = self.cleaned_data["username"]
+                password = self.cleaned_data["password"]
+            
+                # Saving logic for the user
+                user = User(username = username, password = password)
+                user.save()
+                company_save = Company(self)
+                company_save.user = user
+                company_save.save()
+            
+            # Saving logic for the company
+            # Extract cleaned data
+                company_name = self.cleaned_data["company_name"]
+                company_size = self.cleaned_data["company_size"]
+                website = self.cleaned_data["website"]
+                contact_person_name = self.cleaned_data["contact_person_name"]
+                contact_person_position = self.cleaned_data["contact_person_position"]
+                email = self.cleaned_data["email"]
+                phone = self.cleaned_data["phone"]
+                address = self.cleaned_data["address"]
+                company = Company(
+                    user = user,
+                    name = company_name,
+                    size = company_size,
+                    website = website,
+                    contact_person_name = contact_person_name,
+                    contact_person_position = contact_person_position,
+                    email = email,
+                    phone = phone,
+                    address = address,
+                   
+                )
+                company.save()
+                return company'''
 
 
 class CourseForm(forms.ModelForm):
@@ -248,9 +271,5 @@ class CourseForm(forms.ModelForm):
             # Remove the 'new_skill' field from the form
             self.fields.pop('new_skill')
 
-
-
-
-
 class CSVUploadForm(forms.Form):
-    csv_file = forms.FileField(label="Upload CSV file")
+    csv_file = forms.FileField(label='Upload CSV file')

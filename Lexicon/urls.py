@@ -33,24 +33,20 @@ urlpatterns = [
     path("courses_admin/", views.courses, name="courses"),
     path("company_signup/", views.company_signup, name="company_signup"),
     path("company_login/", views.company_login, name="company_login"),
-    path('company_dashboard/', views.company_dashboard, name='company_dashboard'),
+   path("company_info/", views.company_info, name="company_info"),
+    path("company/", views.companies, name="company"),
     path("login_student/", views.login_student, name="login_student"),
     path("signup_student/", views.signup_student, name="signup_student"),
-    
     path("display_students/", views.display_students, name="display_students"),
     path("update_student/<str:email>/", views.update_student, name="update_student"),
     path("delete_student/<str:email>/", views.delete_student, name="delete_student"),
-
     path("info_student/<int:student_ID>/", views.info_student, name="info_student"),
-
     path("students/<int:course_id>", views.students, name="students"),
-    
-    path("company_signup/", views.company_signup, name="Company_signup"),
     path("search/", views.search, name="search"),
     path("courses/", views.courses, name="courses"),
     #path('courses/<int:course_id>/', views.courses, name='courses'),
     path("student_list/", views.student_list, name="student_list"),
-    path("company/", views.companies, name="company"),
+    
     path('profileMatcher_Student/<int:course_id>', views.profile_matcherStudent, name='profile_matcherStudent'),
     path('profile_matcher/<int:course_id>/', views.profile_matcherStudent, name='profile_matcher'),
     path('students/<int:student_id>/delete/', delete_student, name='delete_student'),
