@@ -238,18 +238,22 @@ def company_login(request):
         username = request.POST.get("username")
         password = request.POST.get("password")
                # Authenticate user
-        user = authenticate(username = username, password = password)
+        user = authenticate(request,username = username, password = password)
+        
             
+       
         if user is not None and user.is_active:
             # User is authenticated, log them in
             login(request, user)
             company = Company.objects.get(user=user)
-            return HttpResponseRedirect(reverse('company',company))
+            
+            return redirect('company_info')
         else:
             # Authentication failed, handle it appropriately (e.g., show error message)
             print("Invalid username or password")
             error_message = "Invalid username or password."
             return render(request, "company_auth/company_login.html", { "error_message": error_message})
+      
     else:
             return render(request, "company_auth/company_login.html")
 
@@ -276,6 +280,10 @@ def company_signup(request):
       company_form = CompanyRegistrationForm()
       return render(request, "company_auth/company_signup.html", {"company_registration_form": company_form})
 
+def company_info(request, company_id):
+    # Query the Company model to retrieve information for the specified company ID
+    company = get_object_or_404(Company, id=company_id)
+    return render(request, 'company_auth/company_info.html', {'company': company}) 
 
 def company(request):
     company_info = request.user.company_profile  

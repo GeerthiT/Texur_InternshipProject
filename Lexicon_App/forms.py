@@ -234,7 +234,7 @@ class CompanyRegistrationForm(forms.ModelForm):
                     email = email,
                     phone = phone,
                     address = address,
-                    terms_conditions = terms_conditions
+                   
                 )
                 company.save()
                 return company'''

@@ -1,20 +1,265 @@
-{% extends "base.html" %}
-{% load static %}
+{% extends "base.html" %} {% load static %} {% block content %}
 
-{% block content %}
+<div class="container">
+  
 
-<h1>INDEX page - placeholder</h1>
-<p>
-    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Amet consectetur adipiscing elit duis tristique sollicitudin nibh sit. At ultrices mi tempus imperdiet nulla malesuada pellentesque. Eu turpis egestas pretium aenean pharetra magna. Maecenas accumsan lacus vel facilisis volutpat est velit egestas dui. Turpis egestas maecenas pharetra convallis posuere morbi leo. In hendrerit gravida rutrum quisque non tellus. Ac feugiat sed lectus vestibulum. Velit scelerisque in dictum non consectetur a erat nam. Risus feugiat in ante metus. Montes nascetur ridiculus mus mauris.
-<br><br>
-Massa eget egestas purus viverra accumsan in nisl. Tincidunt vitae semper quis lectus. Vulputate sapien nec sagittis aliquam malesuada bibendum arcu vitae elementum. Nunc lobortis mattis aliquam faucibus purus in massa. Auctor urna nunc id cursus metus. Augue ut lectus arcu bibendum at varius. Faucibus in ornare quam viverra. Quis viverra nibh cras pulvinar mattis nunc sed blandit libero. Consequat mauris nunc congue nisi vitae. Dolor sit amet consectetur adipiscing elit. Sed lectus vestibulum mattis ullamcorper. Tincidunt id aliquet risus feugiat in. Id consectetur purus ut faucibus pulvinar elementum. Malesuada bibendum arcu vitae elementum.
-<br><br>
-Risus ultricies tristique nulla aliquet enim tortor at. Morbi leo urna molestie at elementum. Eu lobortis elementum nibh tellus molestie nunc non blandit massa. Nec dui nunc mattis enim ut tellus elementum sagittis. Placerat duis ultricies lacus sed turpis tincidunt. Eleifend donec pretium vulputate sapien nec sagittis aliquam. Interdum varius sit amet mattis vulputate. Commodo elit at imperdiet dui. Arcu non sodales neque sodales ut etiam sit. Hac habitasse platea dictumst vestibulum. Egestas erat imperdiet sed euismod nisi.
-<br><br>
-Sodales neque sodales ut etiam sit. Tempus egestas sed sed risus pretium. Purus in massa tempor nec feugiat nisl pretium. Eleifend mi in nulla posuere sollicitudin aliquam ultrices sagittis orci. Posuere urna nec tincidunt praesent semper. Pellentesque elit eget gravida cum sociis natoque. Nec nam aliquam sem et tortor consequat id. Venenatis cras sed felis eget velit aliquet sagittis. Rhoncus dolor purus non enim praesent elementum facilisis leo vel. Elit pellentesque habitant morbi tristique senectus et. Nibh ipsum consequat nisl vel pretium lectus. Aliquet enim tortor at auctor urna nunc id cursus metus. Diam in arcu cursus euismod quis viverra nibh cras pulvinar. Venenatis lectus magna fringilla urna porttitor rhoncus dolor. Vulputate eu scelerisque felis imperdiet proin fermentum leo vel orci. Nibh nisl condimentum id venenatis a condimentum vitae.
-<br><br>
-Elementum tempus egestas sed sed risus pretium quam vulputate dignissim. In pellentesque massa placerat duis ultricies. Leo a diam sollicitudin tempor id eu nisl nunc mi. Praesent tristique magna sit amet purus gravida quis blandit. Ante metus dictum at tempor. Sed libero enim sed faucibus turpis in eu. Blandit libero volutpat sed cras. Ac auctor augue mauris augue neque gravida. Enim neque volutpat ac tincidunt vitae semper quis. Faucibus vitae aliquet nec ullamcorper sit amet risus nullam eget.
+  <!-- Carousel -->
+  <div class="row">
+    <div class="col">
+      <div
+        id="carouselExampleDark"
+        class="carousel carousel-dark slide"
+        data-bs-ride="carousel"
+      >
+        <div class="carousel-indicators">
+          <button
+            type="button"
+            data-bs-target="#carouselExampleDark"
+            data-bs-slide-to="0"
+            class="active"
+            aria-current="true"
+            aria-label="Slide 1"
+          ></button>
+          <button
+            type="button"
+            data-bs-target="#carouselExampleDark"
+            data-bs-slide-to="1"
+            aria-label="Slide 2"
+          ></button>
+          <button
+            type="button"
+            data-bs-target="#carouselExampleDark"
+            data-bs-slide-to="2"
+            aria-label="Slide 3"
+          ></button>
+        </div>
+        <div class="carousel-inner">
+          <div class="carousel-item active" data-bs-interval="10000">
+            <img
+              src="media/index_pictures/first_slide.jpg"
+              class="d-block w-100"
+              alt="..."
+            />
+            <div class="carousel-caption d-none d-md-block">
+              <h5>First slide label</h5>
+              <p>An education within the IT Infrastructure Academy</p>
+            </div>
+          </div>
+          <div class="carousel-item" data-bs-interval="2000">
+            <img
+              src="media/index_pictures/second_slide.jpg"
+              class="d-block w-100"
+              alt="..."
+            />
+            <div class="carousel-caption d-none d-md-block">
+              <h5>Second slide label</h5>
+              <p>Sweden's first established IT training company.</p>
+            </div>
+          </div>
+          <div class="carousel-item">
+            <img
+              src="media/index_pictures/thired_slide.jpg"
+              class="d-block w-100"
+              alt="..."
+            />
+            <div class="carousel-caption d-none d-md-block">
+              <h5>Third slide label</h5>
+              <p>
+                Some representative placeholder content for the third slide.
+              </p>
+            </div>
+          </div>
+        </div>
+        <button
+          class="carousel-control-prev"
+          type="button"
+          data-bs-target="#carouselExampleDark"
+          data-bs-slide="prev"
+        >
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Previous</span>
+        </button>
+        <button
+          class="carousel-control-next"
+          type="button"
+          data-bs-target="#carouselExampleDark"
+          data-bs-slide="next"
+        >
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Next</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</br>
+</br>
+  <!-- Info for Company and Sudent -->
+  <!-- Hero 4 - Bootstrap Brain Component -->
 
-</p>
+  <div >
+    <section >
+        <div class="container-fluid overflow-hidden">
+          <div class="row">
+            <div class="col-12 col-md-6 order-1 order-md-0 align-self-md-end">
+              <div class="row py-3 py-sm-5 py-xl-9 mt-md-10 justify-content-sm-center">
+                <div class="col-12 col-sm-10">
+                  <h2 > Become part of the Lexicon</h2>
+                  <div class="row">
+                    <div class="col-12 col-xxl-8">
+                      <p class="fs-5 mb-5 text-dark">Lexicon is a growing group with collective competences. 
+                        If you are the right person or represent an interesting organization,
+                         we are always interested in talking about the possibilities for you as a new part of the Lexicon group.
+                        </p>
+                       <p> Together, we have a strong growth vision that characterizes our working methods and has helped us grow since 1979. </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-12 col-md-6 p-0">
+              <img class="img-fluid w-100 h-100 object-fit-cover" loading="lazy"  src="media/index_pictures/info1.jpg" alt="">
+            </div>
+          </div>
+        </div>
+      </section>
+     
+    </div>
+    <div >
+      <div class="row">
+        <div class="col-12 col-md-6 order-1 order-md-0 align-self-md-end">
+            <div class="row py-3 py-sm-5 py-xl-9 mt-md-10 justify-content-sm-center">
+                <div class="col-12 col-sm-10">
+                     <img
+                     src="media/index_pictures/info2.jpg"
+                     class="img-thumbnail w-100"
+                      alt="..."/>
+                </div>
+            </div>
+        </div>
+
+        <div class="col"> </br><h2>We at Lexicon finance our sponsored children's schooling at Jofi School in Gambia</h2>
+            <p>Since 2011, Lexicon has been contributing to the schooling of students at Jofi Prep School
+             in The Gambia by financing all costs for the sponsored children, including school fees,
+              food, premises, school uniforms, books and other educational materials. </p></div>
+     </div> 
+    </div>
+  
+</br>
+  <!-- Stats -->
+  <div class="row">
+    <div class="col-3">
+      <div
+        class="icon icon-shape icon-shape-primary rounded-circle me-2 me-md-0 mb-2"
+      >
+        <span class="far fa-grin-hearts"></span>
+      </div>
+      <span class="counter display-3 text-primary d-block">50+</span>
+      <span class="h5 text-gray"> IT Course</span>
+    </div>
+    <div class="col-3">
+      <div
+        class="icon icon-shape icon-shape-primary rounded-circle me-2 me-md-0 mb-2"
+      >
+        <span class="far fa-grin-hearts"></span>
+      </div>
+      <span class="counter display-3 text-primary d-block">1500+</span>
+      <span class="h5 text-gray">Happy students</span>
+    </div> 
+    <div class="col-3">
+      <div
+        class="icon icon-shape icon-shape-primary rounded-circle me-2 me-md-0 mb-2"
+      >
+        <span class="far fa-grin-hearts"></span>
+      </div>
+      <span class="counter display-3 text-primary d-block">2000+</span>
+      <span class="h5 text-gray">conection to company</span>
+    </div>
+    <div class="col-3">
+      <div
+        class="icon icon-shape icon-shape-primary rounded-circle me-2 me-md-0 mb-2"
+      >
+        <span class="far fa-grin-hearts"></span>
+      </div>
+      <span class="counter display-3 text-primary d-block">5500+</span>
+      <span class="h5 text-gray">Happy people</span>
+    </div>
+  </div>
+  
+  <!-- What sudent say about us -->
+</br>
+</br>
+<div> 
+    <h4>What sudent say about us </h4>
+</div>
+  <div class="row">
+    <div class="col">
+      <div class="media">
+        <div class="media-left">
+          <a href="#">
+            <img
+            class="media-object rounded-circle"
+              data-src="holder.js/64x64"
+              alt="64x64"
+              src="media/index_pictures/review1.jpg"
+              data-holder-rendered="true"
+              style="width: 64px; height: 64px"
+            />
+          </a>
+        </div>
+
+        <div class="media-body">
+          <h4 class="media-heading">Ethan Blackwood</h4>
+          "Lexicon has been instrumental in helping me transition into a new career path as an adult learner.
+           The program offers a diverse range of courses tailored to different skill levels and interests, allowing students to customize their learning experience. The instructors are supportive and engaging, fostering a collaborative learning environment where everyone feels valued. Thanks to Lexicon, 
+          I've gained the knowledge and confidence to pursue my passion and excel in my chosen field."
+        </div>
+      </div>
+      <div class="media">
+        <div class="media-left">
+          <a href="#">
+            <img
+              class="media-object rounded-circle"
+              data-src="holder.js/64x64"
+              alt="64x64"
+              src="media/index_pictures/review2.jpg"
+              data-holder-rendered="true"
+              style="width: 64px; height: 64px"
+            />
+          </a>
+        </div>
+        <div class="media-body">
+          <h4 class="media-heading">Lucas Hawthorne</h4>
+          "Lexicon  provides a supportive and inclusive learning environment for adults looking to further their education. 
+          The instructors are not only knowledgeable but also approachable, making it easy to ask questions and seek clarification.""
+          <div class="media">
+            <div class="media-left">
+              <a href="#">
+                <img
+                 class="media-object rounded-circle"
+                  data-src="holder.js/64x64"
+                  alt="64x64"
+                  src="media/index_pictures/review3.jpg"
+                  data-holder-rendered="true"
+                  style="width: 64px; height: 64px"
+                />
+              </a>
+            </div>
+            <div class="media-body">
+              <h4 class="media-heading">Olivia Everly</h4>
+              "Lexicon exceeded my expectations in every way possible.
+               The curriculum is diverse and relevant, covering a wide range of topics that are essential for adult learners.
+                The instructors are experts in their respective fields and go above and beyond to ensure that every student succeeds.
+                 I've gained valuable insights and practical skills that have undoubtedly boosted my career prospects.
+                  I can't recommend Lexicon enough!"
+            </div>
+          </div>
+        </div>
+      </div>
+      
+       
+      </div>
+    </div>
+  </div>
+</div>
 
 {% endblock %}
