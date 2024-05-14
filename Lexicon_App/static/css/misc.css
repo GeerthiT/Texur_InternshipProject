@@ -216,3 +216,6 @@ div.botbar{
   text-align: center;
   padding: 20px 0;
 }
+.custom-width{
+  width: 50px;
+}
