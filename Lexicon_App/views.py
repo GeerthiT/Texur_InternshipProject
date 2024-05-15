@@ -282,7 +282,7 @@ def company_signup(request):
 
 def company_info(request):
     # Query the Company model to retrieve information for the specified company ID
-    
+      
     return render(request, 'company_auth/company_info.html', {'company': company}) 
 
 def company(request):
