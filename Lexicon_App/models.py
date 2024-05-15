@@ -62,8 +62,9 @@ class Company(models.Model):
     email = models.EmailField("User Email", default="info@example.com")
     phone = models.CharField(max_length=15, default='Unknown')
     address = models.CharField(max_length=255, default='Unknown')
+    company_ID = models.AutoField(primary_key=True)
 
-def __str__(self):
+    def __str__(self):
         return self.name
 
 class InternshipPost(models.Model):

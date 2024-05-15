@@ -274,7 +274,7 @@ def company_signup(request):
 
             # Log in the user after successful signup
             login(request, user)
-            return redirect('company_info')
+            return redirect('company_info', company_ID=company.pk)
     else:
         company_form = CompanyRegistrationForm()
         return render(request, "company_auth/company_signup.html", {"company_registration_form": company_form})
@@ -294,16 +294,13 @@ def company_login(request):
     else:
         return render(request, 'company_auth/company_login.html')
 
-def company_info(request):
+def company_info(request, company_ID):
     if request.user.is_authenticated:
-        try:
-            company = Company.objects.get(user=request.user)
-            return render(request, 'company_auth/company_info.html', {'company': company})
-        except Company.DoesNotExist:
-            error_message = "Company information not found."
+        company = get_object_or_404(Company, pk=company_ID)
+        return render(request, 'company_auth/company_info.html', {'company': company})
     else:
         error_message = "You are not logged in."
-    return render(request, 'company_auth/company_info.html', {'error_message': error_message})
+        return render(request, 'company_auth/company_info.html', {'error_message': error_message})
 
 def company(request):
     # Ensure user is logged in before accessing company-related views
