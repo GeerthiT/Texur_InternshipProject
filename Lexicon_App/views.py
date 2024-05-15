@@ -233,59 +233,83 @@ def search(request):
     # company  views.py starts
     
 def company_login(request):
-    if request.method == "POST":
-        # Get data from the form
-        username = request.POST.get("username")
-        password = request.POST.get("password")
-               # Authenticate user
-        user = authenticate(request,username = username, password = password)
-        
-            
-       
-        if user is not None and user.is_active:
-            # User is authenticated, log them in
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        print(username)
+        print(password)
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
             login(request, user)
-            company = Company.objects.get(user=user)
-            
+            # Redirect to a page where company information is displayed
             return redirect('company_info')
         else:
-            # Authentication failed, handle it appropriately (e.g., show error message)
-            print("Invalid username or password")
-            error_message = "Invalid username or password."
-            return render(request, "company_auth/company_login.html", { "error_message": error_message})
-      
+            error_message = "Invalid username or password. Please try again."
+            return render(request, 'Company_auth/company_login.html', {'error_message': error_message})
     else:
-            return render(request, "company_auth/company_login.html")
-
+        return render(request, 'Company_auth/company_login.html')
+      
+    
 def company_signup(request):
     if request.method == 'POST':
         company_registration = CompanyRegistrationForm(request.POST)
         if company_registration.is_valid():
+            # Extract username and password from the form
             username = company_registration.cleaned_data["username"]
             password = company_registration.cleaned_data["password"]
-            # Saving logic for the user
-            user = User(username = username, password = password)
-            user.save()
             
+            # Check if a user with the same username already exists
+            if User.objects.filter(username=username).exists():
+                # Handle case where user already exists
+                # You can redirect to an error page or handle it differently
+                return HttpResponse("Username already exists")
+                
+            # Create a new user
+            user = User.objects.create_user(username=username, password=password)
+
+            # Save the company profile
             company = company_registration.save(commit=False)
             company.user = user
-          # check if it was really saved or not.
-          # company_registration.save_m2m()
-            company_registration.save()
-            company_registration.save_m2m()
-            return redirect('company_login')
-        else:
-          messages.error(request, "Form validation failed.")
-    else:
-      company_form = CompanyRegistrationForm()
-      return render(request, "company_auth/company_signup.html", {"company_registration_form": company_form})
+            company.save()
 
-def company_info(request, company_id):
-    # Query the Company model to retrieve information for the specified company ID
-    company = get_object_or_404(Company, id=company_id)
-    return render(request, 'company_auth/company_info.html', {'company': company}) 
+            # Log in the user after successful signup
+            login(request, user)
+            return redirect('company_info')
+    else:
+        company_form = CompanyRegistrationForm()
+        return render(request, "company_auth/company_signup.html", {"company_registration_form": company_form})
+    
+    
+def company_login(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            return redirect('company_info')
+        else:
+            error_message = "Invalid username or password. Please try again."
+            return render(request, 'company_auth/company_login.html', {'error_message': error_message})
+    else:
+        return render(request, 'company_auth/company_login.html')
+
+def company_info(request):
+    if request.user.is_authenticated:
+        try:
+            company = Company.objects.get(user=request.user)
+            return render(request, 'company_auth/company_info.html', {'company': company})
+        except Company.DoesNotExist:
+            error_message = "Company information not found."
+    else:
+        error_message = "You are not logged in."
+    return render(request, 'company_auth/company_info.html', {'error_message': error_message})
 
 def company(request):
+    # Ensure user is logged in before accessing company-related views
+    if not request.user.is_authenticated:
+        return redirect('company_login')
+    
     company_info = request.user.company_profile  
     InternshipPost = InternshipPost.objects.filter(company=company_info)
     return render(request, 'company.html', {'company_info': company_info, 'Internship_Post': InternshipPost})
