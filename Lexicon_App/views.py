@@ -604,3 +604,10 @@ def upload_students(request, course_id):
     else:
         messages.error(request, 'Invalid request method')
         return redirect('edit_course', course_id=course_id)
+    
+def delete_course(request, course_id):
+    course = get_object_or_404(Course, pk=course_id)
+    if request.method == 'POST':
+        course.delete()
+        return redirect('courses')
+    return render(request, 'course_administration/delete_course.html', {'course': course})
