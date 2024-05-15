@@ -77,7 +77,10 @@
                 <ul>
                     {% for result in results %}
                         {% if result.type == 'company' %}
-                            <li>{{ result.result }}</li>
+                            <li>
+                                <a href="{% url 'company_info' result.result.company_ID %}">{{ result.result }}
+
+                                </a></li>
                         {% endif %}
                     {% endfor %}
                 </ul>
