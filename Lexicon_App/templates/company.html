@@ -1,5 +1,14 @@
 {% extends "base.html" %} {% load static %} {% block content %}
-
+<style>
+            .btn-back{
+        background-color: #bc3545;
+        border-radius: 35px;
+        padding: 11px 25px;
+        color: #fdfdfd;
+        text-decoration: none;
+    }
+    
+</style>
 <h1 class="text-center">List of companies</h1>
 <div class="container">
 
@@ -16,9 +25,8 @@
         {% endfor %}   
 
     {% endif %}
-    <!-- Add the delete button/link here -->
-    <a href="{% url 'delete_company' company.id %}" class="btn btn-danger"> Delete Company </a> 
+
 </div>
 <a href="{% url 'welcome_admin' %}"
-<button type="button" class="btn btn-danger">Back to home</button></a>
+<button type="button" class="btn-back">Back to home</button></a>
 {% endblock %}

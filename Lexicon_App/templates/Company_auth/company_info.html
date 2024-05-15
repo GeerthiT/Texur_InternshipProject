@@ -63,16 +63,13 @@
 
   <div class="form1">
     {% if company %}
-    <p><strong>Company Name:</strong> {{ company.company_name }}</p>
-    <p><strong>Company Size:</strong> {{ company.company_size }}</p>
+    <p><strong>Company Name:</strong> {{ company.name }}</p>
+    <p><strong>Company Size:</strong> {{ company.size }}</p>
     <p><strong>Website:</strong> {{ company.website }}</p>
     <p>
       <strong>Contact Person Name:</strong> {{ company.contact_person_name }}
     </p>
-    <p>
-      <strong>Contact Person Position:</strong> {{
-      company.contact_person_position }}
-    </p>
+    
     <p><strong>Email:</strong> {{ company.email }}</p>
     <p><strong>Phone:</strong> {{ company.phone }}</p>
     <p><strong>Address:</strong> {{ company.address }}</p>
@@ -85,7 +82,7 @@
   <br />
   {% if request.user.is_staff %}
   <div style="text-align: left">
-    <a href="{% url 'companies' %}" class="btn-back">Back</a>
+    <a href="{% url 'company' %}" class="btn-back">Back</a>
   </div>
   {% endif %}
 </div>

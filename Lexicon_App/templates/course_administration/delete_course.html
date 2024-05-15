@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+ 
+<div class="row">   
+    <div class="col"></div>
+    <div class="col ">
+    
+    <li class="list-group-item d-flex justify-content-between align-items-center ">
+        <span>
+            <div class="container border border-1 border-dark">
+ 
+         <br>
+            <p>Are you sure you want to delete this course?</p>
+ 
+            <form id="delete_form_{{ course.courseID }}" action="{% url 'delete_course' course_id=course.courseID %}" method="post">
+                {% csrf_token %}
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                <button type="button" class="btn btn-danger btn-sm" onclick="confirmDelete('{{ course.name }}', '{{ course.courseID }}')">Delete</button>
+                <button type="button" class="btn btn-success btn-sm" onclick="goBack()">Cancel</button>
+ 
+                </div><br>
+            </form>
+ 
+        </div>
+       
+        </span>
+    </li>
+  
+</div>
+<div class="col"></div>
+</div>
+ 
+           
+ 
+ 
+<script>
+    function confirmDelete(name, courseId) {
+        // if (confirm(`Are you sure you want to delete the course "${name}"?`)) {
+            // If the user confirms, submit the form
+            document.getElementById(`delete_form_${courseId}`).submit();
+        // }
+    }
+    function goBack() {
+        window.history.back(); // Go back to the previous page
+    }
+</script>
+ 
+{% endblock %}
