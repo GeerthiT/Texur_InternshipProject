@@ -134,6 +134,7 @@ class CompanyRegistrationForm(forms.ModelForm):
         widget=forms.CheckboxSelectMultiple,
         required=False,
     )
+    accepting_interns = forms.BooleanField(required=False)
     terms_conditions = forms.BooleanField(required=True)
 
     class Meta:
@@ -147,6 +148,7 @@ class CompanyRegistrationForm(forms.ModelForm):
             "phone",
             "address",
             "required_skills",
+            "contact_details"
         )
     def save(self, commit=True):
         company = super().save(commit=False)

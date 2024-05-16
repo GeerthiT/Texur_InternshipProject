@@ -269,9 +269,11 @@ def company_signup(request):
 
             # Save the company profile
             company = company_registration.save(commit=False)
+            
             company.user = user
             company.save()
             
+            company_registration.save_m2m() 
             # Log in the user after successful signup
             login(request, user)
             return redirect('company_info', company_ID=company.pk)

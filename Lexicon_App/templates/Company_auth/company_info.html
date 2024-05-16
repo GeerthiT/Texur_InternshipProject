@@ -32,59 +32,70 @@
 
 <h1 class="head1">Company Information</h1>
 <br />
-<div class="shadow p-4 mb-5 bg-body rounded">
-  <div style="display: flex; align-items: center">
-    <!-- Spacer -->
-    <div style="flex-grow: 1"></div>
-
-    <!-- Edit and Delete Buttons -->
-    <div class="but" style="display: flex">
-      <!-- Update company -->
-      {% if editing %}
-      <form action="{% url 'update_company' company.id %}" method="get">
-        <button class="btn btn-block btn-info custom-width" type="submit">
-          <b>Edit</b>
-        </button>
-      </form>
-      <div style="margin-right: 10px"></div>
-
-      <!-- Delete company -->
-      <form action="{% url 'delete_company' company.id %}" method="post">
-        {% csrf_token %}
-        <button class="btn btn-block btn-warning custom-width" type="submit">
-          <b>Delete</b>
-        </button>
-      </form>
-      {% endif %}
-    </div>
+<div class="shadow p-4 mb-5 bg-body rounded" style="display: flex; align-items: center;">
+  <!-- Left-aligned image -->
+  <div style="margin-left: 20px;">
+    <img src="{% static "images/company.jpg" %}" alt="Building Image" style="max-width: 300px;">
   </div>
-  <br />
-  <br />
 
-  <div class="form1">
-    {% if company %}
-    <p><strong>Company Name:</strong> {{ company.name }}</p>
-    <p><strong>Company Size:</strong> {{ company.size }}</p>
-    <p><strong>Website:</strong> {{ company.website }}</p>
-    <p>
-      <strong>Contact Person Name:</strong> {{ company.contact_person_name }}
-    </p>
-    <p><strong>skills:</strong> {{ company.required_skills }}</p>
-    <p><strong>Email:</strong> {{ company.email }}</p>
-    <p><strong>Phone:</strong> {{ company.phone }}</p>
-    <p><strong>Address:</strong> {{ company.address }}</p>
-    <!-- Add more fields as needed -->
-    {% else %}
-    <p>No company information found.</p>
+  <!-- Company information -->
+  <div>
+    <div >
+      <!-- Edit and Delete Buttons -->
+      <div class="but" style="margin-right: 30px;">
+        <!-- Update company -->
+        {% if editing %}
+        <form action="{% url 'update_company' company.id %}" method="get">
+          <button class="btn btn-block btn-info custom-width" type="submit">
+            <b>Edit</b>
+          </button>
+        </form>
+        <div style="margin-right: 10px;"></div>
+
+        <!-- Delete company -->
+        <form action="{% url 'delete_company' company.id %}" method="post">
+          {% csrf_token %}
+          <button class="btn btn-block btn-warning custom-width" type="submit">
+            <b>Delete</b>
+          </button>
+        </form>
+        {% endif %}
+      </div>
+    </div>
+
+    <br />
+    <div class="form1">
+      {% if company %}
+      <p><strong>Company Name:</strong> {{ company.name }}</p>
+      <p><strong>Company Size:</strong> {{ company.size }}</p>
+      <p><strong>Website:</strong> {{ company.website }}</p>
+      <p>
+        <strong>Contact Person Name:</strong> {{ company.contact_person_name }}
+      </p>
+      <p><strong>Skills:</strong> 
+        <ul>
+        {% for skill in company.required_skills.all %}
+            <li>{{ skill }}</li>
+        {% endfor %}
+        </ul></p>
+      <p><strong>Email:</strong> {{ company.email }}</p>
+      <p><strong>Phone:</strong> {{ company.phone }}</p>
+      <p><strong>Address:</strong> {{ company.address }}</p>
+      <!-- Add more fields as needed -->
+      {% else %}
+      <p>No company information found.</p>
+      {% endif %}
+    
+
+    <br />
+    {% if request.user.is_staff %}
+    <div style="text-align: left">
+      <a href="{% url 'company' %}" class="btn-back">Back</a>
+    </div>
     {% endif %}
   </div>
-
-  <br />
-  {% if request.user.is_staff %}
-  <div style="text-align: left">
-    <a href="{% url 'company' %}" class="btn-back">Back</a>
   </div>
-  {% endif %}
 </div>
+
 
 {% endblock %}
