@@ -20,7 +20,9 @@
         {% for company in company_data %}
             
             <ul>
-                <li><b>{{ company.name }}</b><br>Accepting Interns: {{ company.accepting_interns }}</li>
+                
+                <li>
+                    <a href="{% url 'company_info' company_ID=company.company_ID %}"><b>{{ company.name }}</b></a><br>Accepting Interns: {{ company.accepting_interns }}</li>
             </ul>
         {% endfor %}   
 

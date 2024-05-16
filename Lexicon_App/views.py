@@ -269,9 +269,11 @@ def company_signup(request):
 
             # Save the company profile
             company = company_registration.save(commit=False)
+            
             company.user = user
             company.save()
-
+            
+            company_registration.save_m2m() 
             # Log in the user after successful signup
             login(request, user)
             return redirect('company_info', company_ID=company.pk)
@@ -287,7 +289,7 @@ def company_login(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            return redirect('company_info')
+            return redirect('company_info',company_ID=user.company_profile.pk)
         else:
             error_message = "Invalid username or password. Please try again."
             return render(request, 'company_auth/company_login.html', {'error_message': error_message})
