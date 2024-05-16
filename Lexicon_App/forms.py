@@ -91,54 +91,6 @@ class StudentForm(forms.ModelForm):
         self.fields["courses"].widget = forms.RadioSelect()  # Add Bootstrap form-select class to courses dropdown
 
 
-'''class CompanyProfileForm(forms.Form):
-    name = forms.CharField(
-        max_length=100, widget=forms.TextInput(attrs={"class": "form-control"})
-    )
-    size = forms.ChoiceField(
-        choices=[
-            ("", "Select the Company size"),
-            ("Startup", "Startup"),
-            ("Small", "Small"),
-            ("Medium", "Medium"),
-            ("Large", "Large"),
-            ("Enterprise", "Enterprise"),
-        ],
-        widget=forms.Select(attrs={"class": "form-control"}),
-    )
-    website = forms.URLField(widget=forms.URLInput(attrs={"class": "form-control"}))
-    contact_person_name = forms.CharField(
-        max_length=100, widget=forms.TextInput(attrs={"class": "form-control"})
-    )
-    contact_person_position = forms.CharField(
-        max_length=100, widget=forms.TextInput(attrs={"class": "form-control"})
-    )
-    email = forms.EmailField(widget=forms.EmailInput(attrs={"class": "form-control"}))
-    phone = forms.CharField(
-        max_length=15, widget=forms.TextInput(attrs={"class": "form-control"})
-    )
-    address = forms.CharField(
-        max_length=255, widget=forms.TextInput(attrs={"class": "form-control"})
-    )
-    
-    terms_conditions = forms.BooleanField(required=True)
-    
-    class Meta:
-            model = Company
-            fields = (
-            "name",
-            "size",
-            "website",
-            "contact_person_name",
-            "contact_person_position",
-            "email",
-            "phone",
-            "age",
-            "address",
-            "terms_conditions"
-        )
-    def __init__(self, *args, **kwargs):
-            super().__init__(*args, **kwargs)'''
             
 class CompanyRegistrationForm(forms.ModelForm):
     username = forms.CharField(widget=forms.TextInput(attrs={"class": "form-control"}))
@@ -162,7 +114,14 @@ class CompanyRegistrationForm(forms.ModelForm):
     contact_person_name = forms.CharField(
         max_length=100, widget=forms.TextInput(attrs={"class": "form-control"})
     )
-    
+    contact_details = forms.ChoiceField(
+        choices=[
+            ("", "Select conatct type"),
+            ("Personal", "Personal"),
+            ("Office", "Office"),
+        ],
+        widget=forms.Select(attrs={"class": "form-control"})
+    )
     email = forms.EmailField(widget=forms.EmailInput(attrs={"class": "form-control"}))
     phone = forms.CharField(
         max_length=15, widget=forms.TextInput(attrs={"class": "form-control"})
@@ -170,7 +129,11 @@ class CompanyRegistrationForm(forms.ModelForm):
     address = forms.CharField(
         max_length=255, widget=forms.TextInput(attrs={"class": "form-control"})
     )
-    
+    required_skills = forms.ModelMultipleChoiceField(
+        queryset=Skillset.objects.all(),
+        widget=forms.CheckboxSelectMultiple,
+        required=False,
+    )
     terms_conditions = forms.BooleanField(required=True)
 
     class Meta:
@@ -179,13 +142,19 @@ class CompanyRegistrationForm(forms.ModelForm):
             "name",
             "size",
             "website",
-            "contact_person_name",
-           
+            "contact_person_name",            
             "email",
             "phone",
-            "address"
+            "address",
+            "required_skills",
         )
-
+    def save(self, commit=True):
+        company = super().save(commit=False)
+        if commit:
+            company.save()
+            self.save_m2m()
+        return company
+    
     def clean(self):
         cleaned_data = super().clean()
         password = cleaned_data.get("password")
@@ -195,27 +164,6 @@ class CompanyRegistrationForm(forms.ModelForm):
             raise forms.ValidationError("Passwords do not match.")
 
         return cleaned_data
-
-    '''def save(self, commit=True):
-        username = self.cleaned_data.get("username")
-        password = self.cleaned_data.get("password")
-
-        # Check if a user with the same username already exists
-        if User.objects.filter(username=username).exists():
-            raise forms.ValidationError("Username already exists")
-
-        # Create a new user
-        user = User.objects.create_user(username=username, password=password)
-        
-        # Save the company
-        company = super().save(commit=False)
-        
-        if commit:
-            # Link the user to the company and save
-            company.user = user
-            company.save()
-
-        return user'''
 
 
 class CourseForm(forms.ModelForm):
