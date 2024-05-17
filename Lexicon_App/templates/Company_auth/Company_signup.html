@@ -3,17 +3,18 @@
 <div class="container">
   <h2 class="h2"><b>Company Profile</b></h2>
   <br />
-
+  
   <h5 class="h5"><b>Fill your Information</b></h5>
   <br />
-
+  <div class="shadow p-4 mb-50 bg-body rounded">
+   
   <form class="form" action="{% url 'company_signup' %}" method="post">
     {% csrf_token %} {{ company_registration_form.as_p }}
     <br />
     <button type="submit">Submit</button>
   </form>
 </div>
-
+</div>
 <br />
 <br />
 <br />

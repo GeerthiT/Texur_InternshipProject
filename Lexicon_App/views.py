@@ -269,12 +269,14 @@ def company_signup(request):
 
             # Save the company profile
             company = company_registration.save(commit=False)
+            
             company.user = user
             company.save()
-
+            
+            company_registration.save_m2m() 
             # Log in the user after successful signup
             login(request, user)
-            return redirect('company_info')
+            return redirect('company_info', company_ID=company.pk)
     else:
         company_form = CompanyRegistrationForm()
         return render(request, "company_auth/company_signup.html", {"company_registration_form": company_form})
@@ -287,23 +289,20 @@ def company_login(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            return redirect('company_info')
+            return redirect('company_info',company_ID=user.company_profile.pk)
         else:
             error_message = "Invalid username or password. Please try again."
             return render(request, 'company_auth/company_login.html', {'error_message': error_message})
     else:
         return render(request, 'company_auth/company_login.html')
 
-def company_info(request):
+def company_info(request, company_ID):
     if request.user.is_authenticated:
-        try:
-            company = Company.objects.get(user=request.user)
-            return render(request, 'company_auth/company_info.html', {'company': company})
-        except Company.DoesNotExist:
-            error_message = "Company information not found."
+        company = get_object_or_404(Company, pk=company_ID)
+        return render(request, 'company_auth/company_info.html', {'company': company})
     else:
         error_message = "You are not logged in."
-    return render(request, 'company_auth/company_info.html', {'error_message': error_message})
+        return render(request, 'company_auth/company_info.html', {'error_message': error_message})
 
 def company(request):
     # Ensure user is logged in before accessing company-related views
@@ -604,3 +603,10 @@ def upload_students(request, course_id):
     else:
         messages.error(request, 'Invalid request method')
         return redirect('edit_course', course_id=course_id)
+    
+def delete_course(request, course_id):
+    course = get_object_or_404(Course, pk=course_id)
+    if request.method == 'POST':
+        course.delete()
+        return redirect('courses')
+    return render(request, 'course_administration/delete_course.html', {'course': course})

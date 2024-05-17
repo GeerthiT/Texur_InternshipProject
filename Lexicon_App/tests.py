@@ -64,7 +64,7 @@ class ViewsTestCase(TestCase):
         self.assertEqual(response.status_code, 200)  # Expecting a success status code
 
     def test_companies(self):
-    # Test fetching companies page
+        # Test fetching companies page
         response = self.client.get(reverse('company'))  # Assuming 'company' is the correct URL name
         self.assertEqual(response.status_code, 200)  # Expecting a success status code
 
