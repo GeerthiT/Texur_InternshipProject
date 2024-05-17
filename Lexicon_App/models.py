@@ -73,12 +73,12 @@ class InternshipPost(models.Model):
 
 
     
-class Skill(models.Model):
-    name = models.CharField(max_length=100)
-
-
-    def __str__(self):
-        return self.name
+#class Skill(models.Model):
+#    name = models.CharField(max_length=100)
+#
+#
+#    def __str__(self):
+#        return self.name
 
 class User(models.Model):
     username = models.CharField(max_length=100)

@@ -28,122 +28,61 @@
     color: #fdfdfd;
     text-decoration: none;
   }
-
-  .internship-section {
-    margin-top: 50px;
-  }
-
-  .internship-item {
-    border: 1px solid #ccc;
-    padding: 10px;
-    margin-bottom: 20px;
-    border-radius: 5px;
-  }
-
-  .internship-actions {
-    margin-top: 10px;
-  }
 </style>
 
 <h1 class="head1">Company Information</h1>
 <br />
 <div class="shadow p-4 mb-5 bg-body rounded">
-  <!-- Company information -->
   <div style="display: flex; align-items: center">
-    <!-- Logo or Image -->
-
     <!-- Spacer -->
     <div style="flex-grow: 1"></div>
 
     <!-- Edit and Delete Buttons -->
     <div class="but" style="display: flex">
       <!-- Update company -->
-      <!-- Placeholder buttons -->
-      <button class="btn btn-block btn-info custom-width" type="button">
-        <b>Edit</b>
-      </button>
+      {% if editing %}
+      <form action="{% url 'update_company' company.id %}" method="get">
+        <button class="btn btn-block btn-info custom-width" type="submit">
+          <b>Edit</b>
+        </button>
+      </form>
       <div style="margin-right: 10px"></div>
 
       <!-- Delete company -->
-      <!-- Placeholder buttons -->
-      <button class="btn btn-block btn-warning custom-width" type="button">
-        <b>Delete</b>
-      </button>
+      <form action="{% url 'delete_company' company.id %}" method="post">
+        {% csrf_token %}
+        <button class="btn btn-block btn-warning custom-width" type="submit">
+          <b>Delete</b>
+        </button>
+      </form>
+      {% endif %}
     </div>
   </div>
   <br />
   <br />
 
   <div class="form1">
-    <!-- Placeholder company information -->
-    <p><strong>Company Name:</strong> Stockholm Company</p>
-    <p><strong>Company Size:</strong> Medium</p>
-    <p><strong>Website:</strong> www.stockholmcompany.com</p>
-    <p><strong>Contact Person Name:</strong> John Doe</p>
-    <p><strong>Contact Person Position:</strong> CEO</p>
-    <p><strong>Email:</strong> john.doe@stockholmcompany.com</p>
-    <p><strong>Phone:</strong> +46 123 456 789</p>
-    <p><strong>Address:</strong> Stockholm, Sweden</p>
+    {% if company %}
+    <p><strong>Company Name:</strong> {{ company.name }}</p>
+    <p><strong>Company Size:</strong> {{ company.size }}</p>
+    <p><strong>Website:</strong> {{ company.website }}</p>
+    <p>
+      <strong>Contact Person Name:</strong> {{ company.contact_person_name }}
+    </p>
+
+    <p><strong>Email:</strong> {{ company.email }}</p>
+    <p><strong>Phone:</strong> {{ company.phone }}</p>
+    <p><strong>Address:</strong> {{ company.address }}</p>
     <!-- Add more fields as needed -->
+    {% else %}
+    <p>No company information found.</p>
+    {% endif %}
   </div>
 
   <br />
-  <!-- Internship Section -->
-  <div class="internship-section">
-    <h2>Internship Posts</h2>
-    <div class="internship-item">
-      <h3>Software Engineer</h3>
-      <p>
-        As a developer in our Market Integration team you will be challenged
-        with a wide range of tasks, ranging from design, development and
-        maintenance of our solution. The Market Integration team is responsible
-        for the integration solution to exchanges globally as well as
-        integration to alternative trading platforms and broker networks. The
-        solution is based on back-end modules with very demanding requirements
-        on low latency as well as high throughput. We have a test-driven
-        development process, and the development is done with in-house developed
-        frameworks using UML, pre-processing and a C like mapping language in
-        parallel with standard C++ and Python.
-      </p>
-      <p>
-        We will offer you challenges, where understanding market and customer
-        requirements and solving problems is a key part, in combination with
-        creating advanced technical solutions. You will be part of an Agile
-        Scrum team with skilled and motivated developers and QA that take full
-        responsibility for its solution which includes both working on
-        continuous improvements as well as innovations. By working closely
-        together with Senior Developers and the Product Owner in your Scrum team
-        you will get a deep understanding of market needs.
-      </p>
-      <p>
-        M Sc. in Computer Science, Engineering Physics or similar degree.
-        Experience in an object-oriented language like Python or C++ is a plus.
-        A great interest in learning the financial markets. Have capacity to
-        deliver high quality software in a high pace environment. Good skills in
-        English.
-      </p>
-      <p>Duration: 3 months</p>
-      <p>Location: Stockholm, Sweden</p>
-      <div class="internship-actions">
-        <!-- Update button -->
-        <a href="edit_internship_post.html" class="btn btn-info">Edit</a>
-        <!-- Delete button -->
-        <a href="delete_internship_post.html" class="btn btn-danger">Delete</a>
-      </div>
-    </div>
-    <!-- Add more internship items as needed -->
-  </div>
-
   {% if request.user.is_staff %}
   <div style="text-align: left">
-    <!-- Back button -->
-    <a href="{% url 'companies' %}" class="btn-back">Back</a>
-  </div>
-  <div>
-    <!-- Add button -->
-    <a href="add_internship_post.html" class="btn btn-info"
-      >Add internship post</a
-    >
+    <a href="{% url 'company' %}" class="btn-back">Back</a>
   </div>
   {% endif %}
 </div>
