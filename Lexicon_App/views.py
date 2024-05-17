@@ -137,12 +137,15 @@ def update_student(request, email):
 
 # Delete a Student
 def delete_student(request, email):
-    # Retrieve the student object using the provided ID
+    # Retrieve the student object using the provided email
     student = get_object_or_404(Student, email=email)
-    # Delete the student from DB
+    # Get the course ID before deleting the student
+    course_id = student.course_id
+    # Delete the student from the database
     student.delete()
-    # Redirect to a relevant page
-    return redirect ('students')
+    # Redirect to the 'students' page with the appropriate arguments
+    return redirect(reverse('students', kwargs={'course_id': course_id}))
+
 
 def display_students(request):
     # Exclude students with internships

@@ -89,7 +89,7 @@ class StudentForm(forms.ModelForm):
             forms.CheckboxSelectMultiple()
         )  # Render skills as checkboxes
         self.fields["courses"].widget = forms.RadioSelect()  # Add Bootstrap form-select class to courses dropdown
-
+        
 
             
 class CompanyRegistrationForm(forms.ModelForm):
