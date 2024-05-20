@@ -87,7 +87,15 @@ class StudentForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         for field_name in self.fields:
             self.fields[field_name].widget.attrs["class"] = "form-control"
+
+        self.fields["skills"].widget = (
+            forms.CheckboxSelectMultiple()
+        )  # Render skills as checkboxes
+        self.fields["courses"].widget = forms.RadioSelect()  # Add Bootstrap form-select class to courses dropdown
+        
+
          # Add Bootstrap form-select class to courses dropdown
+
 
 
             

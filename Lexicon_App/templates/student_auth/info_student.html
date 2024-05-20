@@ -29,6 +29,7 @@
         color: #fdfdfd;
         text-decoration: none;
     }
+
 </style>
 
 
@@ -86,16 +87,31 @@
                 <p><strong>Phone Number:</strong> <input type="text" id="phoneInput" name="phone_number" value="{{ student.phone_number }}"></p>
                 <p><strong>Age:</strong> <input type="number" id="ageInput" name="age" value="{{ student.age }}"></p>
                 <p><strong>Postal Address:</strong> <input type="text" id="addressInput" name="postal_address" value="{{ student.postal_address }}"></p>
-                <p><strong>Skills:</strong> 
+                <!-- <p><strong>Skills:</strong> 
                     <select name="skills" id="skillsInput" multiple>
                         {% for skill in student.skills.all %}
                             {{ skill.name }}{% if not forloop.last %}, {% endif %}
-                        {% endfor %}
+                        {% endfor %} -->
                         <!-- You can populate this dropdown with options from a database or predefined list -->
+                    <!-- </select>
+                </p>
+                <p><strong>Course:</strong> {{ student.course.name }}</p> -->
+
+                <p><strong>Skills:</strong>
+                    <select name="skills" id="skillsInput" multiple>
+                        {% for skill in available_skills %}
+                            <option value="{{ skill.id }}" {% if skill in student.skills.all %}selected{% endif %}>{{ skill.name }}</option>
+                        {% endfor %}
                     </select>
                 </p>
-                <p><strong>Course:</strong> {{ student.course.name }}</p>
-                
+                <p><strong>Course:</strong>
+                    <select name="course" id="courseInput">
+                        {% for course in available_courses %}
+                            <option value="{{ course.id }}" {% if course == student.course %}selected{% endif %}>{{ course.name }}</option>
+                        {% endfor %}
+                    </select>
+                </p>
+
                 <p><strong>Linkedin ID:</strong> <input type="text" id="linkedinIDInput" name="linkedin_ID" value="{{ student.linkedin_ID }}"></p>
                 <p><strong>Github ID:</strong> <input type="text" id="githubIDInput" name="github_ID" value="{{ student.github_ID }}"></p>
               <!-- Add input fields for other editable student information -->
