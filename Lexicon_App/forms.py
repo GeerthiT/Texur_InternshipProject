@@ -55,7 +55,7 @@ class UserForm(forms.ModelForm):
 class StudentForm(forms.ModelForm):
     skills = forms.ModelMultipleChoiceField(
         queryset=Skillset.objects.all(),
-        widget=forms.CheckboxSelectMultiple,
+        widget=forms.SelectMultiple(attrs={'class': 'form-control', 'multiple': 'multiple'}),
         required=False,
     )
     courses = forms.ModelChoiceField(
@@ -64,6 +64,7 @@ class StudentForm(forms.ModelForm):
 
     class Meta:
         model = Student
+        
         fields = (
             "first_name",
             "last_name",
@@ -80,16 +81,22 @@ class StudentForm(forms.ModelForm):
             "skills",
             "courses",
         )
+        
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field_name in self.fields:
             self.fields[field_name].widget.attrs["class"] = "form-control"
+
         self.fields["skills"].widget = (
             forms.CheckboxSelectMultiple()
         )  # Render skills as checkboxes
         self.fields["courses"].widget = forms.RadioSelect()  # Add Bootstrap form-select class to courses dropdown
         
+
+         # Add Bootstrap form-select class to courses dropdown
+
+
 
             
 class CompanyRegistrationForm(forms.ModelForm):

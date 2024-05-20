@@ -121,7 +121,7 @@ def info_student(request, student_ID):
 def update_student(request, email):
     # Retrieve the student object using the provided email
     student = get_object_or_404(Student, email=email)
-
+    
     if request.method == 'POST':
         # Populate the update form with current student data and submitted data
         form = StudentForm(request.POST, instance=student)
