@@ -280,9 +280,6 @@ def company_signup(request):
             # Log in the user after successful signup
             login(request, user)
             return redirect('company_info', company_ID=company.pk)
-    else:
-        company_form = CompanyRegistrationForm()
-        return render(request, "company_auth/company_signup.html", {"company_registration_form": company_form})
     
     
 def company_login(request):
