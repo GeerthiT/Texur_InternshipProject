@@ -21,7 +21,9 @@
     <form method="post" enctype="multipart/form-data">  <!-- Add enctype for file uploads -->
         {% csrf_token %}
         {{ form.as_p }}
+
         
+         <!-- 
         <p><strong>Selected Skills:</strong></p>
         <ul>
             {% for skill in student.skills.all %}
@@ -29,7 +31,7 @@
             {% endfor %}
         </ul>
     
-        <p><strong>Selected Course:</strong>{{ student.course }}</p>
+        <p><strong>Selected Course:</strong>{{ student.course }}</p>-->
         <br>
         <button class="btn btn-success btn-save" type="submit"><b>Save</b></button>
     </form>
