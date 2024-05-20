@@ -1,5 +1,12 @@
 {% extends "base.html" %} {% load static %} {% block content %}
-
+<style>
+  body 
+    {background-color: rgb(235, 244, 251);}
+    .btn-success{
+        width: 150px;
+        margin-left: 32pc;
+    }
+</style>
 <div class="container">
   <h2 class="h2"><b>Company Profile</b></h2>
   <br />
@@ -11,7 +18,7 @@
   <form class="form" action="{% url 'company_signup' %}" method="post">
     {% csrf_token %} {{ company_registration_form.as_p }}
     <br />
-    <button type="submit">Submit</button>
+    <button class="btn btn-success btn-save" type="submit"><b>Save</b></button>
   </form>
 </div>
 </div>
